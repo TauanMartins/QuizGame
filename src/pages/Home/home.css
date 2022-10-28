@@ -1,0 +1,41 @@
+.Home {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    
+}
+
+
+@media screen {
+    .Home .Button {
+        text-align: center;
+        border: 0px;
+        width: 25%;
+        padding: 3%;
+        margin: 3%;
+
+    }
+}
+
+@media (max-width:462px) {
+    .Home .Button {
+        text-align: center;
+        border: 0px;
+        width: 50%;
+        padding: 2%;
+        margin: 15%;
+    }
+}
+
+.Home .Button a {
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+.Home .Button a:hover {
+    text-decoration: none;
+    color: white;
+}

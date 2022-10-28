@@ -1,0 +1,27 @@
+.Game {
+    text-align: center;
+    padding: 20px;
+}
+
+.Game .Button {
+    text-align: center;
+    height: 90%;
+    width: 100%;
+    padding: 7%;
+    margin: 4px;
+
+}
+
+
+.img {
+    height: 160px;
+    width: 160px;
+
+}
+
+#geral {
+    background-color: lightgray;
+}
+
+
+
