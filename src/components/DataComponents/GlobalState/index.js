@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 
 export const GlobalState = createContext({});
 
-function GlobalStateProvider({children}){
+function GlobalStateProvider({ children }) {
 
     const [selectedPlayer, setSelectedPlayer] = useState(undefined);
     const [selectedPlayerIMG, setSelectedPlayerIMG] = useState(undefined);
@@ -15,7 +15,15 @@ function GlobalStateProvider({children}){
     const [answers, setAnswers] = useState([]);
 
     return (
-        <GlobalState.Provider value={{selectedPlayer, setSelectedPlayer, selectedPlayerIMG, setSelectedPlayerIMG, players, setPlayers, question, setQuestion, questionAbout, setQuestionAbout, correctAnswer, setCorrectAnswer, answers, setAnswers}}>
+        <GlobalState.Provider value={{
+            selectedPlayer, setSelectedPlayer,
+            selectedPlayerIMG, setSelectedPlayerIMG,
+            players, setPlayers,
+            question, setQuestion,
+            questionAbout, setQuestionAbout,
+            correctAnswer, setCorrectAnswer,
+            answers, setAnswers
+        }}>
             {children}
         </GlobalState.Provider>
     )

@@ -3,13 +3,13 @@ import { Row, Col, Card, CardTitle, CardText, Button, Label, Container } from "r
 import './game.css';
 
 import Question from "../../components/Question";
-import { getRandomInt } from "../../components/RandomInt&ShuffledArray";
+import { getRandomInt } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 import Timer from "../../components/Timer";
 import api from "../../services/api";
 import loading from "../../assets/loading.gif";
 import Endgame from "../../components/Endgame";
-import { GlobalState } from "../../components/GlobalState";
+import { GlobalState } from "../../components/DataComponents/GlobalState";
 
 export default function Game() {
 
@@ -108,18 +108,20 @@ export default function Game() {
                                                         </Col>
                                                     </Row>
                                                 </Col>
-                                                <Col>
-                                                    <Row id='geral'>
-                                                        <Col id="1">1</Col>
-                                                        <Col id="2">2</Col>
-                                                        <Col id="3">3</Col>
-                                                        <Col id="4">4</Col>
-                                                        <Col id="5">5</Col>
-                                                        <Col id="6">6</Col>
-                                                        <Col id="7">7</Col>
-                                                        <Col id="8">8</Col>
-                                                        <Col id="9">9</Col>
-                                                        <Col id="10">10</Col>
+                                                <Col id='geral'>
+                                                    <Row >
+                                                        <Col className="qNumber" id="1">1</Col>
+                                                        <Col className="qNumber" id="2">2</Col>                                                        
+                                                        <Col className="qNumber" id="3">3</Col>
+                                                        <Col className="qNumber" id="4">4</Col>
+                                                        <Col className="qNumber" id="5">5</Col>
+                                                    </Row>
+                                                    <Row >
+                                                        <Col className="qNumber" id="6">6</Col>
+                                                        <Col className="qNumber" id="7">7</Col>
+                                                        <Col className="qNumber" id="8">8</Col>
+                                                        <Col className="qNumber" id="9">9</Col>
+                                                        <Col className="qNumber" id="10">10</Col>
                                                     </Row>
                                                 </Col>
                                             </Col>
@@ -153,7 +155,7 @@ export default function Game() {
                                 <Container fluid>
                                     <Row >
                                         <Col>
-                                            <Row>
+                                            <Row >
                                                 <Button onClick={e => { check(e.target.value); }} value={answers[0]} key={answers[0]} className="Button" color="primary" >
                                                     {answers[0]}
                                                 </Button>

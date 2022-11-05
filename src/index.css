@@ -2,14 +2,22 @@
 
 body {
     background: #003846;
-    color: #67AADF;
+    color: #ffffff;
+    font-family: arial;
+    letter-spacing: 0.1em;
+    font-weight: 400
+
 } 
 
 body a{
-    color: #67AADF;
+    color: #ffffff;
     text-decoration: none;
 }
 body a:hover{
-    color: #478dc7;    
+    color: #ffffff;    
     text-decoration: none;
+}
+
+.endgame {
+    color: #000000;
 }

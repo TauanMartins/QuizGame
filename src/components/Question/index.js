@@ -1,14 +1,14 @@
-import React, { forwardRef, useContext, useEffect } from "react";
+import React, { forwardRef, useContext } from "react";
 import { Label } from "reactstrap";
 import api from "../../services/api";
-import { countries } from '../Countries';
-import { shuffleArray } from '../RandomInt&ShuffledArray';
-import { rawQuestions, rawParameters } from "../../components/RawQuestions&Parameters";
-import { getImagePlayer } from "../ImagePlayer";
-import { GlobalState } from "../../components/GlobalState";
+import { countries } from '../DataComponents/Countries';
+import { shuffleArray } from '../DataComponents/RandomInt&ShuffledArray';
+import { rawQuestions, rawParameters } from "../../components/DataComponents/RawQuestions&Parameters";
+import { getImagePlayer } from "../DataComponents/ImagePlayer";
+import { GlobalState } from "../DataComponents/GlobalState";
 
 function Question({nothing},ref) {
-    const { selectedPlayer, selectedPlayerIMG, answers, correctAnswer, players, question, questionAbout, setSelectedPlayer, setSelectedPlayerIMG, setPlayers, setQuestion, setQuestionAbout, setCorrectAnswer, setAnswers } = useContext(GlobalState);
+    const { selectedPlayer, selectedPlayerIMG, answers, correctAnswer, players, question, setSelectedPlayer, setSelectedPlayerIMG, setPlayers, setQuestion, setQuestionAbout, setCorrectAnswer, setAnswers } = useContext(GlobalState);
 
 
     var indexRandom = 1;
@@ -166,13 +166,6 @@ function Question({nothing},ref) {
         ...{ selectedPlayer: selectedPlayer, answers: answers, correctAnswer: correctAnswer, selectedPlayerIMG: selectedPlayerIMG }
     }
 
-    useEffect(() => {
-        // lixo que reclamam por n usar:
-        if (questionAbout === 'lixo') {
-            let lixo = (questionAbout, correctAnswer, answers)
-            console.log(lixo)
-        }
-    }, [question])
     return (
         <Label>
             <b>{question}</b>
