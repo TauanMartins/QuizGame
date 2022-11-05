@@ -1,5 +1,10 @@
-.Header{
-  background: #012a35;;
+.Header {
+  background: #012a35;
+}
+
+.Header h3 {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 35px;
 }
 
 
@@ -12,11 +17,11 @@
   }
 }
 
-@media (max-width:462px) {
+@media (max-width:640px) {
   .Header {
     text-align: center;
     width: 100%;
-    height: 3rem;
+    height: 6rem;
     border-bottom: none;
   }
 

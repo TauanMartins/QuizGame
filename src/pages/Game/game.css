@@ -1,4 +1,5 @@
 .Game {
+    color: #000;
     text-align: center;
     padding: 20px;
 }
@@ -21,7 +22,10 @@
 
 #geral {
     background-color: lightgray;
+    border: thin solid #012a35;
+    border-radius: 6px;
 }
 
-
-
+.qNumber {
+    border-radius: 12px;
+}

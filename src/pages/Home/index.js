@@ -15,7 +15,6 @@ export default function Home() {
 
                                     {"Jogar"}
                                     <br />
-                                    {"Nível difícil - Descubra sobre jogadores"}
                                 </Button>
                             </Link>
                         </Col>

@@ -18,7 +18,7 @@ function Endgame({ endgame }, ref) {
     }
     return (
         <>
-            <Modal style={{ minWidth: '40%', minHeight: '10%' }} isOpen={open} >
+            <Modal className="endgame" size='lg' style={{ minWidth: '40%', minHeight: '10%' }} isOpen={open} >
                 <Row>
                     <Col>
                         <ModalBody>
