@@ -3,7 +3,7 @@ import React, { forwardRef, useEffect, useMemo, useState } from "react";
 
 function Timer({ timeOut }, ref) {
     const seconds = 59;
-    var timer = '';
+    const [timer, setTimer] = useState(undefined)
     const [counter, setCounter] = useState(seconds)
 
     // delay to not bug the timer
@@ -13,7 +13,7 @@ function Timer({ timeOut }, ref) {
 
     ref.current = {
         stopTimer: function () {
-             clearTimeout(timer);
+            clearTimeout(timer);
 
         },
         restartTimer: async function () {
@@ -27,9 +27,9 @@ function Timer({ timeOut }, ref) {
     useEffect(() => {
         clearTimeout(timer);
         if (counter > 0) {
-            timer = setTimeout(() => {
+            setTimer(setTimeout(() => {
                 setCounter(counter - 1)
-            }, 1000)
+            }, 1000))
         }
         else if (counter === 0) {
             return timeOut();

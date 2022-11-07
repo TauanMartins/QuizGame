@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Row, Col, Card, Container } from "reactstrap";
 import './teste.css';
-import { supabase } from "../../services/api";
 import axios from "axios";
 
 export default function Sobre() {
@@ -17,6 +16,7 @@ export default function Sobre() {
                 });
             const json = await resp.data
             console.log(json)
+            setQuestion(json)
         }
         getQuestion()
     }, [])
@@ -29,7 +29,7 @@ export default function Sobre() {
                     <Row>
                         <Col>
                             <Card style={{ minHeight: '300px', color: 'black' }}>
-
+                                {question}
                             </Card>
                         </Col>
                     </Row>
