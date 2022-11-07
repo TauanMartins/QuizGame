@@ -1,41 +1,23 @@
 import React, { Fragment, useEffect, useState, useRef, useMemo, useContext } from "react";
-import { Row, Col, Card, CardTitle, CardText, Button, Label, Container } from "reactstrap";
+import { Row, Col, Card, CardTitle, Button, Container, CardBody } from "reactstrap";
 import './game.css';
 
 import Question from "../../components/Question";
 import { getRandomInt } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 import Timer from "../../components/Timer";
-import api from "../../services/api";
-import loading from "../../assets/loading.gif";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
+import axios from "axios";
 
 export default function Game() {
-
-
-    const { selectedPlayer, selectedPlayerIMG, answers, correctAnswer } = useContext(GlobalState)
+    const { currentQuestion, answers, correctAnswer, questions, pontos, setPontos } = useContext(GlobalState)
     const [questionNumber, setQuestionNumber] = useState(1);
-
-    const [score, setScore] = useState(0);
-
-    const totalPages = 811;
-    const currentPage = getRandomInt(1, totalPages)
 
     const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
     const EndgameRef = useRef(null);
 
-    async function getPlayers() {
-        const response = await api.get("api/players", {
-            params: {
-                page: currentPage
-            }
-        });
-        const json = await response.data.items;
-        QuestionRef.current.setList(json);
-
-    }
 
     function timeOut() {
         console.log("timeOut")
@@ -45,7 +27,7 @@ export default function Game() {
     function evaluator(value) {
         if (String(value) === String(correctAnswer)) {
             document.getElementById(questionNumber).style.backgroundColor = '#218838'
-            return setScore(scoreDisplay + 1)
+            return setPontos(scoreDisplay + 1)
         } else {
             document.getElementById(questionNumber).style.backgroundColor = '#c82333'
         }
@@ -53,9 +35,11 @@ export default function Game() {
 
     function check(value) {
         // confere se respondeu certo
-        evaluator(value)
+        if (value) {
+            evaluator(value)
+        }
         // if comparando se questão é igual a 10, se sim entra, se n entra no else
-        if (questionNumber === 10) {
+        if (questionNumber === 10 ||  Object.keys(questions).length===questionNumber) {
             CounterRef.current.stopTimer();
             return endgame()
         } else {
@@ -65,26 +49,39 @@ export default function Game() {
 
     function nextQuestion() {
         console.log("nextQuestion");
-        document.getElementById('img').src = loading; // muda p img de carregando
+        // document.getElementById('img').src = loading; // muda p img de carregando
         setQuestionNumber(questionNumberDisplay + 1); // seta questão +=1
-        QuestionRef.current.nextQuestion(); // diz para componente filho alterar questão
         CounterRef.current.restartTimer(); // restart timer
+        QuestionRef.current.nextQuestion(); // diz para componente filho alterar questão
     }
 
     function endgame() {
         console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
-        EndgameRef.current.endgame(scoreDisplay)
+        EndgameRef.current.endgame()
     }
+
     useEffect(() => {
         console.log("effect")
-
-        getPlayers()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const totalPages = process.env.REACT_APP_TOTALROWS;
+        const currentPage = getRandomInt(totalPages, totalPages);
+        async function getQuestion() {
+            const resp = await axios.get(process.env.REACT_APP_SUPABASEURL + process.env.REACT_APP_ALLQUESTIONS,
+                {
+                    headers: {
+                        apikey: process.env.REACT_APP_APIKEY,
+                        'Range': `${0 + '-' + currentPage}`
+                    }
+                });
+            const json = await resp.data
+            QuestionRef.current.setList(json);
+            console.log(json)
+        }
+        getQuestion()
     }, [])
 
     const questionNumberDisplay = useMemo(() => questionNumber, [questionNumber])
-    const scoreDisplay = useMemo(() => score, [score])
+    const scoreDisplay = useMemo(() => pontos, [pontos])
 
     return (
 
@@ -106,7 +103,7 @@ export default function Game() {
                                                 </Col>
                                                 <Col className="d-flex justify-content-center align-items-center middleText">
                                                     <Row>
-                                                        <b>Score: {score}</b>
+                                                        <b>Score: {scoreDisplay}</b>
                                                     </Row>
                                                 </Col>
                                                 <Col className="d-flex justify-content-center align-items-center">
@@ -135,23 +132,15 @@ export default function Game() {
                                             </Row>
                                         </Col>
                                     </CardTitle>
-                                    <CardText>
-                                        <Row>
-                                            <Col>
-                                                <Label>
-                                                    <b>Sobre o jogador {selectedPlayer === undefined ? '' : selectedPlayer.name} </b>
-                                                </Label>
-                                            </Col>
-                                        </Row>
-                                        <img className='img' id="img" alt={`Jogador ${selectedPlayer === undefined ? '' : selectedPlayer.name}`}
-                                            src={selectedPlayerIMG === undefined ? loading : selectedPlayerIMG} />
+                                    <CardBody>
                                         <Row>
                                             <Col>
                                                 <Question ref={QuestionRef} />
-                                                <br />
                                             </Col>
                                         </Row>
-                                    </CardText>
+                                        {currentQuestion.img === null || currentQuestion.img === undefined ? '' :
+                                            <img className='img' id="img" alt={`Foto de ${currentQuestion.img}`} src={currentQuestion.img} />}
+                                    </CardBody>
                                 </Card>
                             </Col>
                         </Row>

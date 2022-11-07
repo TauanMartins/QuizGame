@@ -4,25 +4,19 @@ export const GlobalState = createContext({});
 
 function GlobalStateProvider({ children }) {
 
-    const [selectedPlayer, setSelectedPlayer] = useState(undefined);
-    const [selectedPlayerIMG, setSelectedPlayerIMG] = useState(undefined);
-    const [players, setPlayers] = useState([{}]);
-
-    const [question, setQuestion] = useState(undefined);
-    const [questionAbout, setQuestionAbout] = useState(undefined);
-
+    const [currentQuestion, setCurrentQuestion] = useState({question: ''});
+    const [questions, setQuestions] = useState(undefined);
     const [correctAnswer, setCorrectAnswer] = useState(undefined);
     const [answers, setAnswers] = useState([]);
+    const [pontos, setPontos] = useState(0);
 
     return (
         <GlobalState.Provider value={{
-            selectedPlayer, setSelectedPlayer,
-            selectedPlayerIMG, setSelectedPlayerIMG,
-            players, setPlayers,
-            question, setQuestion,
-            questionAbout, setQuestionAbout,
+            currentQuestion, setCurrentQuestion,
+            questions, setQuestions,
             correctAnswer, setCorrectAnswer,
-            answers, setAnswers
+            answers, setAnswers,
+            pontos, setPontos
         }}>
             {children}
         </GlobalState.Provider>
