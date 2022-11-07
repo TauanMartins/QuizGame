@@ -11,7 +11,7 @@ import { GlobalState } from "../../components/DataComponents/GlobalState";
 import axios from "axios";
 
 export default function Game() {
-    const { currentQuestion, answers, correctAnswer, questions, pontos, setPontos } = useContext(GlobalState)
+    const { currentQuestion, answers, correctAnswer, questions, pontos, setPontos, setAnswers } = useContext(GlobalState)
     const [questionNumber, setQuestionNumber] = useState(1);
 
     const CounterRef = useRef(null);
@@ -34,6 +34,7 @@ export default function Game() {
     }
 
     function check(value) {
+        console.log("respostas: ",answers)
         // confere se respondeu certo
         if (value) {
             evaluator(value)
@@ -50,6 +51,7 @@ export default function Game() {
     function nextQuestion() {
         console.log("nextQuestion");
         // document.getElementById('img').src = loading; // muda p img de carregando
+        setAnswers([])
         setQuestionNumber(questionNumberDisplay + 1); // seta questão +=1
         CounterRef.current.restartTimer(); // restart timer
         QuestionRef.current.nextQuestion(); // diz para componente filho alterar questão
@@ -70,7 +72,7 @@ export default function Game() {
                 {
                     headers: {
                         apikey: process.env.REACT_APP_APIKEY,
-                        'Range': `${0 + '-' + currentPage}`
+                        'Range': `${0 + '-' + 100}`
                     }
                 });
             const json = await resp.data
