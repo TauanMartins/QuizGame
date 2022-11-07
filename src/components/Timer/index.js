@@ -34,6 +34,7 @@ function Timer({ timeOut }, ref) {
         else if (counter === 0) {
             return timeOut();
         }
+        // eslint-disable-next-line
     }, [counter])
 
     const counterDisplayer = useMemo(() => counter, [counter])
