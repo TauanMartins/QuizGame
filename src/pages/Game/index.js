@@ -44,10 +44,10 @@ export default function Game() {
 
     function evaluator(value) {
         if (String(value) === String(correctAnswer)) {
-            document.getElementById(questionNumber).style.backgroundColor = 'green'
+            document.getElementById(questionNumber).style.backgroundColor = '#218838'
             return setScore(scoreDisplay + 1)
         } else {
-            document.getElementById(questionNumber).style.backgroundColor = 'red'
+            document.getElementById(questionNumber).style.backgroundColor = '#c82333'
         }
     }
 
@@ -76,10 +76,11 @@ export default function Game() {
         // chama modal com score e única opção é voltando para tela principal
         EndgameRef.current.endgame(scoreDisplay)
     }
-
     useEffect(() => {
         console.log("effect")
+
         getPlayers()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const questionNumberDisplay = useMemo(() => questionNumber, [questionNumber])
@@ -96,39 +97,43 @@ export default function Game() {
                             <Col>
                                 <Card>
                                     <CardTitle>
-                                        <Row>
-                                            <Col>
-                                                <b>Questão {questionNumberDisplay}/10</b>
-                                            </Col>
-                                            <Col>
-                                                <Col>
+                                        <Col>
+                                            <Row>
+                                                <Col className="d-flex justify-content-center align-items-center" >
                                                     <Row>
-                                                        <Col>
-                                                            <b>Score: {score}</b>
-                                                        </Col>
+                                                        <b>Questão {questionNumberDisplay}/10</b>
                                                     </Row>
                                                 </Col>
-                                                <Col id='geral'>
-                                                    <Row >
-                                                        <Col className="qNumber" id="1">1</Col>
-                                                        <Col className="qNumber" id="2">2</Col>                                                        
-                                                        <Col className="qNumber" id="3">3</Col>
-                                                        <Col className="qNumber" id="4">4</Col>
-                                                        <Col className="qNumber" id="5">5</Col>
-                                                    </Row>
-                                                    <Row >
-                                                        <Col className="qNumber" id="6">6</Col>
-                                                        <Col className="qNumber" id="7">7</Col>
-                                                        <Col className="qNumber" id="8">8</Col>
-                                                        <Col className="qNumber" id="9">9</Col>
-                                                        <Col className="qNumber" id="10">10</Col>
+                                                <Col className="d-flex justify-content-center align-items-center middleText">
+                                                    <Row>
+                                                        <b>Score: {score}</b>
                                                     </Row>
                                                 </Col>
-                                            </Col>
-                                            <Col>
-                                                <Timer timeOut={timeOut} ref={CounterRef} />
-                                            </Col>
-                                        </Row>
+                                                <Col className="d-flex justify-content-center align-items-center">
+                                                    <Row>
+                                                        <Timer timeOut={timeOut} ref={CounterRef} />
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                            <Row className="AllQuestions" >
+                                                <Col className=" justify-content-center ">
+                                                    <Row >
+                                                        <Col className="qNumber" id="1"><b>1</b></Col>
+                                                        <Col className="qNumber" id="2"><b>2</b></Col>
+                                                        <Col className="qNumber" id="3"><b>3</b></Col>
+                                                        <Col className="qNumber" id="4"><b>4</b></Col>
+                                                        <Col className="qNumber" id="5"><b>5</b></Col>
+                                                    </Row>
+                                                    <Row >
+                                                        <Col className="qNumber" id="6"><b>6</b></Col>
+                                                        <Col className="qNumber" id="7"><b>7</b></Col>
+                                                        <Col className="qNumber" id="8"><b>8</b></Col>
+                                                        <Col className="qNumber" id="9"><b>9</b></Col>
+                                                        <Col className="qNumber" id="10"><b>10</b></Col>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                        </Col>
                                     </CardTitle>
                                     <CardText>
                                         <Row>
