@@ -20,12 +20,24 @@
 
 }
 
-#geral {
-    background-color: lightgray;
-    border: thin solid #012a35;
-    border-radius: 6px;
+@media (min-width:700px) {
+    .AllQuestions {
+        margin: auto;
+        width: 40%;
+    }
+}
+
+@media (max-width:350px) {
+    .middleText{
+        
+        top: 0;
+        border-left: thin solid #012a35;
+        border-right: thin solid #012a35;
+    }
 }
 
 .qNumber {
+    background-color: lightgray;
+    border: thin solid #012a35;
     border-radius: 12px;
 }

@@ -2,11 +2,20 @@
   background: #012a35;
 }
 
-.Header h3 {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 35px;
+.headerText {
+  width: auto;
+  align-content: center;
+  align-items: center;
 }
 
+
+@media (min-width:322px) {
+  .Header h3 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 35px;
+  }
+
+}
 
 @media screen {
   .Header {
@@ -17,12 +26,30 @@
   }
 }
 
-@media (max-width:640px) {
+@media (max-width:670px) {
   .Header {
     text-align: center;
     width: 100%;
     height: 6rem;
     border-bottom: none;
+  }
+
+}
+
+@media (max-width:322px) {
+  .Header label{
+    width: min-content;
+    font-size: 10px;
+  }
+  .Header{
+    text-align: center;
+    width: 100%;
+    height: 3rem;
+    border-bottom: thin solid #012a35;
+  }
+  .Header h3{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
   }
 
 }

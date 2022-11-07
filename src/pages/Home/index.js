@@ -12,9 +12,7 @@ export default function Home() {
                         <Col>
                             <Link to="/game" >
                                 <Button className="Button" size="lg" color="primary" >
-
                                     {"Jogar"}
-                                    <br />
                                 </Button>
                             </Link>
                         </Col>
