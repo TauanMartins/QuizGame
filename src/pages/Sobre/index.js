@@ -50,6 +50,7 @@ export default function Sobre() {
                             </Card>
                         </Col>
                     </Row>
+                    <br />
                 </Container>
             </div>
         </Fragment >
