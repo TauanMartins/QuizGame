@@ -40,9 +40,7 @@ function Timer({ timeOut }, ref) {
     const counterDisplayer = useMemo(() => counter, [counter])
 
     return (
-        <span>
             <b>Tempo:  0:{counterDisplayer < 10 ? '0' + counterDisplayer : counterDisplayer} segundos</b>
-        </span>
     )
 }
 
