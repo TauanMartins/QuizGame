@@ -3,7 +3,6 @@ import { Row, Col, Card, CardTitle, Button, Container, CardBody } from "reactstr
 import './game.css';
 
 import Question from "../../components/Question";
-import { getRandomInt } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
@@ -65,8 +64,8 @@ export default function Game() {
 
     useEffect(() => {
         console.log("effect")
-        const totalPages = process.env.REACT_APP_TOTALROWS;
-        const currentPage = getRandomInt(totalPages, totalPages);
+        //const totalPages = process.env.REACT_APP_TOTALROWS;
+        //const currentPage = getRandomInt(totalPages, totalPages);
         async function getQuestion() {
             const resp = await axios.get(process.env.REACT_APP_SUPABASEURL + process.env.REACT_APP_ALLQUESTIONS,
                 {
