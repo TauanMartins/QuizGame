@@ -5,7 +5,7 @@ import Game from './pages/Game';
 import Header from './components/Footer&Header/Header';
 import GlobalStateProvider from './components/DataComponents/GlobalState';
 import Sobre from './pages/Sobre';
-import SelectANDEdit from './pages/Select&Edit';
+import Edit from './pages/Edit';
 
 function RoutesApp() {
     return (
@@ -14,7 +14,7 @@ function RoutesApp() {
                 <Header />
                 <div className='Body'>
                     <Routes>
-                        <Route path="/select-and-edit" element={<SelectANDEdit />} />
+                        <Route path="/edit" element={<Edit />} />
                         <Route path="sobre" element={<Sobre />} />
                         <Route path="/" element={<Home />} />
                         <Route path="/game" element={<GlobalStateProvider><Game /></GlobalStateProvider>} />

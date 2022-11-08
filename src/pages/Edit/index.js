@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { Row, Col, Card, Container, Table, Input, Button } from "reactstrap";
-import './selectANDedit.css';
+import './edit.css';
 import axios from "axios";
 import Editar from "../../components/Editar";
 import Remover from "../../components/Remover";
 
-export default function Sobre() {
+export default function Edit() {
     const [questions, setQuestions] = useState(undefined);
     const [question, setQuestion] = useState(undefined);
     const [pathimg, setpathimg] = useState(undefined);
@@ -48,7 +48,7 @@ export default function Sobre() {
     return (
 
         <Fragment>
-            <div className="selectANDedit">
+            <div className="edit">
                 <Container fluid>
                     <br />
                     <Row>
