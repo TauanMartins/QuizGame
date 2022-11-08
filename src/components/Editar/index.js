@@ -51,19 +51,21 @@ function Editar({ Editar }, ref) {
 
     ref.current = {
         editar: function (currentQuestion) {
-            let question = [JSON.parse(currentQuestion)]
-            setOpen(true)
-            setEditQuestion(question)
-            question.map(item => {
-                setItem(item.id);
-                setQuestion(item.question);
-                setpathimg(item.img);
-                setDifficulty(item.difficulty);
-                setanswerRight(item.rightAnswer);
-                setDistractionAnswer1(item.distractionAnswer1);
-                setDistractionAnswer2(item.distractionAnswer2);
-                setDistractionAnswer3(item.distractionAnswer3);
-            })
+            if (Object.keys(currentQuestion).length >= 1) {
+                let question = [JSON.parse(currentQuestion)]
+                setOpen(true)
+                setEditQuestion(question)
+                question.map(item => {
+                    setItem(item.id);
+                    setQuestion(item.question);
+                    setpathimg(item.img);
+                    setDifficulty(item.difficulty);
+                    setanswerRight(item.rightAnswer);
+                    setDistractionAnswer1(item.distractionAnswer1);
+                    setDistractionAnswer2(item.distractionAnswer2);
+                    setDistractionAnswer3(item.distractionAnswer3);
+                })
+            }
         },
         ...{ open: open }
     }
