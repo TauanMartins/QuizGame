@@ -64,6 +64,7 @@ function Editar({ Editar }, ref) {
                     setDistractionAnswer1(item.distractionAnswer1);
                     setDistractionAnswer2(item.distractionAnswer2);
                     setDistractionAnswer3(item.distractionAnswer3);
+                    return true;
                 })
             }
         },
