@@ -17,12 +17,11 @@ function NameComp({ a }, ref) {
     }
 
     return (
-
         <Fragment>
             <Container fluid>
-                <Modal centered isOpen={abrir} style={{ color: 'black' }} className="contained-modal-title-vcenter" >
+                <Modal centered isOpen={abrir} style={{ color: 'black' }} >
                     <ModalHeader toggle={handleTooltip}>
-                        <h4>Digite seu nome para fazer parte do HighScore no final</h4>
+                        Digite seu nome para fazer parte do HighScore no final
                     </ModalHeader>
                     <ModalBody >
                         <Col>
