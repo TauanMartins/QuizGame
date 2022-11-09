@@ -6,7 +6,7 @@ import { GlobalState } from "../../components/DataComponents/GlobalState";
 function NameComp({ a }, ref) {
     const [abrir, setAbrir] = useState(false);
     const { setName, setPontos } = useContext(GlobalState)
-
+    
     function handleTooltip() {
         setAbrir(!abrir);
     }
