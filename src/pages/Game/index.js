@@ -113,7 +113,7 @@ export default function Game() {
         console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
         insertScore({name: name, score: scoreDisplay})
-        setTimeout(EndgameRef.current.endgame(), 5000)
+        setTimeout(()=>EndgameRef.current.endgame(), 500)
     }
 
     useEffect(() => {

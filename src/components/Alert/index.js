@@ -6,7 +6,7 @@ function AlertComp({a}, ref) {
     const [mensagem, setMensagem] = useState('Erro!');
     function handleTooltip() {
         setAlert(!alert);
-        setTimeout(window.location.reload(), 1000)
+        window.location.reload()
     }
 
     ref.current = {
