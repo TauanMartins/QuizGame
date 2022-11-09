@@ -13,7 +13,6 @@ function Endgame({ endgame }, ref) {
     }
     ref.current = {
         endgame: function () {
-            
             setOpen(true)
         },
         ...{ open: open }
