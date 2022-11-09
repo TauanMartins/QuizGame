@@ -25,7 +25,7 @@ export default function Game() {
 
     function generateQuestion(cond) {
         if (cond === 1) {
-            selectAllQtdEASY().then(response => {
+            return selectAllQtdEASY().then(response => {
                 var totalRows = response.count;
                 var totalPages = Math.floor(totalRows / 5);
                 var currentPage = getRandomInt(0, totalPages - 1);
@@ -40,7 +40,7 @@ export default function Game() {
             })
         }
         if (cond === 2) {
-            selectAllQtdMEDIUM().then(response => {
+            return selectAllQtdMEDIUM().then(response => {
                 var totalRows = response.count;
                 var totalPages = Math.floor(totalRows / 3);
                 var currentPage = getRandomInt(0, totalPages - 1);
@@ -55,7 +55,7 @@ export default function Game() {
             })
         }
         if (cond === 3) {
-            selectAllQtdHARD().then(response => {
+            return selectAllQtdHARD().then(response => {
                 var totalRows = response.count;
                 var totalPages = Math.floor(totalRows / 2);
                 var currentPage = getRandomInt(0, totalPages - 1);
