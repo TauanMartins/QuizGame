@@ -6,7 +6,7 @@ function Question({ nothing }, ref) {
     const { questions, setQuestions, currentQuestion, setCurrentQuestion, setAnswers, setCorrectAnswer } = useContext(GlobalState);
 
     function generateQuestion(question) {
-        console.log(question)
+        //console.log(question)
 
         setCorrectAnswer(question.rightAnswer)
         if ((question.distractionAnswer2 === undefined || question.distractionAnswer2 === null || question.distractionAnswer2 === '') &&

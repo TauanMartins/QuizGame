@@ -1,6 +1,7 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useRef } from "react";
 import { Label, Modal, ModalBody, Row, Col, Button, Input } from "reactstrap";
-import axios from "axios";
+import Alert from "../Alert";
+import { update } from "../../components/DataComponents/BD";
 
 function Editar({ Editar }, ref) {
 
@@ -8,12 +9,17 @@ function Editar({ Editar }, ref) {
     const [editQuestion, setEditQuestion] = useState(undefined);
     const [item, setItem] = useState(undefined)
     const [question, setQuestion] = useState(undefined);
-    const [pathimg, setpathimg] = useState(undefined);
+    const [imgPath, setPathImg] = useState(undefined);
+    const [imgAlt, setAltImg] = useState(undefined);
     const [difficulty, setDifficulty] = useState(undefined);
-    const [answerRight, setanswerRight] = useState(undefined);
+    const [answerRight, setAnswerRight] = useState(undefined);
     const [distractionAnswer1, setDistractionAnswer1] = useState(undefined);
     const [distractionAnswer2, setDistractionAnswer2] = useState(undefined);
     const [distractionAnswer3, setDistractionAnswer3] = useState(undefined);
+
+    const [required, setRequired] = useState(false);
+
+    const AlertRef = useRef(null);
 
     function handleTooltip() {
         setOpen(!open);
@@ -21,32 +27,28 @@ function Editar({ Editar }, ref) {
 
     async function editar() {
 
-        // abaixo p postar uma pergunta
-        // const resp = await axios.patch(process.env.REACT_APP_SUPABASEURL + process.env.REACT_APP_EDITQUESTION + item,
-        //     {
-        //         question: question, img: pathimg, difficulty: difficulty, rightAnswer: answerRight, distractionAnswer1: distractionAnswer1, distractionAnswer2: distractionAnswer2, distractionAnswer3: distractionAnswer3
-        //     },
-        //     {
-        //         headers: {
-        //             apikey: process.env.REACT_APP_APIKEY,
-        //             'Content-Type': 'application/json',
-        //             'Prefer': 'return=representation'
-        //         }
-        //     });
-        // console.log(resp)
-        await axios.patch(process.env.REACT_APP_SUPABASEURL + process.env.REACT_APP_EDITQUESTION + item,
-            {
-                question: question, img: pathimg, difficulty: difficulty, rightAnswer: answerRight, distractionAnswer1: distractionAnswer1, distractionAnswer2: distractionAnswer2, distractionAnswer3: distractionAnswer3
-            },
-            {
-                headers: {
-                    apikey: process.env.REACT_APP_APIKEY,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=representation'
-                }
-            }).then(function (response) { return alert("Editado!") }).catch(function (error) { return alert("Erro!") })
-        setTimeout(setOpen(false), 3000)
-        window.location.reload();
+        if (question === undefined || question === '' ||
+            difficulty === undefined || difficulty === '' ||
+            answerRight === undefined || answerRight === '' ||
+            distractionAnswer1 === undefined || distractionAnswer1 === '') {
+            return setRequired(true)
+        }
+        update(item,{
+            question: question,
+            img: imgPath,
+            imgAlt: imgAlt,
+            difficulty: difficulty,
+            rightAnswer: answerRight,
+            distractionAnswer1: distractionAnswer1,
+            distractionAnswer2: distractionAnswer2,
+            distractionAnswer3: distractionAnswer3
+        }).then(response => {
+            if (response.error===null) {
+                return AlertRef.current.change('Editado')
+            } else {
+                return AlertRef.current.change()
+            }
+        })
     }
 
     ref.current = {
@@ -58,12 +60,13 @@ function Editar({ Editar }, ref) {
                 question.map(item => {
                     setItem(item.id);
                     setQuestion(item.question);
-                    setpathimg(item.img);
+                    setPathImg(item.img === null ? undefined : item.img);
+                    setAltImg(item.imgAlt === null ? undefined : item.imgAlt)
                     setDifficulty(item.difficulty);
-                    setanswerRight(item.rightAnswer);
+                    setAnswerRight(item.rightAnswer);
                     setDistractionAnswer1(item.distractionAnswer1);
-                    setDistractionAnswer2(item.distractionAnswer2);
-                    setDistractionAnswer3(item.distractionAnswer3);
+                    setDistractionAnswer2(item.distractionAnswer2 === null ? undefined : item.distractionAnswer2);
+                    setDistractionAnswer3(item.distractionAnswer3 === null ? undefined : item.distractionAnswer3);
                     return true;
                 })
             }
@@ -73,6 +76,7 @@ function Editar({ Editar }, ref) {
     return (
         <>
             <Modal className="Editar" size='lg' style={{ minWidth: '40%', minHeight: '10%', color: 'black' }} isOpen={open} >
+                <Alert ref={AlertRef} />
                 <Row>
                     <Col>
                         <ModalBody>
@@ -99,48 +103,53 @@ function Editar({ Editar }, ref) {
                                         {
                                             editQuestion === undefined ? '' :
                                                 editQuestion.map(item => {
-                                                    return (<>
-                                                        <Label>Questão número {item.id}</Label>
-                                                        <br />
-                                                        <Label>Questão:</Label>
-                                                        <Input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} />
-                                                        <br />
-                                                        <Label>Caminho da imagem:</Label>
-                                                        <Input type="text" value={pathimg} onChange={(e) => setpathimg(e.target.value)} />
-                                                        <br />
-                                                        <Label>Dificuldade:</Label>
-                                                        <Input type="select" onChange={(e) => setDifficulty(e.target.value)}>
-                                                            <option key={difficulty} value={difficulty}>{difficulty === 'E' ? 'Fácil' : difficulty === 'M' ? 'Médio' : 'Difícil'}</option>
-                                                            {difficulty === 'E' ?
-                                                                <>
-                                                                    <option key='M' value="M">Médio</option>
-                                                                    <option key='D' value="D">Difícil</option>
-                                                                </>
-                                                                : difficulty === 'M' ?
-                                                                    <>
-                                                                        <option key='E' value="E">Fácil</option>
-                                                                        <option key='D' value="D">Difícil</option>
-                                                                    </>
-                                                                    :
+                                                    return (
+                                                        <div key={item.id}>
+                                                            <Label>ID</Label>
+                                                            <Input type="text" value={item.id} disabled />
+                                                            <br />
+                                                            <Label>Questão:</Label>
+                                                            <Input invalid={required} type="text" value={question} onChange={(e) => setQuestion(e.target.value)} />
+                                                            <br />
+                                                            <Label>Caminho da imagem:</Label>
+                                                            <Input type="text" value={imgPath} onChange={(e) => setPathImg(e.target.value)} />
+                                                            <br />
+                                                            <Label>Descrição da imagem:</Label>
+                                                            <Input type="text" value={imgAlt} onChange={(e) => setAltImg(e.target.value)} />
+                                                            <br />
+                                                            <Label>Dificuldade:</Label>
+                                                            <Input invalid={required} type="select" onChange={(e) => setDifficulty(e.target.value)}>
+                                                                <option key={difficulty} value={difficulty}>{difficulty === 'E' ? 'Fácil' : difficulty === 'M' ? 'Médio' : 'Difícil'}</option>
+                                                                {difficulty === 'E' ?
                                                                     <>
                                                                         <option key='M' value="M">Médio</option>
-                                                                        <option key='E' value="E">Fácil</option>
+                                                                        <option key='H' value="H">Difícil</option>
                                                                     </>
-                                                            }
-                                                        </Input>
-                                                        <br />
-                                                        <Label>Resposta Correta:</Label>
-                                                        <Input type="text" value={answerRight} onChange={(e) => setanswerRight(e.target.value)} />
-                                                        <br />
-                                                        <Label>Distrator 1:</Label>
-                                                        <Input type="text" value={distractionAnswer1} onChange={(e) => setDistractionAnswer1(e.target.value)} />
-                                                        <br />
-                                                        <Label>Distrator 2:</Label>
-                                                        <Input type="text" value={distractionAnswer2} onChange={(e) => setDistractionAnswer2(e.target.value)} />
-                                                        <br />
-                                                        <Label>Distrator 3:</Label>
-                                                        <Input type="text" value={distractionAnswer3} onChange={(e) => setDistractionAnswer3(e.target.value)} />
-                                                    </>
+                                                                    : difficulty === 'M' ?
+                                                                        <>
+                                                                            <option key='E' value="E">Fácil</option>
+                                                                            <option key='H' value="H">Difícil</option>
+                                                                        </>
+                                                                        :
+                                                                        <>
+                                                                            <option key='M' value="M">Médio</option>
+                                                                            <option key='E' value="E">Fácil</option>
+                                                                        </>
+                                                                }
+                                                            </Input>
+                                                            <br />
+                                                            <Label>Resposta Correta:</Label>
+                                                            <Input invalid={required} type="text" value={answerRight} onChange={(e) => setAnswerRight(e.target.value)} />
+                                                            <br />
+                                                            <Label>Distrator 1:</Label>
+                                                            <Input invalid={required} type="text" value={distractionAnswer1} onChange={(e) => setDistractionAnswer1(e.target.value)} />
+                                                            <br />
+                                                            <Label>Distrator 2:</Label>
+                                                            <Input type="text" value={distractionAnswer2} onChange={(e) => setDistractionAnswer2(e.target.value)} />
+                                                            <br />
+                                                            <Label>Distrator 3:</Label>
+                                                            <Input type="text" value={distractionAnswer3} onChange={(e) => setDistractionAnswer3(e.target.value)} />
+                                                        </div>
                                                     );
                                                 })}
 

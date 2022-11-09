@@ -9,14 +9,15 @@ function GlobalStateProvider({ children }) {
     const [correctAnswer, setCorrectAnswer] = useState(undefined);
     const [answers, setAnswers] = useState([]);
     const [pontos, setPontos] = useState(0);
-
+    const [name, setName] = useState('Unknown')
     return (
         <GlobalState.Provider value={{
             currentQuestion, setCurrentQuestion,
             questions, setQuestions,
             correctAnswer, setCorrectAnswer,
             answers, setAnswers,
-            pontos, setPontos
+            pontos, setPontos,
+            name, setName
         }}>
             {children}
         </GlobalState.Provider>
