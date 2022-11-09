@@ -2,6 +2,7 @@ import React, { forwardRef, useContext, useState } from "react";
 import {Modal, ModalBody, Row, Col, Button, Container } from "reactstrap";
 import { GlobalState } from "../DataComponents/GlobalState";
 import { Link } from "react-router-dom";
+import Score from "../Score";
 
 function Endgame({ endgame }, ref) {
 
@@ -12,6 +13,7 @@ function Endgame({ endgame }, ref) {
     }
     ref.current = {
         endgame: function () {
+            
             setOpen(true)
         },
         ...{ open: open }
@@ -50,6 +52,13 @@ function Endgame({ endgame }, ref) {
                                                             pontos >= 0 ? 'Sinto muito!' : ''
                                             }
                                         </b>
+                                        <br />
+                                        Confira se você está entre os melhores na tabela abaixo:
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col style={{ textAlign: "center" }}>
+                                        <Score/>
                                     </Col>
                                 </Row>
                                 <br />

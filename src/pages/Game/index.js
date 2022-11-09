@@ -7,20 +7,68 @@ import Question from "../../components/Question";
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import axios from "axios";
+import { insertScore, selectAllPaginationEASY, selectAllPaginationHARD, selectAllPaginationMEDIUM, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { getRandomInt } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 export default function Game() {
-    const { currentQuestion, answers, correctAnswer, questions, pontos, setPontos, setAnswers } = useContext(GlobalState)
+    const { currentQuestion, answers, correctAnswer, pontos, setPontos, setAnswers, name } = useContext(GlobalState)
     const [questionNumber, setQuestionNumber] = useState(1);
 
     const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
     const EndgameRef = useRef(null);
 
-
     function timeOut() {
         console.log("timeOut")
         return check(0);
+    }
+
+    function generateQuestion(cond) {
+        if (cond === 1) {
+            selectAllQtdEASY().then(response => {
+                var totalRows = response.count;
+                var totalPages = Math.floor(totalRows / 5);
+                var currentPage = getRandomInt(0, totalPages - 1);
+                var intervaloMin = currentPage * 5;
+                var intervaloMax = intervaloMin + 4;
+                selectAllPaginationEASY(intervaloMin, intervaloMax).then(response => {
+                    //console.log(response.data)
+                    if (response.error === null) {
+                        return QuestionRef.current.setList(response.data)
+                    }
+                })
+            })
+        }
+        if (cond === 2) {
+            selectAllQtdMEDIUM().then(response => {
+                var totalRows = response.count;
+                var totalPages = Math.floor(totalRows / 3);
+                var currentPage = getRandomInt(0, totalPages - 1);
+                var intervaloMin = currentPage * 3;
+                var intervaloMax = intervaloMin + 2;
+                selectAllPaginationMEDIUM(intervaloMin, intervaloMax).then(response => {
+                    //console.log(response.data)
+                    if (response.error === null) {
+                        return QuestionRef.current.setList(response.data)
+                    }
+                })
+            })
+        }
+        if (cond === 3) {
+            selectAllQtdHARD().then(response => {
+                var totalRows = response.count;
+                var totalPages = Math.floor(totalRows / 2);
+                var currentPage = getRandomInt(0, totalPages - 1);
+                var intervaloMin = currentPage * 2;
+                var intervaloMax = intervaloMin + 1;
+                selectAllPaginationHARD(intervaloMin, intervaloMax).then(response => {
+                    //console.log(response.data)
+                    if (response.error === null) {
+                        return QuestionRef.current.setList(response.data)
+                    }
+                })
+            })
+        }
     }
 
     function evaluator(value) {
@@ -33,13 +81,18 @@ export default function Game() {
     }
 
     function check(value) {
-        console.log("respostas: ",answers)
+        console.log("respostas: ", answers)
         // confere se respondeu certo
         if (value) {
             evaluator(value)
         }
-        // if comparando se questão é igual a 10, se sim entra, se n entra no else
-        if (questionNumber === 10 ||  Object.keys(questions).length===questionNumber) {
+        if (questionNumberDisplay === 5) {
+            generateQuestion(2)
+        }
+        if (questionNumberDisplay === 8) {
+            generateQuestion(3)
+        }
+        if (questionNumberDisplay === 10) {
             CounterRef.current.stopTimer();
             return endgame()
         } else {
@@ -59,36 +112,41 @@ export default function Game() {
     function endgame() {
         console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
+        insertScore({name: name, score: pontos})
         EndgameRef.current.endgame()
     }
 
     useEffect(() => {
         console.log("effect")
-        //const totalPages = process.env.REACT_APP_TOTALROWS;
-        //const currentPage = getRandomInt(totalPages, totalPages);
-        async function getQuestion() {
-            const resp = await axios.get(process.env.REACT_APP_SUPABASEURL + process.env.REACT_APP_ALLQUESTIONS,
-                {
-                    headers: {
-                        apikey: process.env.REACT_APP_APIKEY,
-                        'Range': `${0 + '-' + 100}`
-                    }
-                });
-            const json = await resp.data
-            QuestionRef.current.setList(json);
-            console.log(json)
-        }
-        getQuestion()
+        // select abaixo bom para fazer o segundo modo de jogo infinito
+        // selectAllQtd().then(response => {
+        //     var totalRows = response.count;
+        //     var totalPages = Math.floor(totalRows / 10);
+        //     var currentPage = getRandomInt(0, totalPages - 1);
+        //     var intervaloMin = currentPage * 10;
+        //     var intervaloMax = intervaloMin + 9;
+        //     console.log(totalPages)
+        //     console.log(totalRows, intervaloMin, intervaloMax, currentPage)
+        //     selectAllPaginationHARD().then(response => {
+        //         console.log(response);
+        //     })
+        // })
+        // selectAllPagination(intervaloMin, intervaloMax).then(response => {
+        //     console.log(response)
+        //     if (response.error === null) {
+        //         console.log('entrou')
+        //         return QuestionRef.current.setList(response.data)
+        //     }
+        // })
+        generateQuestion(1)
     }, [])
 
     const questionNumberDisplay = useMemo(() => questionNumber, [questionNumber])
     const scoreDisplay = useMemo(() => pontos, [pontos])
 
     return (
-
         <Fragment>
             <div className="Game">
-
                 <Row>
                     <Col>
                         <Row>
@@ -140,7 +198,7 @@ export default function Game() {
                                             </Col>
                                         </Row>
                                         {currentQuestion.img === null || currentQuestion.img === undefined ? '' :
-                                            <img className='img' id="img" alt={`Foto de ${currentQuestion.img}`} src={currentQuestion.img} />}
+                                            <img className='img' id="img" alt={`${currentQuestion.imgAlt}`} src={currentQuestion.img} />}
                                     </CardBody>
                                 </Card>
                             </Col>

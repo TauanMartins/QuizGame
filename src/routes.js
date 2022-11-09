@@ -16,7 +16,7 @@ function RoutesApp() {
                     <Routes>
                         <Route path="/edit" element={<Edit />} />
                         <Route path="sobre" element={<Sobre />} />
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={<GlobalStateProvider><Home /></GlobalStateProvider>} />
                         <Route path="/game" element={<GlobalStateProvider><Game /></GlobalStateProvider>} />
                     </Routes>
                 </div>
