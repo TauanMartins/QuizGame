@@ -6,7 +6,7 @@ import { GlobalState } from "../../components/DataComponents/GlobalState";
 function NameComp({ a }, ref) {
     const [abrir, setAbrir] = useState(false);
     const { setName, setPontos } = useContext(GlobalState)
-    
+
     function handleTooltip() {
         setAbrir(!abrir);
     }
@@ -28,10 +28,10 @@ function NameComp({ a }, ref) {
                             <Label style={{ textAlign: 'left' }}>Nome:</Label>
                         </Col>
                         <Col style={{ textAlign: 'center' }}>
-                            <Input placeholder='João' onChange={e => setName(e.target.value)} />
+                            <Input placeholder='João' onChange={e => { if (e === '') { return true } else { return setName(e.target.value) } }} />
                             <br />
                             <Link to="/game" >
-                                <Button onClick={e=> setPontos(0)} className="Button" size="lg" color="primary" >
+                                <Button onClick={e => setPontos(0)} className="Button" size="lg" color="primary" >
                                     {"Jogar"}
                                 </Button>
                             </Link>
