@@ -19,7 +19,7 @@ export default function Game() {
 
     function timeOut() {
         console.log("timeOut")
-        return check(0);
+        return check('timeOut');
     }
 
     function generateQuestion(cond) {
