@@ -8,7 +8,7 @@ import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
 import { insertScore, selectAllPaginationEASY, selectAllPaginationHARD, selectAllPaginationMEDIUM, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
-import { getRandomInt } from "../../components/DataComponents/RandomInt&ShuffledArray";
+import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 export default function Game() {
     const { currentQuestion, answers, correctAnswer, pontos, setPontos, setAnswers, name } = useContext(GlobalState)
@@ -33,7 +33,7 @@ export default function Game() {
                 selectAllPaginationEASY(intervaloMin, intervaloMax).then(response => {
                     //console.log(response.data)
                     if (response.error === null) {
-                        return QuestionRef.current.setList(response.data)
+                        return QuestionRef.current.setList(shuffleArray(response.data))
                     }
                 })
             })
@@ -48,7 +48,7 @@ export default function Game() {
                 selectAllPaginationMEDIUM(intervaloMin, intervaloMax).then(response => {
                     //console.log(response.data)
                     if (response.error === null) {
-                        return QuestionRef.current.setList(response.data)
+                        return QuestionRef.current.setList(shuffleArray(response.data))
                     }
                 })
             })
@@ -63,7 +63,7 @@ export default function Game() {
                 selectAllPaginationHARD(intervaloMin, intervaloMax).then(response => {
                     //console.log(response.data)
                     if (response.error === null) {
-                        return QuestionRef.current.setList(response.data)
+                        return QuestionRef.current.setList(shuffleArray(response.data))
                     }
                 })
             })
