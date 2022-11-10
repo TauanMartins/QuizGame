@@ -19,7 +19,6 @@ function Timer({ timeOut }, ref) {
     }
 
     useEffect(() => {
-        console.log(counter, Math.floor(counter));
         if (Math.floor(counter) === 0) {
             return timeOut();
         }
