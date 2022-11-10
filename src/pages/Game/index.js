@@ -13,7 +13,6 @@ import { getRandomInt } from "../../components/DataComponents/RandomInt&Shuffled
 export default function Game() {
     const { currentQuestion, answers, correctAnswer, pontos, setPontos, setAnswers, name } = useContext(GlobalState)
     const [questionNumber, setQuestionNumber] = useState(1);
-
     const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
     const EndgameRef = useRef(null);
@@ -74,17 +73,20 @@ export default function Game() {
     function evaluator(value) {
         if (String(value) === String(correctAnswer)) {
             document.getElementById(questionNumber).style.backgroundColor = '#218838'
-            return setPontos(scoreDisplay + 1)
+            let points = scoreDisplay + 1
+            setPontos(points)
+            return points;
         } else {
-            document.getElementById(questionNumber).style.backgroundColor = '#c82333'
+            document.getElementById(questionNumber).style.backgroundColor = '#c82333';
         }
     }
 
     function check(value) {
         console.log("respostas: ", answers)
         // confere se respondeu certo
+        var point = 0
         if (value) {
-            evaluator(value)
+            point = evaluator(value)
         }
         if (questionNumberDisplay === 5) {
             generateQuestion(2)
@@ -94,7 +96,7 @@ export default function Game() {
         }
         if (questionNumberDisplay === 10) {
             CounterRef.current.stopTimer();
-            return endgame()
+            return endgame(point)
         } else {
             return nextQuestion();
         }
@@ -109,11 +111,11 @@ export default function Game() {
         QuestionRef.current.nextQuestion(); // diz para componente filho alterar questão
     }
 
-    function endgame() {
+    function endgame(point) {
         console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
-        insertScore({name: name, score: pontos})
-        setTimeout(()=>EndgameRef.current.endgame(), 500)
+        insertScore({ name: name, score: point })
+        setTimeout(() => EndgameRef.current.endgame(), 500)
     }
 
     useEffect(() => {
