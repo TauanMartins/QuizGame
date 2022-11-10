@@ -78,6 +78,7 @@ export default function Game() {
             return points;
         } else {
             document.getElementById(questionNumber).style.backgroundColor = '#c82333';
+            return scoreDisplay;
         }
     }
 
