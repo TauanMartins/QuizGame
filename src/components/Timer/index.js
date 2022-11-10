@@ -6,25 +6,28 @@ function Timer({ timeOut }, ref) {
     const seconds = 59.01;
     const [timer, setTimer] = useState(undefined)
     const [counter, setCounter] = useState(seconds)
-    var ms = parseFloat(`0.${getRandomInt(0,1000)}`)
+    var ms = parseFloat(`0.${getRandomInt(0, 1000)}`)
     ref.current = {
         stopTimer: function () {
             clearTimeout(timer);
         },
         restartTimer: async function () {
             clearTimeout(timer);
-            setCounter(seconds+ms)
+            setCounter(seconds + ms)
         },
         ...{ counter: counter }
     }
 
     useEffect(() => {
-        if (counter > 0) {
-            setTimer(setTimeout(()=>{return setCounter(counter - 1)}, 1000))
-        }
-        else if (counter === 0) {
+        console.log(counter, Math.floor(counter));
+        if (Math.floor(counter) === 0) {
             return timeOut();
         }
+        else if (Math.floor(counter) > 0) {
+            setTimer(setTimeout(() => { return setCounter(counter - 1) }, 1000))
+        }
+
+
         // eslint-disable-next-line
     }, [counter])
 
