@@ -7,7 +7,7 @@ import Score from "../Score";
 function Endgame({ endgame, visible }, ref) {
 
     const [open, setOpen] = useState(false);
-    const { pontos, setName } = useContext(GlobalState);
+    const { pontos, setName, name } = useContext(GlobalState);
     function handleTooltip() {
         setName('Unknown')
         setOpen(!open);
@@ -19,81 +19,78 @@ function Endgame({ endgame, visible }, ref) {
         ...{ open: open }
     }
     return (
-        <Container>
-            <Modal className="endgame" size='lg' style={{ minWidth: '40%', minHeight: '10%' }} isOpen={open} >
-                <Row>
-                    <Col>
-                        <ModalBody>
-                            <Col>
-                                {visible ?
-                                    <>
-                                        <Row >
-                                            <Col style={{ textAlign: "center" }}>
-                                                <h4>
-                                                    <b>
-                                                        ScoreBoard
-                                                    </b>
-                                                </h4>
-                                            </Col>
-                                        </Row>
-                                        <br />
-                                    </>
-                                    :
-                                    <>
-                                        <Row >
-                                            <Col style={{ textAlign: "center" }}>
-
-                                            </Col>
-                                        </Row>
-                                        <Row >
-                                            <Col style={{ textAlign: "center" }}>
-                                                <h4>
-                                                    <b>
-                                                        Muito bom! Você concluiu o jogo!
-                                                    </b>
-                                                </h4>
-                                            </Col>
-                                        </Row>
-                                        <br />
-                                        <Row>
-                                            <Col style={{ textAlign: "center" }}>
-                                                Seu score total foi de <b>{pontos}</b> {pontos === 1 ? 'ponto' : 'pontos'}.
-                                                <br />
-                                                <b>
-                                                    {
-                                                        pontos >= 9 ? 'Parabéns, você sabe muito!' :
-                                                            pontos >= 7 ? 'Ok, você sabe mais ou menos.' :
-                                                                pontos >= 3 ? 'Vish, por pouco você não é um burro' :
-                                                                    pontos >= 0 ? 'Sinto muito!' : ''
-                                                    }
-                                                </b>
-                                                <br />
-                                                Confira se você está entre os melhores na tabela abaixo:
-                                            </Col>
-                                        </Row>
-                                    </>}
-                                <Row>
-                                    <Col style={{ textAlign: "center" }}>
-                                        <Score />
-                                    </Col>
+        <Container fluid>
+            <Modal className="endgame" size='lg' style={{ minWidth: '50%', minHeight: '10%' }} isOpen={open} >
+                <ModalBody>
+                    {visible ?
+                        <>
+                            <Col >
+                                <Row className="d-flex justify-content-center align-items-center">
+                                    <h4>
+                                        <b>
+                                            ScoreBoard
+                                        </b>
+                                    </h4>
                                 </Row>
-                                <br />
-                                <Row>
-                                    <Col style={{ textAlign: 'center' }}>
-                                        <Link to="/" >
-                                            <Button size="lg" color="primary" onClick={handleTooltip} >
-
-                                                Sair
-
-                                            </Button>
-                                        </Link>
-                                    </Col>
-                                </Row>
-                                <br />
                             </Col>
-                        </ModalBody>
+                            <br />
+                        </>
+                        :
+                        <Col>
+                            <Row className="d-flex justify-content-center align-items-center">
+                                <h4 >
+                                    <b>
+                                        Muito bom, {`${name}`}!
+                                    </b>
+                                    <br />
+                                    <b>
+                                        Você concluiu o jogo!
+                                    </b>
+                                </h4>
+                            </Row>
+                            <Row >
+                                <Col>
+                                    <Row className="d-flex justify-content-center align-items-center">
+                                        Seu score total foi de <b>{pontos}</b> {pontos === 1 ? 'ponto' : 'pontos'}.
+                                    </Row>
+
+
+                                    <Row className="d-flex justify-content-center align-items-center">
+                                        <b>
+                                            {
+                                                pontos >= 9 ? 'Parabéns, você sabe muito!' :
+                                                    pontos >= 7 ? 'Ok, você sabe mais ou menos.' :
+                                                        pontos >= 3 ? 'Vish, por pouco você não é um burro' :
+                                                            pontos >= 0 ? 'Sinto muito!' : ''
+                                            }
+                                        </b>
+                                    </Row>
+                                    <Row className="d-flex justify-content-center align-items-center">
+                                        Confira sua posição e score abaixo:
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </Col>
+                    }
+                    <Col>
+                        <Row className="justify-content-center">
+                            <Score />
+                        </Row>
                     </Col>
-                </Row>
+                    <br />
+                    <Col >
+                        <Row className="d-flex justify-content-center align-items-center">
+                            <Link to="/" >
+                                <Button size="lg" color="primary" onClick={handleTooltip} >
+
+                                    Sair
+
+                                </Button>
+                            </Link>
+                        </Row>
+                    </Col>
+                    <br />
+                </ModalBody>
             </Modal>
         </Container>
     )
