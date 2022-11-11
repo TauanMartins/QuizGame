@@ -2,6 +2,22 @@ import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(process.env.REACT_APP_SUPABASEURL, process.env.REACT_APP_APIKEY);
 
+
+export async function uploadImage(name, img) {
+    const { data, error } = await supabase.storage
+        .from('public')
+        .upload(`images/${name}`, img, {
+            cacheControl: '3600',
+            upsert: false
+        })
+    return { data: data, error };
+}
+
+export async function getImage(path) {
+    const { data, error } = await supabase.storage.from('public').download(`images/${path}`)
+    return { data: data, error };
+}
+
 export async function selectMaxScore() {
     let { data: maxscore, error } = await supabase
         .from('maxscore')
