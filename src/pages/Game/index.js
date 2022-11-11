@@ -11,7 +11,7 @@ import { insertScore, selectAllPaginationEASY, selectAllPaginationHARD, selectAl
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 export default function Game() {
-    const { currentQuestion, answers, correctAnswer, pontos, setPontos, setAnswers, name } = useContext(GlobalState)
+    const { currentQuestion, answers, correctAnswer, pontos, setPontos, setAnswers, name, img } = useContext(GlobalState)
     const [questionNumber, setQuestionNumber] = useState(1);
     const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
@@ -200,8 +200,8 @@ export default function Game() {
                                                 <Question ref={QuestionRef} />
                                             </Col>
                                         </Row>
-                                        {currentQuestion.img === null || currentQuestion.img === undefined ? '' :
-                                            <img className='img' id="img" alt={`${currentQuestion.imgAlt}`} src={currentQuestion.img} />}
+                                        {img === null || img === undefined ? '' :
+                                            <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
                                     </CardBody>
                                 </Card>
                             </Col>

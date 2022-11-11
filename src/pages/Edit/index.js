@@ -4,13 +4,16 @@ import './edit.css';
 import Editar from "../../components/Editar";
 import Remover from "../../components/Remover";
 import Alert from "../../components/Alert";
-import { insert, selectAll } from "../../components/DataComponents/BD";
+import { insert, selectAll, selectAllQtd, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM, uploadImage } from "../../components/DataComponents/BD";
 
 export default function Edit() {
     const [questions, setQuestions] = useState(undefined);
+    const [questionsQTD, setQuestionsQTD] = useState(undefined);
+    const [questionsEASY, setQuestionsEASY] = useState(undefined);
+    const [questionsMEDIUM, setQuestionsMEDIUM] = useState(undefined);
+    const [questionsHARD, setQuestionsHARD] = useState(undefined);
     const [question, setQuestion] = useState(undefined);
     const [pathimg, setPathImg] = useState(undefined);
-    const [imgAlt, setAltImg] = useState(undefined);
     const [difficulty, setDifficulty] = useState(undefined);
     const [answerRight, setAnswerRight] = useState(undefined);
     const [distractionAnswer1, setDistractionAnswer1] = useState(undefined);
@@ -24,8 +27,6 @@ export default function Edit() {
     const AlertRef = useRef(null);
 
 
-
-
     async function adicionar() {
         if (((distractionAnswer2 === '') && (distractionAnswer3 !== '')) ||
             ((distractionAnswer2 !== '') && (distractionAnswer3 === ''))) {
@@ -37,10 +38,10 @@ export default function Edit() {
             distractionAnswer1 === undefined)) {
             return setRequired(true);
         }
+        uploadImage(pathimg.name, pathimg.img).then(response => console.log(response))
         insert({
             question: question,
-            img: pathimg,
-            imgAlt: imgAlt,
+            img: pathimg.name,
             difficulty: difficulty,
             rightAnswer: answerRight,
             distractionAnswer1: distractionAnswer1,
@@ -56,7 +57,11 @@ export default function Edit() {
     }
 
     useEffect(() => {
-        selectAll().then(response => { console.log(response); setQuestions(response.data) })
+        selectAll().then(response => { setQuestions(response.data) })
+        selectAllQtd().then(response => setQuestionsQTD(response.count))
+        selectAllQtdEASY().then(response => setQuestionsEASY(response.count))
+        selectAllQtdMEDIUM().then(response => setQuestionsMEDIUM(response.count))
+        selectAllQtdHARD().then(response => setQuestionsHARD(response.count))
     }, [])
 
     return (
@@ -68,13 +73,31 @@ export default function Edit() {
                     <Row>
                         <Col>
                             <Card>
+                                <Col>
+                                    <br />
+                                    <Row>
+                                        <h6><b>É importante que o número de páginas seja um inteiro para garantir uma maior variabilidade de questões.</b></h6>
+                                    </Row>
+                                    <Row>
+                                        <li>Quantidade de questões gerais: {questionsQTD}</li>
+                                    </Row>
+                                    <Row>
+                                        <li>Quantidade de questões fáceis: {questionsEASY}. Quantidade de páginas: {questionsEASY === undefined ? '' : questionsEASY / 5}</li>
+                                    </Row>
+                                    <Row>
+                                        <li>Quantidade de questões médias: {questionsMEDIUM}. Quantidade de páginas: {questionsMEDIUM === undefined ? '' : questionsMEDIUM / 3}</li>
+                                    </Row>
+                                    <Row>
+                                        <li>Quantidade de questões difíceis: {questionsHARD}. Quantidade de páginas: {questionsHARD === undefined ? '' : questionsHARD / 2}</li>
+                                    </Row>
+                                    <br />
+                                </Col>
                                 <Table bordered responsive striped>
                                     <thead>
                                         <tr>
                                             <th style={{ width: "1%" }}>ID</th>
                                             <th style={{ width: "30%" }}>Questão</th>
-                                            <th style={{ width: "5%" }}>IMG Path</th>
-                                            <th style={{ width: "5%" }}>IMG Desc</th>
+                                            <th style={{ width: "14%" }}>IMG Desc.</th>
                                             <th style={{ width: "11%" }}>Dificuldade</th>
                                             <th style={{ width: "10%" }}>R. Certa</th>
                                             <th style={{ width: "10%" }}>R. Distração</th>
@@ -103,7 +126,6 @@ export default function Edit() {
                                                             <th key={item.id} scope="row">{item.id}</th>
                                                             <td>{item.question}</td>
                                                             <td className="td">{item.img}</td>
-                                                            <td className="td">{item.imgAlt}</td>
                                                             <td className="td">{item.difficulty}</td>
                                                             <td className="td">{item.rightAnswer}</td>
                                                             <td className="td">{item.distractionAnswer1}</td>
@@ -118,8 +140,9 @@ export default function Edit() {
                                         <tr key={'last'}>
                                             <th key={'last'} scope="row"></th>
                                             <td><Input invalid={required} type='textarea' onChange={e => setQuestion(e.target.value)} placeholder="Questão"></Input></td>
-                                            <td><Input type='text' onChange={e => setPathImg(e.target.value)} placeholder="Caminho da IMG"></Input></td>
-                                            <td><Input type='text' onChange={e => setAltImg(e.target.value)} placeholder="Desc da IMG"></Input></td>
+                                            <td className="td">
+                                                <Input type='file' onChange={e => {setPathImg({ name: e.target.files[0].name, img: e.target.files[0]})}} /> 
+                                                <Input type='text' placeholder="Nome da IMG" onChange={e => setPathImg({ name: e.target.value, img: e.target.value })} /></td>
                                             <td><Input invalid={required} type="select" onChange={e => setDifficulty(e.target.value)} >
                                                 <option >Selecione</option>
                                                 <option key="E" value="E">Fácil</option>

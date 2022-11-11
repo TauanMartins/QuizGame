@@ -5,6 +5,7 @@ export const GlobalState = createContext({});
 function GlobalStateProvider({ children }) {
 
     const [currentQuestion, setCurrentQuestion] = useState({question: ''});
+    const [img, setIMG] = useState(undefined)
     const [questions, setQuestions] = useState(undefined);
     const [correctAnswer, setCorrectAnswer] = useState(undefined);
     const [answers, setAnswers] = useState([]);
@@ -17,7 +18,8 @@ function GlobalStateProvider({ children }) {
             correctAnswer, setCorrectAnswer,
             answers, setAnswers,
             pontos, setPontos,
-            name, setName
+            name, setName,
+            img, setIMG
         }}>
             {children}
         </GlobalState.Provider>
