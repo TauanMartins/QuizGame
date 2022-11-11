@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Container, Table } from "reactstrap";
+import React, { useState, useEffect, Fragment } from "react";
+import { Table } from "reactstrap";
 import { selectMaxScore } from "../DataComponents/BD";
 
 export default function Score({ s }) {
@@ -10,13 +10,13 @@ export default function Score({ s }) {
         selectMaxScore().then(response => { return setScore(response.data) })
     }, [])
     return (
-        <Container>
+        <Fragment>
             <Table bordered responsive striped>
                 <thead>
                     <tr>
-                        <th style={{ width: "3%" }}>Colocação</th>
-                        <th style={{ width: "66%" }}>Nome</th>
-                        <th style={{ width: "30%" }}>Pontuação</th>
+                        <th style={{ width: "3%" }}>Pos.</th>
+                        <th style={{ width: "56%" }}>Nome</th>
+                        <th style={{ width: "20%" }}>Score</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +29,7 @@ export default function Score({ s }) {
                             : score.map((user, key) => {
                                 return (
                                     <tr key={user.id}>
-                                        <th key={user.id} scope="row">{key+1}º</th>
+                                        <th key={user.id} scope="row">{key + 1}º</th>
                                         <th key={user.name} scope="row">{user.name}</th>
                                         <td>{user.score}</td>
                                     </tr>
@@ -38,6 +38,6 @@ export default function Score({ s }) {
                     }
                 </tbody>
             </Table>
-        </Container>
+        </Fragment>
     )
 }
