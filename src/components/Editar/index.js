@@ -1,7 +1,7 @@
 import React, { forwardRef, useState, useRef } from "react";
 import { Label, Modal, ModalBody, Row, Col, Button, Input } from "reactstrap";
 import Alert from "../Alert";
-import { update } from "../../components/DataComponents/BD";
+import { selectAllThemes, update } from "../../components/DataComponents/BD";
 
 function Editar({ Editar }, ref) {
 
@@ -10,7 +10,8 @@ function Editar({ Editar }, ref) {
     const [item, setItem] = useState(undefined)
     const [question, setQuestion] = useState(undefined);
     const [imgPath, setPathImg] = useState(undefined);
-    const [imgAlt, setAltImg] = useState(undefined);
+    const [themeList, setThemeList] = useState(undefined);
+    const [theme, setTheme] = useState(undefined);
     const [difficulty, setDifficulty] = useState(undefined);
     const [answerRight, setAnswerRight] = useState(undefined);
     const [distractionAnswer1, setDistractionAnswer1] = useState(undefined);
@@ -33,17 +34,17 @@ function Editar({ Editar }, ref) {
             distractionAnswer1 === undefined || distractionAnswer1 === '') {
             return setRequired(true)
         }
-        update(item,{
+        update(item, {
             question: question,
             img: imgPath,
-            imgAlt: imgAlt,
+            theme_fk: theme,
             difficulty: difficulty,
             rightAnswer: answerRight,
             distractionAnswer1: distractionAnswer1,
             distractionAnswer2: distractionAnswer2,
             distractionAnswer3: distractionAnswer3
         }).then(response => {
-            if (response.error===null) {
+            if (response.error === null) {
                 return AlertRef.current.change('Editado')
             } else {
                 return AlertRef.current.change()
@@ -57,11 +58,13 @@ function Editar({ Editar }, ref) {
                 let question = [JSON.parse(currentQuestion)]
                 setOpen(true)
                 setEditQuestion(question)
+                selectAllThemes().then(response => setThemeList(response.data))
                 question.map(item => {
+                    console.log(item)
                     setItem(item.id);
                     setQuestion(item.question);
                     setPathImg(item.img === null ? undefined : item.img);
-                    setAltImg(item.imgAlt === null ? undefined : item.imgAlt)
+                    setTheme({ id: item.idtheme, name: item.theme })
                     setDifficulty(item.difficulty);
                     setAnswerRight(item.rightAnswer);
                     setDistractionAnswer1(item.distractionAnswer1);
@@ -114,8 +117,18 @@ function Editar({ Editar }, ref) {
                                                             <Label>Caminho da imagem:</Label>
                                                             <Input type="text" value={imgPath} onChange={(e) => setPathImg(e.target.value)} />
                                                             <br />
-                                                            <Label>Descrição da imagem:</Label>
-                                                            <Input type="text" value={imgAlt} onChange={(e) => setAltImg(e.target.value)} />
+                                                            <Label>Tema da questão:</Label>
+                                                            <Input type="select" onChange={e => setTheme(e.target.value)} >
+                                                                <option key={'current'} >{theme.name}</option>
+                                                                {
+                                                                    themeList === undefined ? '' :
+                                                                        themeList.map(tema => {
+                                                                            return (                                                                                
+                                                                                tema.theme===theme.name?'':<option key={tema.id} value={tema.id}>{tema.theme}</option>
+                                                                            );
+                                                                        })
+                                                                }
+                                                            </Input>
                                                             <br />
                                                             <Label>Dificuldade:</Label>
                                                             <Input invalid={required} type="select" onChange={(e) => setDifficulty(e.target.value)}>

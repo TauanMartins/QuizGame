@@ -4,7 +4,7 @@ import './edit.css';
 import Editar from "../../components/Editar";
 import Remover from "../../components/Remover";
 import Alert from "../../components/Alert";
-import { insert, selectAll, selectAllQtd, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM, uploadImage } from "../../components/DataComponents/BD";
+import { insert, selectAll, selectAllQtd, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM, selectAllThemes, uploadImage } from "../../components/DataComponents/BD";
 
 export default function Edit() {
     const [questions, setQuestions] = useState(undefined);
@@ -14,6 +14,8 @@ export default function Edit() {
     const [questionsHARD, setQuestionsHARD] = useState(undefined);
     const [question, setQuestion] = useState(undefined);
     const [pathimg, setPathImg] = useState(undefined);
+    const [themeList, setThemeList] = useState(undefined);
+    const [theme, setTheme] = useState(undefined);
     const [difficulty, setDifficulty] = useState(undefined);
     const [answerRight, setAnswerRight] = useState(undefined);
     const [distractionAnswer1, setDistractionAnswer1] = useState(undefined);
@@ -42,6 +44,7 @@ export default function Edit() {
         insert({
             question: question,
             img: pathimg.name,
+            theme_fk: theme.id,
             difficulty: difficulty,
             rightAnswer: answerRight,
             distractionAnswer1: distractionAnswer1,
@@ -58,6 +61,7 @@ export default function Edit() {
 
     useEffect(() => {
         selectAll().then(response => { setQuestions(response.data) })
+        selectAllThemes().then(response => { setThemeList(response.data) })
         selectAllQtd().then(response => setQuestionsQTD(response.count))
         selectAllQtdEASY().then(response => setQuestionsEASY(response.count))
         selectAllQtdMEDIUM().then(response => setQuestionsMEDIUM(response.count))
@@ -97,8 +101,9 @@ export default function Edit() {
                                         <tr>
                                             <th style={{ width: "1%" }}>ID</th>
                                             <th style={{ width: "30%" }}>Questão</th>
-                                            <th style={{ width: "14%" }}>IMG Desc.</th>
-                                            <th style={{ width: "11%" }}>Dificuldade</th>
+                                            <th style={{ width: "9%" }}>IMG Desc.</th>
+                                            <th style={{ width: "11%" }}>Tema</th>
+                                            <th style={{ width: "9%" }}>Dificuldade</th>
                                             <th style={{ width: "10%" }}>R. Certa</th>
                                             <th style={{ width: "10%" }}>R. Distração</th>
                                             <th style={{ width: "10%" }}>R. Distração</th>
@@ -119,6 +124,7 @@ export default function Edit() {
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 : questions.map(item => {
                                                     return (
@@ -126,6 +132,7 @@ export default function Edit() {
                                                             <th key={item.id} scope="row">{item.id}</th>
                                                             <td>{item.question}</td>
                                                             <td className="td">{item.img}</td>
+                                                            <td className="td">{item.theme}</td>
                                                             <td className="td">{item.difficulty}</td>
                                                             <td className="td">{item.rightAnswer}</td>
                                                             <td className="td">{item.distractionAnswer1}</td>
@@ -141,8 +148,20 @@ export default function Edit() {
                                             <th key={'last'} scope="row"></th>
                                             <td><Input invalid={required} type='textarea' onChange={e => setQuestion(e.target.value)} placeholder="Questão"></Input></td>
                                             <td className="td">
-                                                <Input type='file' onChange={e => {setPathImg({ name: e.target.files[0].name, img: e.target.files[0]})}} /> 
+                                                <Input type='file' onChange={e => { setPathImg({ name: e.target.files[0].name, img: e.target.files[0] }) }} />
                                                 <Input type='text' placeholder="Nome da IMG" onChange={e => setPathImg({ name: e.target.value, img: e.target.value })} /></td>
+                                            <td><Input invalid={required} type="select" onChange={e => setTheme(e.target.value)} >
+                                                <option >Selecione</option>
+                                                {
+                                                    themeList === undefined ? '' :
+                                                        themeList.map(tema => {
+                                                            return (
+                                                                <option key={tema.id} value={{id: tema.id, tema:tema.theme}}>{tema.theme}</option>
+                                                            );
+                                                        })
+                                                }
+                                            </Input>
+                                            </td>
                                             <td><Input invalid={required} type="select" onChange={e => setDifficulty(e.target.value)} >
                                                 <option >Selecione</option>
                                                 <option key="E" value="E">Fácil</option>

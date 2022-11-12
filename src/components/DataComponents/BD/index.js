@@ -10,11 +10,14 @@ export async function uploadImage(name, img) {
             cacheControl: '3600',
             upsert: false
         })
+
     return { data: data, error };
 }
 
 export async function getImage(path) {
     const { data, error } = await supabase.storage.from('public').download(`images/${path}`)
+    console.log(data)
+
     return { data: data, error };
 }
 
@@ -33,11 +36,17 @@ export async function insertScore(dados) {
     return { data, error };
 }
 
+export async function selectAllThemes() {
+    let { data: theme, error } = await supabase
+        .from('theme')
+        .select('*')
+    return { data: theme, error };
+}
 export async function selectAll() {
-    var { data: questions, error } = await supabase
-        .from('questions')
-        .select('*');
-    return { data: questions, error };
+    var { data: allquestions, error } = await supabase
+        .from('allquestions')
+        .select('*')
+    return { data: allquestions, error };
 }
 
 export async function selectAllPagination(min, max) {
