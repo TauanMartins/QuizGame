@@ -22,7 +22,7 @@ export default function Home() {
                     </Row>
                     <Row>
                         <Col>
-                            <Button onClick={()=>EndGameRef.current.endgame()} size="lg" color="primary" >
+                            <Button onClick={()=>EndGameRef.current.endgame()} outline size="lg" color="primary" >
                                 {"ScoreBoard"}
                             </Button>
                         </Col>

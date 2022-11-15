@@ -7,9 +7,8 @@ import Score from "../Score";
 function Endgame({ endgame, visible }, ref) {
 
     const [open, setOpen] = useState(false);
-    const { pontos, setName, name } = useContext(GlobalState);
+    const { pontos, name} = useContext(GlobalState);
     function handleTooltip() {
-        setName('Unknown')
         setOpen(!open);
     }
     ref.current = {

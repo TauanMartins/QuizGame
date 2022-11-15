@@ -15,8 +15,8 @@ export async function uploadImage(name, img) {
 }
 
 export async function getImage(path) {
-    const { data, error } = await supabase.storage.from('public').download(`images/${path}`)
-    console.log(data)
+    const { data, error } = await supabase.storage.from('public')
+        .download(`images/${path}`);
 
     return { data: data, error };
 }
@@ -57,31 +57,67 @@ export async function selectAllPagination(min, max) {
     return { data: questions, error };
 }
 
-export async function selectAllPaginationEASY(min, max) {
-    var { data: questions, error } = await supabase
-        .from('questions')
-        .select('*')
-        .eq('difficulty', 'E')
-        .range(min, max);
-    return { data: questions, error };
+export async function selectAllPaginationEASY(min, max, tema) {
+    var data, error, response;
+    if (tema) {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'E')
+            .in('theme_fk', tema)
+            .range(min, max);
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'E')
+            .range(min, max);
+    }
+    data = response.data
+    error = response.error
+    return { data, error };
 }
 
-export async function selectAllPaginationMEDIUM(min, max) {
-    var { data: questions, error } = await supabase
-        .from('questions')
-        .select('*')
-        .eq('difficulty', 'M')
-        .range(min, max);
-    return { data: questions, error };
+export async function selectAllPaginationMEDIUM(min, max, tema) {
+    var data, error, response;
+    if (tema) {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'M')
+            .in('theme_fk', tema)
+            .range(min, max);
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'M')
+            .range(min, max);
+    }
+    data = response.data
+    error = response.error
+    return { data, error };
 }
 
-export async function selectAllPaginationHARD(min, max) {
-    var { data: questions, error } = await supabase
-        .from('questions')
-        .select('*')
-        .eq('difficulty', 'H')
-        .range(min, max);
-    return { data: questions, error };
+export async function selectAllPaginationHARD(min, max, tema) {
+    var data, error, response;
+    if (tema) {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'H')
+            .in('theme_fk', tema)
+            .range(min, max);
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'H')
+            .range(min, max);
+    }
+    data = response.data
+    error = response.error
+    return { data, error };
 }
 
 export async function selectAllQtd() {
@@ -91,27 +127,60 @@ export async function selectAllQtd() {
     return { count, error };
 }
 
-export async function selectAllQtdEASY() {
-    var { count, error } = await supabase
-        .from('questions')
-        .select('*', { count: 'exact', head: true })
-        .eq('difficulty', 'E')
+export async function selectAllQtdEASY(tema) {
+    var count, error, response;
+    if (tema) {
+        response = await supabase
+            .from('questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('difficulty', 'E')
+            .in('theme_fk', tema)
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('difficulty', 'E')
+    }
+    count = response.count
+    error = response.error
     return { count, error };
 }
 
-export async function selectAllQtdMEDIUM() {
-    var { count, error } = await supabase
-        .from('questions')
-        .select('*', { count: 'exact', head: true })
-        .eq('difficulty', 'M');
+export async function selectAllQtdMEDIUM(tema) {
+    var count, error, response;
+    if (tema) {
+        response = await supabase
+            .from('questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('difficulty', 'M')
+            .in('theme_fk', tema)
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('difficulty', 'M')
+    }
+    count = response.count
+    error = response.error
     return { count, error };
 }
 
-export async function selectAllQtdHARD() {
-    var { count, error } = await supabase
-        .from('questions')
-        .select('*', { count: 'exact', head: true })
-        .eq('difficulty', 'H');
+export async function selectAllQtdHARD(tema) {
+    var count, error, response;
+    if (tema) {
+        response = await supabase
+            .from('questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('difficulty', 'H')
+            .in('theme_fk', tema)
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('difficulty', 'H')
+    }
+    count = response.count
+    error = response.error
     return { count, error };
 }
 

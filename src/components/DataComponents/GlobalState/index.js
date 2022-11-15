@@ -11,6 +11,8 @@ function GlobalStateProvider({ children }) {
     const [answers, setAnswers] = useState([]);
     const [pontos, setPontos] = useState(0);
     const [name, setName] = useState('Unknown')
+    const [theme, setTheme] = useState(undefined)
+
     return (
         <GlobalState.Provider value={{
             currentQuestion, setCurrentQuestion,
@@ -19,7 +21,8 @@ function GlobalStateProvider({ children }) {
             answers, setAnswers,
             pontos, setPontos,
             name, setName,
-            img, setIMG
+            img, setIMG,
+            theme, setTheme
         }}>
             {children}
         </GlobalState.Provider>

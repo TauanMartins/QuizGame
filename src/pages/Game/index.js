@@ -11,66 +11,125 @@ import { insertScore, selectAllPaginationEASY, selectAllPaginationHARD, selectAl
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 export default function Game() {
-    const { currentQuestion, answers, correctAnswer, pontos, setPontos, setAnswers, name, img } = useContext(GlobalState)
+    const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setAnswers, name, img, theme } = useContext(GlobalState)
     const [questionNumber, setQuestionNumber] = useState(1);
     const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
     const EndgameRef = useRef(null);
 
     function timeOut() {
-        console.log("timeOut")
-        return check('timeOut');
+        return check('operationGame1');
     }
 
     function generateQuestion(cond) {
         if (cond === 1) {
-            return selectAllQtdEASY().then(response => {
-                var totalRows = response.count;
-                var totalPages = Math.floor(totalRows / 5);
-                var currentPage = getRandomInt(0, totalPages - 1);
-                var intervaloMin = currentPage * 5;
-                var intervaloMax = intervaloMin + 4;
-                selectAllPaginationEASY(intervaloMin, intervaloMax).then(response => {
-                    //console.log(response.data)
-                    if (response.error === null) {
-                        return QuestionRef.current.setList(shuffleArray(response.data))
-                    }
+            if (theme && theme[0] !== '1') {
+                return selectAllQtdEASY(theme).then(response => {
+                    var totalRows = response.count;
+                    var totalPages = Math.floor(totalRows / 5);
+                    var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    var intervaloMin = currentPage * 5;
+                    var intervaloMax = intervaloMin + 4;
+                    selectAllPaginationEASY(intervaloMin, intervaloMax, theme).then(response => {
+                        if (Object.keys(response.data).length === 0) {
+                            return check('operationGame')
+                        } else {
+                            return QuestionRef.current.setList(shuffleArray(response.data))
+                        }
+                    })
+
                 })
-            })
+            } else {
+                return selectAllQtdEASY().then(response => {
+                    var totalRows = response.count;
+                    var totalPages = Math.floor(totalRows / 5);
+                    var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    var intervaloMin = currentPage * 5;
+                    var intervaloMax = intervaloMin + 4;
+                    selectAllPaginationEASY(intervaloMin, intervaloMax).then(response => {
+                        if (Object.keys(response.data).length === 0) {
+                            return check('operationGame')
+                        } else {
+                            return QuestionRef.current.setList(shuffleArray(response.data))
+                        }
+                    })
+                })
+            }
         }
         if (cond === 2) {
-            return selectAllQtdMEDIUM().then(response => {
-                var totalRows = response.count;
-                var totalPages = Math.floor(totalRows / 3);
-                var currentPage = getRandomInt(0, totalPages - 1);
-                var intervaloMin = currentPage * 3;
-                var intervaloMax = intervaloMin + 2;
-                selectAllPaginationMEDIUM(intervaloMin, intervaloMax).then(response => {
-                    //console.log(response.data)
-                    if (response.error === null) {
-                        return QuestionRef.current.setList(shuffleArray(response.data))
-                    }
+            if (theme && theme[0] !== '1') {
+                return selectAllQtdMEDIUM(theme).then(response => {
+                    var totalRows = response.count;
+                    var totalPages = Math.floor(totalRows / 3);
+                    var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    var intervaloMin = currentPage * 3;
+                    var intervaloMax = intervaloMin + 2;
+                    selectAllPaginationMEDIUM(intervaloMin, intervaloMax, theme).then(response => {
+                        console.log('aqui')
+                        if (Object.keys(response.data).length === 0) {
+                            return check('operationGame')
+                        } else {
+                            return QuestionRef.current.setList(shuffleArray(response.data))
+                        }
+                    })
                 })
-            })
+            } else {
+                return selectAllQtdMEDIUM().then(response => {
+                    var totalRows = response.count;
+                    var totalPages = Math.floor(totalRows / 3);
+                    var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    var intervaloMin = currentPage * 3;
+                    var intervaloMax = intervaloMin + 2;
+                    selectAllPaginationMEDIUM(intervaloMin, intervaloMax).then(response => {
+                        if (Object.keys(response.data).length === 0) {
+                            return check('operationGame')
+                        } else {
+                            return QuestionRef.current.setList(shuffleArray(response.data))
+                        }
+                    })
+                })
+            }
         }
         if (cond === 3) {
-            return selectAllQtdHARD().then(response => {
-                var totalRows = response.count;
-                var totalPages = Math.floor(totalRows / 2);
-                var currentPage = getRandomInt(0, totalPages - 1);
-                var intervaloMin = currentPage * 2;
-                var intervaloMax = intervaloMin + 1;
-                selectAllPaginationHARD(intervaloMin, intervaloMax).then(response => {
-                    //console.log(response.data)
-                    if (response.error === null) {
-                        return QuestionRef.current.setList(shuffleArray(response.data))
-                    }
+            if (theme && theme[0] !== '1') {
+                return selectAllQtdHARD(theme).then(response => {
+                    var totalRows = response.count;
+                    var totalPages = Math.floor(totalRows / 2);
+                    var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    var intervaloMin = currentPage * 2;
+                    var intervaloMax = intervaloMin + 1;
+                    selectAllPaginationHARD(intervaloMin, intervaloMax, theme).then(response => {
+                        console.log('aqui2')
+                        if (Object.keys(response.data).length === 0) {
+                            return check('operationGame')
+                        } else {
+                            return QuestionRef.current.setList(shuffleArray(response.data))
+                        }
+                    })
                 })
-            })
+            } else {
+                return selectAllQtdHARD().then(response => {
+                    var totalRows = response.count;
+                    var totalPages = Math.floor(totalRows / 2);
+                    var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    var intervaloMin = currentPage * 2;
+                    var intervaloMax = intervaloMin + 1;
+                    selectAllPaginationHARD(intervaloMin, intervaloMax).then(response => {
+                        if (Object.keys(response.data).length === 0) {
+                            return check('operationGame')
+                        } else {
+                            return QuestionRef.current.setList(shuffleArray(response.data))
+                        }
+                    })
+                })
+            }
         }
     }
 
     function evaluator(value) {
+        if (value === 'operationGame') {
+            return scoreDisplay;
+        }
         if (String(value) === String(correctAnswer)) {
             document.getElementById(questionNumber).style.backgroundColor = '#218838'
             let points = scoreDisplay + 1
@@ -84,18 +143,28 @@ export default function Game() {
 
     function check(value) {
         console.log("respostas: ", answers)
+        var next_question = questions.indexOf(currentQuestion, 0) + 1;
+        console.log(next_question)
+        console.log(value)
         // confere se respondeu certo
-        var point = 0
+        var point;
         if (value) {
             point = evaluator(value)
         }
-        if (questionNumberDisplay === 5) {
+        if (((questionNumberDisplay === 5 ||
+            (Object.keys(questions).length === next_question))
+            && (questions[questions.length - 1].difficulty === 'E'))
+            && value !== 'operationGame') {
             generateQuestion(2)
         }
-        if (questionNumberDisplay === 8) {
+        if (((questionNumberDisplay === 9 ||
+            (Object.keys(questions).length === next_question))
+            && (questions[questions.length - 1].difficulty === 'M'))
+            && value !== 'operationGame') {
             generateQuestion(3)
         }
-        if (questionNumberDisplay === 10) {
+        if (questionNumberDisplay === 10 ||
+            value === 'operationGame') {
             CounterRef.current.stopTimer();
             return endgame(point)
         } else {
@@ -105,7 +174,6 @@ export default function Game() {
 
     function nextQuestion() {
         console.log("nextQuestion");
-        // document.getElementById('img').src = loading; // muda p img de carregando
         setAnswers([])
         setQuestionNumber(questionNumberDisplay + 1); // seta questão +=1
         CounterRef.current.restartTimer(); // restart timer
@@ -120,28 +188,8 @@ export default function Game() {
     }
 
     useEffect(() => {
-        console.log("effect")
-        // select abaixo bom para fazer o segundo modo de jogo infinito
-        // selectAllQtd().then(response => {
-        //     var totalRows = response.count;
-        //     var totalPages = Math.floor(totalRows / 10);
-        //     var currentPage = getRandomInt(0, totalPages - 1);
-        //     var intervaloMin = currentPage * 10;
-        //     var intervaloMax = intervaloMin + 9;
-        //     console.log(totalPages)
-        //     console.log(totalRows, intervaloMin, intervaloMax, currentPage)
-        //     selectAllPaginationHARD().then(response => {
-        //         console.log(response);
-        //     })
-        // })
-        // selectAllPagination(intervaloMin, intervaloMax).then(response => {
-        //     console.log(response)
-        //     if (response.error === null) {
-        //         console.log('entrou')
-        //         return QuestionRef.current.setList(response.data)
-        //     }
-        // })
         generateQuestion(1)
+        // eslint-disable-next-line
     }, [])
 
     const questionNumberDisplay = useMemo(() => questionNumber, [questionNumber])
