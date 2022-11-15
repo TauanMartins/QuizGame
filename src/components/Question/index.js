@@ -33,6 +33,7 @@ function Question({ nothing }, ref) {
 
             // abaixo seta todas as questões da partida
             setQuestions(allQuestions)
+            setIMG(undefined)
             // abaixo a primeira questão é selecionada para a questão
             let firstQuestion = allQuestions[0]
             setCurrentQuestion(allQuestions[0])
