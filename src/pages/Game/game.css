@@ -36,8 +36,14 @@
     }
 }
 
+.qNumberF{
+    background-color: orange;
+    border: thin solid #012a35;
+    border-radius: 12px;
+}
 .qNumber {
     background-color: lightgray;
     border: thin solid #012a35;
     border-radius: 12px;
 }
+
