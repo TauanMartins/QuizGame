@@ -50,7 +50,7 @@ function Endgame({ endgame, visible }, ref) {
                             <Row >
                                 <Col>
                                     <Row className="d-flex justify-content-center align-items-center">
-                                        Seu score total foi de <b>{pontos}</b> {pontos === 1 ? 'ponto' : 'pontos'}.
+                                        Seu score total foi de <b>{' '+pontos+' '}</b> {pontos === 1 ? ' ponto' : ' pontos'}.
                                     </Row>
 
 

@@ -45,9 +45,6 @@ function Question({ nothing }, ref) {
         },
         nextQuestion: function () {
             var next_question = questions.indexOf(currentQuestion, 0) + 1;
-            if (questions[next_question] === undefined) {
-                return "NoMoreQuestionsOver"
-            }
             generateQuestion(questions[next_question])
             setCurrentQuestion(questions[next_question])
             if(!(questions[next_question].img===null || questions[next_question].img===undefined)){

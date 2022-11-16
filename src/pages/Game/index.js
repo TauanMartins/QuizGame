@@ -1,9 +1,7 @@
 import React, { Fragment, useEffect, useState, useRef, useMemo, useContext } from "react";
 import { Row, Col, Card, CardTitle, Button, Container, CardBody } from "reactstrap";
 import './game.css';
-
 import Question from "../../components/Question";
-
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
@@ -23,7 +21,7 @@ export default function Game() {
 
     function generateQuestion(cond) {
         if (cond === 1) {
-            if (theme && theme[0] !== '1') {
+            if (theme && (theme[0] !== '1' && theme.length > 0)) {
                 return selectAllQtdEASY(theme).then(response => {
                     var totalRows = response.count;
                     var totalPages = Math.floor(totalRows / 5);
@@ -57,7 +55,7 @@ export default function Game() {
             }
         }
         if (cond === 2) {
-            if (theme && theme[0] !== '1') {
+            if (theme && (theme[0] !== '1' && theme.length > 0)) {
                 return selectAllQtdMEDIUM(theme).then(response => {
                     var totalRows = response.count;
                     var totalPages = Math.floor(totalRows / 3);
@@ -91,7 +89,7 @@ export default function Game() {
             }
         }
         if (cond === 3) {
-            if (theme && theme[0] !== '1') {
+            if (theme && (theme[0] !== '1' && theme.length > 0)) {
                 return selectAllQtdHARD(theme).then(response => {
                     var totalRows = response.count;
                     var totalPages = Math.floor(totalRows / 2);
@@ -198,103 +196,99 @@ export default function Game() {
     return (
         <Fragment>
             <div className="Game">
-                <Row>
-                    <Col>
-                        <Row>
+                <Container fluid>
+                    
+                    <Card>
+                        <CardTitle>
                             <Col>
-                                <Card>
-                                    <CardTitle>
-                                        <Col>
-                                            <Row>
-                                                <Col className="d-flex justify-content-center align-items-center" >
-                                                    <Row>
-                                                        <b>Questão {questionNumberDisplay}/10</b>
-                                                    </Row>
-                                                </Col>
-                                                <Col className="d-flex justify-content-center align-items-center middleText">
-                                                    <Row>
-                                                        <b>Score: {scoreDisplay}</b>
-                                                    </Row>
-                                                </Col>
-                                                <Col className="d-flex justify-content-center align-items-center">
-                                                    <Row>
-                                                        <Timer timeOut={timeOut} ref={CounterRef} />
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                            <Row className="AllQuestions" >
-                                                <Col className=" justify-content-center ">
-                                                    <Row >
-                                                        <Col className="qNumber" id="1"><b>1</b></Col>
-                                                        <Col className="qNumber" id="2"><b>2</b></Col>
-                                                        <Col className="qNumber" id="3"><b>3</b></Col>
-                                                        <Col className="qNumber" id="4"><b>4</b></Col>
-                                                        <Col className="qNumber" id="5"><b>5</b></Col>
-                                                    </Row>
-                                                    <Row >
-                                                        <Col className="qNumber" id="6"><b>6</b></Col>
-                                                        <Col className="qNumber" id="7"><b>7</b></Col>
-                                                        <Col className="qNumber" id="8"><b>8</b></Col>
-                                                        <Col className="qNumber" id="9"><b>9</b></Col>
-                                                        <Col className="qNumber" id="10"><b>10</b></Col>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                    </CardTitle>
-                                    <CardBody>
-                                        <Row>
-                                            <Col>
-                                                <Question ref={QuestionRef} />
-                                            </Col>
+                                <Row>
+                                    <Col  >
+                                        <Row className="d-flex justify-content-center align-items-center">
+                                            <b>Questão {questionNumberDisplay}/10</b>
                                         </Row>
-                                        {img === null || img === undefined ? '' :
-                                            <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
-                                    </CardBody>
-                                </Card>
+                                    </Col>
+                                    <Col className="middleText" >
+                                        <Row className="d-flex justify-content-center align-items-center">
+                                            <b>Score: {scoreDisplay}</b>
+                                        </Row>
+                                    </Col>
+                                    <Col >
+                                        <Row className="d-flex justify-content-center align-items-center">
+                                            <Timer timeOut={timeOut} ref={CounterRef} />
+                                        </Row>
+                                    </Col>
+                                </Row>
+                                <Row className="AllQuestions" >
+                                    <Col className=" justify-content-center ">
+                                        <Row >
+                                            <Col className="qNumber" id="1"><b>1</b></Col>
+                                            <Col className="qNumber" id="2"><b>2</b></Col>
+                                            <Col className="qNumber" id="3"><b>3</b></Col>
+                                            <Col className="qNumber" id="4"><b>4</b></Col>
+                                            <Col className="qNumber" id="5"><b>5</b></Col>
+                                        </Row>
+                                        <Row >
+                                            <Col className="qNumber" id="6"><b>6</b></Col>
+                                            <Col className="qNumber" id="7"><b>7</b></Col>
+                                            <Col className="qNumber" id="8"><b>8</b></Col>
+                                            <Col className="qNumber" id="9"><b>9</b></Col>
+                                            <Col className="qNumber" id="10"><b>10</b></Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
                             </Col>
-                        </Row>
-                        {
-                            answers === undefined ? '' : answers.length === 0 ? '' :
-                                <Container fluid>
+                        </CardTitle>
+                        <CardBody>
+                            <Row>
+                                <Col>
+                                    <Question ref={QuestionRef} />
+                                </Col>
+                            </Row>
+                            {img === null || img === undefined ? '' :
+                                <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
+                        </CardBody>
+                    </Card>
+
+                    {
+                        answers === undefined ? '' : answers.length === 0 ? '' :
+                            <Container fluid>
+                                <Row >
+                                    <Col>
+                                        <Row >
+                                            <Button onClick={e => { check(e.target.value); }} value={answers[0]} key={answers[0]} className="Button" color="primary" >
+                                                {answers[0]}
+                                            </Button>
+                                        </Row>
+                                    </Col>
+                                    <Col>
+                                        <Row>
+                                            <Button onClick={e => { check(e.target.value); }} value={answers[1]} key={answers[1]} className="Button" color="success" >
+                                                {answers[1]}
+                                            </Button>
+                                        </Row>
+                                    </Col>
+                                </Row>
+                                {answers === undefined ? '' : answers.length === 2 ? '' :
                                     <Row >
                                         <Col>
-                                            <Row >
-                                                <Button onClick={e => { check(e.target.value); }} value={answers[0]} key={answers[0]} className="Button" color="primary" >
-                                                    {answers[0]}
+                                            <Row>
+                                                <Button onClick={e => { check(e.target.value); }} value={answers[2]} key={answers[2]} className="Button" color="warning" >
+                                                    {answers[2]}
                                                 </Button>
                                             </Row>
                                         </Col>
                                         <Col>
                                             <Row>
-                                                <Button onClick={e => { check(e.target.value); }} value={answers[1]} key={answers[1]} className="Button" color="success" >
-                                                    {answers[1]}
+                                                <Button onClick={e => { check(e.target.value); }} value={answers[3]} key={answers[3]} className="Button" color="danger" >
+                                                    {answers[3]}
                                                 </Button>
                                             </Row>
                                         </Col>
                                     </Row>
-                                    {answers === undefined ? '' : answers.length === 2 ? '' :
-                                        <Row >
-                                            <Col>
-                                                <Row>
-                                                    <Button onClick={e => { check(e.target.value); }} value={answers[2]} key={answers[2]} className="Button" color="warning" >
-                                                        {answers[2]}
-                                                    </Button>
-                                                </Row>
-                                            </Col>
-                                            <Col>
-                                                <Row>
-                                                    <Button onClick={e => { check(e.target.value); }} value={answers[3]} key={answers[3]} className="Button" color="danger" >
-                                                        {answers[3]}
-                                                    </Button>
-                                                </Row>
-                                            </Col>
-                                        </Row>
-                                    }
-                                </Container>
-                        }
-                    </Col>
-                </Row>
+                                }
+                            </Container>
+                    }
+                </Container>
             </div >
             <Endgame ref={EndgameRef} />
         </Fragment >

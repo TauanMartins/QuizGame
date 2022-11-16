@@ -1,12 +1,12 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { Row, Col, Card, Container, Table, Input, Button } from "reactstrap";
-import './edit.css';
-import Editar from "../../components/Editar";
-import Remover from "../../components/Remover";
+import './maintence.css';
+import Edit from "../../components/Maintence/Edit";
+import Remove from "../../components/Maintence/Remove";
 import Alert from "../../components/Alert";
 import { insert, selectAll, selectAllQtd, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM, selectAllThemes, uploadImage } from "../../components/DataComponents/BD";
 
-export default function Edit() {
+export default function Maintence() {
     const [questions, setQuestions] = useState(undefined);
     const [questionsQTD, setQuestionsQTD] = useState(undefined);
     const [questionsEASY, setQuestionsEASY] = useState(undefined);
@@ -24,8 +24,8 @@ export default function Edit() {
 
     const [required, setRequired] = useState(false);
 
-    const EditarRef = useRef(null);
-    const RemoverRef = useRef(null);
+    const EditRef = useRef(null);
+    const RemoveRef = useRef(null);
     const AlertRef = useRef(null);
 
 
@@ -138,8 +138,8 @@ export default function Edit() {
                                                             <td className="td">{item.distractionAnswer1}</td>
                                                             <td className="td">{item.distractionAnswer2}</td>
                                                             <td className="td">{item.distractionAnswer3}</td>
-                                                            <td className="td"><Button onClick={(e) => { EditarRef.current.editar(e.target.value) }} value={JSON.stringify(item)} color="warning">Editar</Button>{' '}
-                                                                <Button onClick={(e) => RemoverRef.current.remover(e.target.value)} value={JSON.stringify(item)} color="danger">Remover</Button></td>
+                                                            <td className="td"><Button onClick={(e) => { EditRef.current.editar(e.target.value) }} value={JSON.stringify(item)} color="warning">Editar</Button>{' '}
+                                                                <Button onClick={(e) => RemoveRef.current.remover(e.target.value)} value={JSON.stringify(item)} color="danger">Remover</Button></td>
                                                         </tr>
                                                     );
                                                 })
@@ -183,8 +183,8 @@ export default function Edit() {
                         </Col>
                     </Row>
                 </Container>
-                <Editar ref={EditarRef} />
-                <Remover ref={RemoverRef} />
+                <Edit ref={EditRef} />
+                <Remove ref={RemoveRef} />
             </div>
         </Fragment >
 

@@ -1,9 +1,9 @@
 import React, { forwardRef, useState, useRef } from "react";
 import { Label, Modal, ModalBody, Row, Col, Button, Input } from "reactstrap";
-import Alert from "../Alert";
-import { selectAllThemes, update } from "../../components/DataComponents/BD";
+import Alert from "../../Alert";
+import { selectAllThemes, update } from "../../DataComponents/BD";
 
-function Editar({ Editar }, ref) {
+function Edit({ Editar }, ref) {
 
     const [open, setOpen] = useState(false);
     const [editQuestion, setEditQuestion] = useState(undefined);
@@ -190,4 +190,4 @@ function Editar({ Editar }, ref) {
     )
 }
 
-export default forwardRef(Editar)
+export default forwardRef(Edit)
