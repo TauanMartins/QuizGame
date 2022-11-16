@@ -75,7 +75,6 @@ export async function selectAllPagination(min, max) {
 export async function selectAllPaginationEASY(min, max, tema) {
     var data, error, response;
     if (tema && tema[0] !== '1') {
-        console.log('aqui')
         response = await supabase
             .from('questions')
             .select('*')
@@ -83,7 +82,6 @@ export async function selectAllPaginationEASY(min, max, tema) {
             .in('theme_fk', tema)
             .range(min, max);
     } else {
-        console.log('aqui2')
         response = await supabase
             .from('questions')
             .select('*')

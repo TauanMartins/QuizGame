@@ -44,7 +44,6 @@ function Edit({ Editar }, ref) {
             distractionAnswer2: distractionAnswer2,
             distractionAnswer3: distractionAnswer3
         }).then(response => {
-            console.log(response)
             if (response.error === null) {
                 return AlertRef.current.change('Editado')
             } else {

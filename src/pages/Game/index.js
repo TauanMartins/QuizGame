@@ -131,14 +131,13 @@ export default function Game() {
             (questions[questions.length - 1].difficulty === 'D' && questions.length < 2 && questionNumberDisplay >= next_question)) {
             if (currentQuestion.difficulty === 'E' && value === undefined) {
                 return generateQuestion(2)
-            } else if (currentQuestion.difficulty === 'M' && value !== 'operationGame3') {
+            } else if ((currentQuestion.difficulty === 'M'||currentQuestion.difficulty === 'E') && value !== 'operationGame3') {
                 return generateQuestion(3)
             }
         }
         // condição abaixo acabará com o jogo, quando chegar 
         if (questionNumberDisplay === 11 || value === 'operationGame3' || value === 'operationGame2' ||
             (currentQuestion.difficulty === 'H' && questions.length < 2)) {
-            console.log('quarto')
             CounterRef.current.stopTimer();
             endgame()
         }
