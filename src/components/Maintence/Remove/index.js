@@ -1,9 +1,9 @@
 import React, { forwardRef, useState, useRef } from "react";
 import { Label, Modal, ModalBody, Row, Col, Button } from "reactstrap";
-import Alert from "../Alert";
-import { deleteR } from "../../components/DataComponents/BD";
+import Alert from "../../Alert";
+import { deleteR } from "../../DataComponents/BD";
 
-function Remover({ Remover }, ref) {
+function Remove({ Remover }, ref) {
 
     const [open, setOpen] = useState(false);
     const [removeQuestion, setRemoveQuestion] = useState(undefined)
@@ -128,4 +128,4 @@ function Remover({ Remover }, ref) {
     )
 }
 
-export default forwardRef(Remover)
+export default forwardRef(Remove)
