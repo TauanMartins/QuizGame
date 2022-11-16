@@ -37,13 +37,14 @@ function Edit({ Editar }, ref) {
         update(item, {
             question: question,
             img: imgPath,
-            theme_fk: theme,
+            theme_fk: theme.id,
             difficulty: difficulty,
             rightAnswer: answerRight,
             distractionAnswer1: distractionAnswer1,
             distractionAnswer2: distractionAnswer2,
             distractionAnswer3: distractionAnswer3
         }).then(response => {
+            console.log(response)
             if (response.error === null) {
                 return AlertRef.current.change('Editado')
             } else {

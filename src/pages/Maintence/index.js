@@ -4,7 +4,7 @@ import './maintence.css';
 import Edit from "../../components/Maintence/Edit";
 import Remove from "../../components/Maintence/Remove";
 import Alert from "../../components/Alert";
-import { insert, selectAll, selectAllQtd, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM, selectAllThemes, uploadImage } from "../../components/DataComponents/BD";
+import { insert, selectAll, selectAllByTheme, selectAllQtd, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM, selectAllThemes, uploadImage } from "../../components/DataComponents/BD";
 
 export default function Maintence() {
     const [questions, setQuestions] = useState(undefined);
@@ -13,8 +13,9 @@ export default function Maintence() {
     const [questionsMEDIUM, setQuestionsMEDIUM] = useState(undefined);
     const [questionsHARD, setQuestionsHARD] = useState(undefined);
     const [question, setQuestion] = useState(undefined);
-    const [pathimg, setPathImg] = useState(undefined);
+    const [pathimg, setPathImg] = useState({ name: undefined, img: undefined });
     const [themeList, setThemeList] = useState(undefined);
+    const [themeListInfo, setThemeListInfo] = useState(undefined);
     const [theme, setTheme] = useState(undefined);
     const [difficulty, setDifficulty] = useState(undefined);
     const [answerRight, setAnswerRight] = useState(undefined);
@@ -44,12 +45,12 @@ export default function Maintence() {
         insert({
             question: question,
             img: pathimg.name,
-            theme_fk: theme.id,
+            theme_fk: theme,
             difficulty: difficulty,
             rightAnswer: answerRight,
             distractionAnswer1: distractionAnswer1,
             distractionAnswer2: distractionAnswer2,
-            distractionAnswer3: distractionAnswer3
+            distractionAnswer3: distractionAnswer3,
         }).then(response => {
             if (response.error === null) {
                 return AlertRef.current.change('Adicionado')
@@ -60,17 +61,27 @@ export default function Maintence() {
     }
 
     useEffect(() => {
-        selectAll().then(response => { setQuestions(response.data) })
-        selectAllThemes().then(response => { setThemeList(response.data) })
+        selectAll().then(response => setQuestions(response.data))
         selectAllQtd().then(response => setQuestionsQTD(response.count))
         selectAllQtdEASY().then(response => setQuestionsEASY(response.count))
         selectAllQtdMEDIUM().then(response => setQuestionsMEDIUM(response.count))
         selectAllQtdHARD().then(response => setQuestionsHARD(response.count))
+        selectAllThemes().then(response => setThemeList(response.data))
     }, [])
+
+    useEffect(() => {
+        if (themeListInfo !== undefined) {
+            selectAllByTheme([themeListInfo]).then(response => setQuestions(response.data))
+            selectAllQtd([themeListInfo]).then(response => setQuestionsQTD(response.count))
+            selectAllQtdEASY([themeListInfo]).then(response => setQuestionsEASY(response.count))
+            selectAllQtdMEDIUM([themeListInfo]).then(response => setQuestionsMEDIUM(response.count))
+            selectAllQtdHARD([themeListInfo]).then(response => setQuestionsHARD(response.count))
+        }
+    }, [themeListInfo])
 
     return (
         <Fragment>
-            <div className="edit">
+            <div className="maintence">
                 <Container fluid>
                     <Alert ref={AlertRef} />
                     <br />
@@ -82,8 +93,9 @@ export default function Maintence() {
                                     <Row>
                                         <h6><b>É importante que o número de páginas seja um inteiro para garantir uma maior variabilidade de questões.</b></h6>
                                     </Row>
+
                                     <Row>
-                                        <li>Quantidade de questões gerais: {questionsQTD}</li>
+                                        <li><b>Quantidade de questões do tema {questions === undefined || themeListInfo === undefined ? 'Geral' : themeListInfo[0] === '1' ? 'Geral' : questions[0].theme}: {questionsQTD}</b></li>
                                     </Row>
                                     <Row>
                                         <li>Quantidade de questões fáceis: {questionsEASY}. Quantidade de páginas: {questionsEASY === undefined ? '' : questionsEASY / 5}</li>
@@ -94,6 +106,23 @@ export default function Maintence() {
                                     <Row>
                                         <li>Quantidade de questões difíceis: {questionsHARD}. Quantidade de páginas: {questionsHARD === undefined ? '' : questionsHARD / 2}</li>
                                     </Row>
+                                    <Row>
+                                        <li><b>Selecione para ver questões de temas específicos:</b></li>
+                                    </Row>
+                                    <Col>
+                                        <Row className="d-flex justify-content-center align-items-center">
+                                            <Input invalid={required} type="select" onChange={e => setThemeListInfo(e.target.value)} >
+                                                {
+                                                    themeList === undefined ? '' :
+                                                        themeList.map(tema => {
+                                                            return (
+                                                                <option key={tema.id} value={tema.id}>{tema.theme}</option>
+                                                            );
+                                                        })
+                                                }
+                                            </Input>
+                                        </Row>
+                                    </Col>
                                     <br />
                                 </Col>
                                 <Table bordered responsive striped>
@@ -156,7 +185,7 @@ export default function Maintence() {
                                                     themeList === undefined ? '' :
                                                         themeList.map(tema => {
                                                             return (
-                                                                <option key={tema.id} value={{id: tema.id, tema:tema.theme}}>{tema.theme}</option>
+                                                                <option key={tema.id} value={tema.id}>{tema.theme}</option>
                                                             );
                                                         })
                                                 }
