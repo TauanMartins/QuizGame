@@ -10,7 +10,9 @@ import { getRandomInt, shuffleArray } from "../../components/DataComponents/Rand
 
 export default function Game() {
     // variáveis globais que percorrem o jogo inteiro e todos seus componentes
-    const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setAnswers, name, img, theme } = useContext(GlobalState)
+    const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos,
+        setAnswers, name, img, theme, streak, setStreak, distractionAnswer, power,
+        setPower, activate, setActivate, multiplier, setMultiplier } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -25,7 +27,9 @@ export default function Game() {
     const scoreDisplay = useMemo(() => Math.floor(pontos), [pontos])
 
     function timeOut() {
-        return evaluator('operationGame1');
+        if (questionNumberDisplay <= 10) {
+            return evaluator('operationGame1');
+        }
     }
 
     // variável que chama as questões com a quantidade e dificuldade certa, é onde possui a
@@ -92,15 +96,61 @@ export default function Game() {
     // função chamada após usuário clicar em uma resposta ou o tempo acabar, acresce 
     // ou permanece a pontuação caso acerte ou erre e chama a nextQuestion().
     function evaluator(value) {
-        console.log('evaluator')
+        // define valor padrão de pontuação para cada tipo de questão
+        let qEasy = 1000;
+        let qMedium = 1500;
+        let qHard = 2000;
+
+        // ao clicar em uma alternativa ou acabando o tempo os poderes são desativados
+        // e o multiplicador volta ao normal de valor 1
+        setActivate(false);
+        setMultiplier(1);
+
+        // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
+            // como ele acertou seta de verde
             document.getElementById(questionNumber).style.backgroundColor = '#218838';
-            setPontos(scoreDisplay + 1)
+
+            // faz a somatória da pontuação dependendo do tipo de questão e multiplicador
+            if (currentQuestion.difficulty === 'E') {
+                setPontos(scoreDisplay + (qEasy * multiplier))
+            } else if (currentQuestion.difficulty === 'M') {
+                setPontos(scoreDisplay + (qMedium * multiplier))
+            } else {
+                setPontos(scoreDisplay + (qHard * multiplier))
+            }
+
+            // seta +1 p contar o streak
+            setStreak(streak + 1);
+            
+            // aqui ele vê quantas questões acertou seguidas, irá mudar a cor para laranja.
+            if (streak + 1 >= 3) {
+                let streakV = streak;
+                let qNumber = questionNumber
+                while (qNumber !== (questionNumber - streakV - 1)) {
+                    document.getElementById(qNumber).style.backgroundColor = '#EC9706'
+                    qNumber = qNumber - 1;
+                }
+            }
             return nextQuestion();
         } else {
+            // ao errar uma questão seta de vermelho e chama a função setPontos para chamar a check() posteriormente
             document.getElementById(questionNumber).style.backgroundColor = '#c82333';
             var operationalPoints = parseFloat(`0.0${getRandomInt(0, 1000)}`);
             setPontos(scoreDisplay + operationalPoints);
+
+            // se ele tinha um streak ativo ele agora seta as questões antes amarelas(indicando streak) para verde,
+            let streakV = streak;
+            let qNumber = questionNumber;
+            while (qNumber !== (questionNumber - streakV - 1)) {
+                if (qNumber !== questionNumber) {
+                    document.getElementById(qNumber).style.backgroundColor = '#218838'
+                }
+                qNumber = qNumber - 1;
+            }
+
+            // como ele errou, perde o streak
+            setStreak(0)
             return nextQuestion();
         }
 
@@ -109,7 +159,12 @@ export default function Game() {
     // e se há a necessidade de chamar funções para encerrar o jogo ou acrescentar questões.
     function check(value) {
         console.log('check')
-        // console.log("respostas: ", answers)
+
+        // aqui checa se o usuário ativará o poder ou não.
+        if (streak % 3 === 0 && streak !== 0) {
+            setActivate(true)
+        }
+
 
         // variável que define a questão a frente da próxima. Ex: na lista com 3 questões e estando 
         // respondendo a primeira questão, next_question terá valor de 2, pois a 2 questão é logo após a 1 
@@ -131,7 +186,7 @@ export default function Game() {
             (questions[questions.length - 1].difficulty === 'D' && questions.length < 2 && questionNumberDisplay >= next_question)) {
             if (currentQuestion.difficulty === 'E' && value === undefined) {
                 return generateQuestion(2)
-            } else if ((currentQuestion.difficulty === 'M'||currentQuestion.difficulty === 'E') && value !== 'operationGame3') {
+            } else if ((currentQuestion.difficulty === 'M' || currentQuestion.difficulty === 'E') && value !== 'operationGame3') {
                 return generateQuestion(3)
             }
         }
@@ -149,7 +204,7 @@ export default function Game() {
         console.log("nextQuestion");
         setAnswers(['', '', '', '']) // seta lista de respostas como vazias para os botões não sumirem
         setQuestionNumber(questionNumberDisplay + 1); // seta questão +=1
-        document.getElementById(questionNumber + 1 === 11 ? 10 : questionNumber + 1).style.backgroundColor = 'orange' // seta a proxima questão como atual
+        document.getElementById(questionNumber + 1 === 11 ? 10 : questionNumber + 1).style.backgroundColor = '#60B4D3' // seta a proxima questão como atual
         CounterRef.current.restartTimer(); // restart timer
         QuestionRef.current.nextQuestion(); // diz para componente filho alterar questão
     }
@@ -178,6 +233,22 @@ export default function Game() {
         // eslint-disable-next-line
     }, [pontos])
 
+    useEffect(() => {
+        if (power === 'Hide') {
+            document.getElementById(distractionAnswer).style.display = 'none';
+            setActivate(false);
+            setPower(undefined);
+        } else if (power === '2x') {
+            setMultiplier(2);
+            setActivate(false);
+            setPower(undefined);
+        } else if (power === '3x') {
+            setMultiplier(3);
+            setActivate(false);
+            setPower(undefined);
+        }
+        // eslint-disable-next-line
+    }, [power])
 
 
     return (
@@ -226,13 +297,26 @@ export default function Game() {
                             </Col>
                         </CardTitle>
                         <CardBody>
-                            <Row>
-                                <Col>
+                            <Col>
+                                <Row className="d-flex justify-content-center align-items-center">
                                     <Question ref={QuestionRef} />
-                                </Col>
-                            </Row>
-                            {img === null || img === undefined ? '' :
-                                <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
+                                </Row>
+                                <Row className="d-flex justify-content-center align-items-center">
+                                    {img === null || img === undefined ? '' :
+                                        <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
+                                </Row>
+                                <Row className="d-flex justify-content-center align-items-center">
+                                    {
+                                        activate === true ?
+                                            <>
+                                                <Button outline color='warning' onClick={() => setPower('Hide')}>Hide</Button>{'  .  '}
+                                                <Button outline color='danger' onClick={() => setPower('2x')}>2x Points</Button>{'  .  '}
+                                                <Button outline color='danger' onClick={() => setPower('3x')}>3x Points</Button>
+                                            </>
+                                            : ''
+                                    }
+                                </Row>
+                            </Col>
                         </CardBody>
                     </Card>
 
@@ -242,14 +326,14 @@ export default function Game() {
                                 <Row >
                                     <Col>
                                         <Row >
-                                            <Button onClick={e => { evaluator(e.target.value); }} value={answers[0]} key={answers[0]} className="Button" color="primary" >
+                                            <Button onClick={e => { evaluator(e.target.value); }} id={answers[0]} value={answers[0]} key={answers[0]} className="Button" color="primary" >
                                                 {answers[0]}
                                             </Button>
                                         </Row>
                                     </Col>
                                     <Col>
                                         <Row>
-                                            <Button onClick={e => { evaluator(e.target.value); }} value={answers[1]} key={answers[1]} className="Button" color="success" >
+                                            <Button onClick={e => { evaluator(e.target.value); }} id={answers[1]} value={answers[1]} key={answers[1]} className="Button" color="success" >
                                                 {answers[1]}
                                             </Button>
                                         </Row>
@@ -259,14 +343,14 @@ export default function Game() {
                                     <Row >
                                         <Col>
                                             <Row>
-                                                <Button onClick={e => { evaluator(e.target.value); }} value={answers[2]} key={answers[2]} className="Button" color="warning" >
+                                                <Button onClick={e => { evaluator(e.target.value); }} id={answers[2]} value={answers[2]} key={answers[2]} className="Button" color="warning" >
                                                     {answers[2]}
                                                 </Button>
                                             </Row>
                                         </Col>
                                         <Col>
                                             <Row>
-                                                <Button onClick={e => { evaluator(e.target.value); }} value={answers[3]} key={answers[3]} className="Button" color="danger" >
+                                                <Button onClick={e => { evaluator(e.target.value); }} id={answers[3]} value={answers[3]} key={answers[3]} className="Button" color="danger" >
                                                     {answers[3]}
                                                 </Button>
                                             </Row>
