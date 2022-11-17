@@ -10,6 +10,13 @@ function GlobalStateProvider({ children }) {
     const [correctAnswer, setCorrectAnswer] = useState(undefined);
     const [answers, setAnswers] = useState([]);
 
+    // variáveis para compor os poderes e atributos não essenciais
+    const [streak, setStreak] = useState(0);
+    const [distractionAnswer, setDistractionAnswer] = useState(undefined);
+    const [power, setPower] = useState(undefined)
+    const [activate, setActivate] = useState(false)
+    const [multiplier, setMultiplier] = useState(1);
+
     // variáveis que compõem dados do jogador
     const [pontos, setPontos] = useState(0);
     const [name, setName] = useState('Unknown');
@@ -26,7 +33,12 @@ function GlobalStateProvider({ children }) {
             pontos, setPontos,
             name, setName,
             img, setIMG,
-            theme, setTheme
+            theme, setTheme,
+            streak, setStreak,
+            distractionAnswer, setDistractionAnswer,
+            power, setPower,
+            activate, setActivate,
+            multiplier, setMultiplier
         }}>
             {children}
         </GlobalState.Provider>

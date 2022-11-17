@@ -12,7 +12,7 @@ function GameOptions({ a }, ref) {
     const [invalid, setInvalid] = useState({ value: 'true', msg: '', first: true });
 
     // variáveis para definir opções do jogador
-    const { setName, setPontos, setTheme, theme } = useContext(GlobalState)
+    const { setName, setPontos, setTheme, theme, setActivate, setPower, setMultiplier, setStreak } = useContext(GlobalState)
 
     // variáveis para apresentar a lista correta ao usuário à 
     // medida que ele for marcando e desmarcando as checkboxes
@@ -27,10 +27,14 @@ function GameOptions({ a }, ref) {
     // caso o usuário já tenha jogado irá setar para variáveis padrão.
     ref.current = {
         startGameOptions: function () {
-            setAbrir(true)
-            setName('Unknown')
-            setTheme([])            
-            setPontos(0)
+            setAbrir(true);
+            setName('Unknown');
+            setTheme([]);           
+            setPontos(0);
+            setActivate(false);
+            setPower(undefined);
+            setStreak(0);
+            setMultiplier(1);
         }
     }
 
