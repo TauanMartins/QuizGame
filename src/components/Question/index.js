@@ -4,7 +4,7 @@ import { GlobalState } from "../DataComponents/GlobalState";
 import { shuffleArray } from "../DataComponents/RandomInt&ShuffledArray";
 
 function Question({ nothing }, ref) {
-    const { questions, setQuestions, currentQuestion, setCurrentQuestion, setAnswers, setCorrectAnswer, setIMG, setDistractionAnswer } = useContext(GlobalState);
+    const { questions, setQuestions, currentQuestion, setCurrentQuestion, setAnswers, setCorrectAnswer, setIMG, setDistractionAnswer1, setDistractionAnswer2 } = useContext(GlobalState);
 
     // função que baixa imagem se a questão possuir
     async function downloadImage(path) {
@@ -22,11 +22,12 @@ function Question({ nothing }, ref) {
     function generateQuestion(question) {
         //console.log(question)
         setCorrectAnswer(question.rightAnswer)
-        setDistractionAnswer(question.distractionAnswer1)
+        setDistractionAnswer1(question.distractionAnswer1)
         if ((question.distractionAnswer2 === undefined || question.distractionAnswer2 === null || question.distractionAnswer2 === '') &&
             (question.distractionAnswer3 === undefined || question.distractionAnswer3 === null || question.distractionAnswer3 === '')) {
             return setAnswers(shuffleArray([question.rightAnswer, question.distractionAnswer1]))
-        } else {            
+        } else {   
+            setDistractionAnswer2(question.distractionAnswer2)         
             return setAnswers(shuffleArray([question.rightAnswer, question.distractionAnswer1, question.distractionAnswer2, question.distractionAnswer3]))
         }
     }
