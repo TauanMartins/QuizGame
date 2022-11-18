@@ -12,7 +12,9 @@ function GlobalStateProvider({ children }) {
 
     // variáveis para compor os poderes e atributos não essenciais
     const [streak, setStreak] = useState(0);
-    const [distractionAnswer, setDistractionAnswer] = useState(undefined);
+    const [distractionAnswer1, setDistractionAnswer1] = useState(undefined);
+    const [distractionAnswer2, setDistractionAnswer2] = useState(undefined);
+    const [listPowers, setListPowers] = useState([1,2,3,4,5])
     const [power, setPower] = useState(undefined)
     const [activate, setActivate] = useState(false)
     const [multiplier, setMultiplier] = useState(1);
@@ -35,10 +37,13 @@ function GlobalStateProvider({ children }) {
             img, setIMG,
             theme, setTheme,
             streak, setStreak,
-            distractionAnswer, setDistractionAnswer,
+            distractionAnswer1, setDistractionAnswer1,
+            distractionAnswer2, setDistractionAnswer2,
             power, setPower,
             activate, setActivate,
-            multiplier, setMultiplier
+            multiplier, setMultiplier,
+            listPowers, setListPowers
+
         }}>
             {children}
         </GlobalState.Provider>

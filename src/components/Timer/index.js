@@ -3,7 +3,7 @@ import { getRandomInt } from "../DataComponents/RandomInt&ShuffledArray";
 
 
 function Timer({ timeOut }, ref) {
-    const seconds = 59.01;
+    const seconds = 21.01;
     const [timer, setTimer] = useState(undefined)
     const [counter, setCounter] = useState(seconds)
     var ms = parseFloat(`0.${getRandomInt(0, 1000)}`)

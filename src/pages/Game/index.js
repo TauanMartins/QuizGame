@@ -11,13 +11,15 @@ import { getRandomInt, shuffleArray } from "../../components/DataComponents/Rand
 export default function Game() {
     // variáveis globais que percorrem o jogo inteiro e todos seus componentes
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos,
-        setAnswers, name, img, theme, streak, setStreak, distractionAnswer, power,
-        setPower, activate, setActivate, multiplier, setMultiplier } = useContext(GlobalState)
+        setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
+        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
     const EndgameRef = useRef(null);
+
+    // variável para sortear poderes da questão
 
     // variável que define o número da questão
     const [questionNumber, setQuestionNumber] = useState(1);
@@ -72,7 +74,6 @@ export default function Game() {
                     }
                 })
             })
-
         }
         if (cond === 3) {
             return selectAllQtdHARD(theme).then(response => {
@@ -92,7 +93,6 @@ export default function Game() {
         }
     }
 
-
     // função chamada após usuário clicar em uma resposta ou o tempo acabar, acresce 
     // ou permanece a pontuação caso acerte ou erre e chama a nextQuestion().
     function evaluator(value) {
@@ -106,8 +106,11 @@ export default function Game() {
         setActivate(false);
         setMultiplier(1);
 
+        // sorteia poderes quando o usuário acertar o streak
+        setListPowers(shuffleArray(listPowers))
         // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
+
             // como ele acertou seta de verde
             document.getElementById(questionNumber).style.backgroundColor = '#218838';
 
@@ -122,7 +125,7 @@ export default function Game() {
 
             // seta +1 p contar o streak
             setStreak(streak + 1);
-            
+
             // aqui ele vê quantas questões acertou seguidas, irá mudar a cor para laranja.
             if (streak + 1 >= 3) {
                 let streakV = streak;
@@ -132,9 +135,13 @@ export default function Game() {
                     qNumber = qNumber - 1;
                 }
             }
+
             return nextQuestion();
         } else {
             // ao errar uma questão seta de vermelho e chama a função setPontos para chamar a check() posteriormente
+            if (power === 'Imune') {
+                return console.log('Tente novamente!')
+            }
             document.getElementById(questionNumber).style.backgroundColor = '#c82333';
             var operationalPoints = parseFloat(`0.0${getRandomInt(0, 1000)}`);
             setPontos(scoreDisplay + operationalPoints);
@@ -151,6 +158,7 @@ export default function Game() {
 
             // como ele errou, perde o streak
             setStreak(0)
+
             return nextQuestion();
         }
 
@@ -158,13 +166,12 @@ export default function Game() {
     // Chamado ao mudar de questão, confere se há questões suficientes pela frente
     // e se há a necessidade de chamar funções para encerrar o jogo ou acrescentar questões.
     function check(value) {
-        console.log('check')
+        //console.log('check')
 
         // aqui checa se o usuário ativará o poder ou não.
         if (streak % 3 === 0 && streak !== 0) {
             setActivate(true)
         }
-
 
         // variável que define a questão a frente da próxima. Ex: na lista com 3 questões e estando 
         // respondendo a primeira questão, next_question terá valor de 2, pois a 2 questão é logo após a 1 
@@ -201,8 +208,8 @@ export default function Game() {
     // função chamada após evaluation, limpa lista de respostas, acresce o número da questão, 
     // muda a questão atual restarta o timer fala para o componente filho alterar a questão.
     function nextQuestion() {
-        console.log("nextQuestion");
-        setAnswers(['', '', '', '']) // seta lista de respostas como vazias para os botões não sumirem
+        //console.log("nextQuestion");
+        setAnswers(['', '']) // seta lista de respostas como vazias para os botões não sumirem
         setQuestionNumber(questionNumberDisplay + 1); // seta questão +=1
         document.getElementById(questionNumber + 1 === 11 ? 10 : questionNumber + 1).style.backgroundColor = '#60B4D3' // seta a proxima questão como atual
         CounterRef.current.restartTimer(); // restart timer
@@ -212,7 +219,7 @@ export default function Game() {
     // função chamada no endgame, insere os dados do jogador no bd, e espera 500 ms para 
     // ao registrar no bd ser visualizado logo em seguida no modal que abrirá na chamada da função.
     function endgame() {
-        console.log("endgame")
+        //console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
         insertScore({ name: name, score: scoreDisplay })
         setTimeout(() => EndgameRef.current.endgame(), 500)
@@ -234,8 +241,13 @@ export default function Game() {
     }, [pontos])
 
     useEffect(() => {
-        if (power === 'Hide') {
-            document.getElementById(distractionAnswer).style.display = 'none';
+        if (power === 'Hide1') {
+            document.getElementById(String(distractionAnswer1) + 'Answer').style.display = 'none';
+            setActivate(false);
+            setPower(undefined);
+        } else if (power === 'Hide2') {
+            document.getElementById(String(distractionAnswer1) + 'Answer').style.display = 'none';
+            document.getElementById(String(distractionAnswer2) + 'Answer').style.display = 'none';
             setActivate(false);
             setPower(undefined);
         } else if (power === '2x') {
@@ -272,6 +284,7 @@ export default function Game() {
                                     </Col>
                                     <Col >
                                         <Row className="d-flex justify-content-center align-items-center">
+
                                             <Timer timeOut={timeOut} ref={CounterRef} />
                                         </Row>
                                     </Col>
@@ -296,6 +309,7 @@ export default function Game() {
                                 </Row>
                             </Col>
                         </CardTitle>
+                        <hr />
                         <CardBody>
                             <Col>
                                 <Row className="d-flex justify-content-center align-items-center">
@@ -305,13 +319,51 @@ export default function Game() {
                                     {img === null || img === undefined ? '' :
                                         <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
                                 </Row>
-                                <Row className="d-flex justify-content-center align-items-center">
+                                <Row className="AllPowers">
                                     {
+
                                         activate === true ?
                                             <>
-                                                <Button outline color='warning' onClick={() => setPower('Hide')}>Hide</Button>{'  .  '}
-                                                <Button outline color='danger' onClick={() => setPower('2x')}>2x Points</Button>{'  .  '}
-                                                <Button outline color='danger' onClick={() => setPower('3x')}>3x Points</Button>
+                                                {(listPowers[0] === 1 || listPowers[1] === 1) || (listPowers[0] === 5 && listPowers[1] === 4) || (listPowers[0] === 4 && listPowers[1] === 5) ?
+                                                    <Col>
+                                                        <Row className="flex-end justify-content-center align-items-center">
+                                                            <Button outline color='warning' onClick={() => setPower('Hide1')}><b>Hide</b></Button>
+                                                        </Row>
+                                                    </Col>
+                                                    : ''
+                                                }
+                                                {((listPowers[0] === 2 || listPowers[1] === 2) && !(listPowers[0] === 1 || listPowers[1] === 1)) ?
+                                                    answers.length > 2 ?
+                                                        <Col>
+                                                            <Row className="d-flex justify-content-center align-items-center">
+                                                                <Button outline color='warning' onClick={() => setPower('Hide2')}><b>Hide</b></Button>
+                                                            </Row>
+                                                        </Col>
+                                                        : ''
+                                                    : ''
+                                                }
+                                                {(listPowers[0] === 3 || listPowers[1] === 3) || ((listPowers[0] === 4 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 4) && answers.length <= 2)
+                                                    || (listPowers[0] === 5 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 5) ?
+                                                    <Col>
+                                                        <Row className="d-flex justify-content-center align-items-center">
+                                                            < Button outline color='info' onClick={() => { setActivate(false); setPower('Imune') }}><b>Imune</b></Button>
+                                                        </Row>
+                                                    </Col>
+                                                    : ''}
+                                                {(listPowers[0] === 4 || listPowers[1] === 4) || (listPowers[0] === 1 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 1) ?
+                                                    <Col>
+                                                        <Row className="d-flex justify-content-center align-items-center">
+                                                            <Button outline color='danger' onClick={() => setPower('2x')}><b>2x Points</b></Button>
+                                                        </Row>
+                                                    </Col>
+                                                    : ''}
+                                                {(listPowers[0] === 5 || listPowers[1] === 5) && !(listPowers[0] === 4 || listPowers[1] === 4) ?
+                                                    <Col>
+                                                        <Row className="d-flex justify-content-center align-items-center">
+                                                            <Button outline color='danger' onClick={() => setPower('3x')}><b>3x Points</b></Button>
+                                                        </Row>
+                                                    </Col>
+                                                    : ''}
                                             </>
                                             : ''
                                     }
@@ -326,14 +378,14 @@ export default function Game() {
                                 <Row >
                                     <Col>
                                         <Row >
-                                            <Button onClick={e => { evaluator(e.target.value); }} id={answers[0]} value={answers[0]} key={answers[0]} className="Button" color="primary" >
+                                            <Button onClick={e => { evaluator(e.target.value); }} id={String(answers[0]) + 'Answer'} value={answers[0]} key={answers[0]} className="Button" color="primary" >
                                                 {answers[0]}
                                             </Button>
                                         </Row>
                                     </Col>
                                     <Col>
                                         <Row>
-                                            <Button onClick={e => { evaluator(e.target.value); }} id={answers[1]} value={answers[1]} key={answers[1]} className="Button" color="success" >
+                                            <Button onClick={e => { evaluator(e.target.value); }} id={String(answers[1]) + 'Answer'} value={answers[1]} key={answers[1]} className="Button" color="success" >
                                                 {answers[1]}
                                             </Button>
                                         </Row>
@@ -343,14 +395,14 @@ export default function Game() {
                                     <Row >
                                         <Col>
                                             <Row>
-                                                <Button onClick={e => { evaluator(e.target.value); }} id={answers[2]} value={answers[2]} key={answers[2]} className="Button" color="warning" >
+                                                <Button onClick={e => { evaluator(e.target.value); }} id={String(answers[2]) + 'Answer'} value={answers[2]} key={answers[2]} className="Button" color="warning" >
                                                     {answers[2]}
                                                 </Button>
                                             </Row>
                                         </Col>
                                         <Col>
                                             <Row>
-                                                <Button onClick={e => { evaluator(e.target.value); }} id={answers[3]} value={answers[3]} key={answers[3]} className="Button" color="danger" >
+                                                <Button onClick={e => { evaluator(e.target.value); }} id={String(answers[3]) + 'Answer'} value={answers[3]} key={answers[3]} className="Button" color="danger" >
                                                     {answers[3]}
                                                 </Button>
                                             </Row>
