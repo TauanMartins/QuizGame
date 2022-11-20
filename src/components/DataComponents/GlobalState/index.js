@@ -9,6 +9,7 @@ function GlobalStateProvider({ children }) {
     const [questions, setQuestions] = useState(undefined);
     const [correctAnswer, setCorrectAnswer] = useState(undefined);
     const [answers, setAnswers] = useState([]);
+    const [endgameVariable, setEndGame] = useState(false);
 
     // variáveis para compor os poderes e atributos não essenciais
     const [streak, setStreak] = useState(0);
@@ -42,7 +43,8 @@ function GlobalStateProvider({ children }) {
             power, setPower,
             activate, setActivate,
             multiplier, setMultiplier,
-            listPowers, setListPowers
+            listPowers, setListPowers,
+            endgameVariable, setEndGame
 
         }}>
             {children}

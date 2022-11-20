@@ -10,6 +10,7 @@ function Timer({ timeOut }, ref) {
     ref.current = {
         stopTimer: function () {
             clearTimeout(timer);
+            setTimer('overgame')
         },
         restartTimer: async function () {
             clearTimeout(timer);
@@ -22,7 +23,7 @@ function Timer({ timeOut }, ref) {
         if (Math.floor(counter) === 0) {
             return timeOut();
         }
-        else if (Math.floor(counter) > 0) {
+        else if (Math.floor(counter) > 0 && timer !=='overgame') {
             setTimer(setTimeout(() => { return setCounter(counter - 1) }, 1000))
         }
 
