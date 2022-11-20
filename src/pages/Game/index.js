@@ -5,21 +5,19 @@ import Question from "../../components/Question";
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import { insertScore, selectAllPaginationEASY, selectAllPaginationHARD, selectAllPaginationMEDIUM, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 
 export default function Game() {
     // variáveis globais que percorrem o jogo inteiro e todos seus componentes
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
-        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers } = useContext(GlobalState)
+        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, endgameVariable } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
     const EndgameRef = useRef(null);
-
-    // variável para sortear poderes da questão
 
     // variável que define o número da questão
     const [questionNumber, setQuestionNumber] = useState(1);
@@ -29,9 +27,7 @@ export default function Game() {
     const scoreDisplay = useMemo(() => Math.floor(pontos), [pontos])
 
     function timeOut() {
-        if (questionNumberDisplay <= 10) {
-            return evaluator('operationGame1');
-        }
+        return evaluator('operationGame1');
     }
 
     // variável que chama as questões com a quantidade e dificuldade certa, é onde possui a
@@ -50,7 +46,7 @@ export default function Game() {
                 var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
                 var intervaloMin = currentPage * 5;
                 var intervaloMax = intervaloMin + 4;
-                selectAllPaginationEASY(intervaloMin, intervaloMax, theme).then(response => {
+                selectAllPaginationEASYRandom(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
                         return check('operationGame1')
                     } else {
@@ -66,7 +62,7 @@ export default function Game() {
                 var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
                 var intervaloMin = currentPage * 3;
                 var intervaloMax = intervaloMin + 2;
-                selectAllPaginationMEDIUM(intervaloMin, intervaloMax, theme).then(response => {
+                selectAllPaginationMEDIUMRandom(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
                         return check('operationGame2')
                     } else {
@@ -82,7 +78,7 @@ export default function Game() {
                 var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
                 var intervaloMin = currentPage * 2;
                 var intervaloMax = intervaloMin + 1;
-                selectAllPaginationHARD(intervaloMin, intervaloMax, theme).then(response => {
+                selectAllPaginationHARDRandom(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
                         return check('operationGame3')
                     } else {
@@ -140,6 +136,7 @@ export default function Game() {
         } else {
             // ao errar uma questão seta de vermelho e chama a função setPontos para chamar a check() posteriormente
             if (power === 'Imune') {
+                setPower(undefined);
                 return console.log('Tente novamente!')
             }
             document.getElementById(questionNumber).style.backgroundColor = '#c82333';
@@ -168,40 +165,55 @@ export default function Game() {
     function check(value) {
         //console.log('check')
 
+        // variável que define a questão a frente da próxima. Ex: na lista com 3 questões e estando 
+        // respondendo a primeira questão, next_question terá valor de 2, pois a 2 questão é logo após a 1 
+
+        // console.log('entrou 1')
+        // console.log('dificuldade da questão é facil? ', questions[questions.length - 1].difficulty === 'E', 'qtd de questões menor que o esperado? ', questions.length < 5, 'menos questões na lista do que o numero da questão?', questionNumberDisplay > questions.length, 'ultima questão é a atual? ', questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))
+        // console.log('dificuldade da questão é media? ', questions[questions.length - 1].difficulty === 'M', 'qtd de questões menor que o esperado? ', questions.length < 3, 'menos questões na lista do que o numero da questão?', questionNumberDisplay - 4 >= questions.length, 'ultima questão é a atual? ', questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))
+        // console.log('dificuldade da questão é dificil? ', questions[questions.length - 1].difficulty === 'H', 'qtd de questões menor que o esperado? ', questions.length <= 2, 'menos questões na lista do que o numero da questão?', questionNumberDisplay - 7 >= questions.length, 'ultima questão é a atual? ', questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))
+
         // aqui checa se o usuário ativará o poder ou não.
         if (streak % 3 === 0 && streak !== 0) {
             setActivate(true)
         }
 
-        // variável que define a questão a frente da próxima. Ex: na lista com 3 questões e estando 
-        // respondendo a primeira questão, next_question terá valor de 2, pois a 2 questão é logo após a 1 
-        var next_question = questions.indexOf(currentQuestion, 0) + 2;
-
         // condição visa incluir questões médias depois que o jogador responde as 5 questões fáceis
         if (((questionNumberDisplay === 6) && (questions[questions.length - 1].difficulty === 'E'))) {
+            // console.log('entrou 2')
             generateQuestion(2)
         }
         // condição visa incluir questões difíceis depois que o jogador responde as 3 questões médias
         else if (((questionNumberDisplay === 9) && (questions[questions.length - 1].difficulty === 'M'))) {
+            // console.log('entrou 3')
             generateQuestion(3)
         }
         // se não satisfaz as primeiras condições é capaz que não existam questões que preencham a premissa 5,3,2
         // onde deve ter 5 questões fáceis, 3 médias e 2 difíceis no banco de dados. Condições abaixo visam preencher
         // o jogo com o máximo de questões que achar sobre o tema escolhido. E se não houver o jogo acaba.
-        else if ((questions[questions.length - 1].difficulty === 'E' && questions.length < 5 && questionNumberDisplay >= next_question) ||
-            (questions[questions.length - 1].difficulty === 'M' && questions.length < 3 && questionNumberDisplay >= next_question) ||
-            (questions[questions.length - 1].difficulty === 'D' && questions.length < 2 && questionNumberDisplay >= next_question)) {
+        else if ((questions[questions.length - 1].difficulty === 'E' && (questions.length < 5 && questionNumberDisplay > questions.length) && questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion)) ||
+            (questions[questions.length - 1].difficulty === 'M' && (questions.length < 3 && questionNumberDisplay - 4 >= questions.length) && questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion)) ||
+            (questions[questions.length - 1].difficulty === 'H' && (questions.length < 2 && questionNumberDisplay - 7 >= questions.length) && questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))) {
+            // console.log('entrou 4')
+
             if (currentQuestion.difficulty === 'E' && value === undefined) {
+                // console.log('if')
                 return generateQuestion(2)
-            } else if ((currentQuestion.difficulty === 'M' || currentQuestion.difficulty === 'E') && value !== 'operationGame3') {
+            }
+            else if (currentQuestion.difficulty === 'M' || value === 'operationGame2') {
+                //console.log('else if 1')
                 return generateQuestion(3)
+            }
+            else if (currentQuestion.difficulty === 'H' && !(value === 'operationGame4')) {
+                // console.log('else if 2')
+                return check('operationGame4')
             }
         }
         // condição abaixo acabará com o jogo, quando chegar 
-        if (questionNumberDisplay === 11 || value === 'operationGame3' || value === 'operationGame2' ||
-            (currentQuestion.difficulty === 'H' && questions.length < 2)) {
+        if (questionNumberDisplay === 11 || value === 'operationGame2' || value === 'operationGame3' || value === 'operationGame4') {
+            // console.log('entrou 5')
             CounterRef.current.stopTimer();
-            endgame()
+            return endgame()
         }
     }
 
@@ -222,7 +234,7 @@ export default function Game() {
         //console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
         insertScore({ name: name, score: scoreDisplay })
-        setTimeout(() => EndgameRef.current.endgame(), 500)
+        setTimeout(() => EndgameRef.current.endgame(questionNumberDisplay), 500)
     }
 
     // effect que ao carregar o jogo chama as questões fáceis para compor o jogo
@@ -235,6 +247,9 @@ export default function Game() {
     // se precisa chamar questões Médias ou Difíceis ou ainda acabar o jogo.
     useEffect(() => {
         if (pontos !== 0 && questions.length > 0) {
+            if (endgameVariable) {
+                return check('operationGame4')
+            }
             check()
         }
         // eslint-disable-next-line

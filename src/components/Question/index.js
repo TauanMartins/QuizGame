@@ -4,7 +4,7 @@ import { GlobalState } from "../DataComponents/GlobalState";
 import { shuffleArray } from "../DataComponents/RandomInt&ShuffledArray";
 
 function Question({ nothing }, ref) {
-    const { questions, setQuestions, currentQuestion, setCurrentQuestion, setAnswers, setCorrectAnswer, setIMG, setDistractionAnswer1, setDistractionAnswer2 } = useContext(GlobalState);
+    const { questions, setQuestions, currentQuestion, setCurrentQuestion, setAnswers, setCorrectAnswer, setIMG, setDistractionAnswer1, setDistractionAnswer2, setEndGame } = useContext(GlobalState);
 
     // função que baixa imagem se a questão possuir
     async function downloadImage(path) {
@@ -37,7 +37,7 @@ function Question({ nothing }, ref) {
         setList: function (allQuestions) {
             // seta a lista de questões que serão perguntadas            
             setQuestions(allQuestions)
-
+            console.log(allQuestions)
             // seta a imagem como nula caso a questão anterior tivesse uma imagem
             setIMG(undefined)
 
@@ -60,6 +60,10 @@ function Question({ nothing }, ref) {
             // já está sendo exibida e se está encerra na hora para não haver erros
             var next_question = questions.indexOf(currentQuestion, 0) + 1;
             var limit = questions.length;
+            if (next_question===limit&&currentQuestion.difficulty==='H') {
+                setEndGame(true);
+                return "NoMoreQuestionsOverFinale"
+            }
             if (next_question===limit) {
                 return "NoMoreQuestionsOver"
             }

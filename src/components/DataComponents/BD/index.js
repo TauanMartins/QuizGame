@@ -92,6 +92,26 @@ export async function selectAllPaginationEASY(min, max, tema) {
     error = response.error
     return { data, error };
 }
+export async function selectAllPaginationEASYRandom(min, max, tema) {
+    var data, error, response;
+    if (tema && tema[0] !== '1') {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'E')
+            .in('theme_fk', tema)
+            .range(min, max);
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'E')
+            .range(min, max);
+    }
+    data = response.data
+    error = response.error
+    return { data, error };
+}
 
 export async function selectAllPaginationMEDIUM(min, max, tema) {
     var data, error, response;
@@ -114,7 +134,49 @@ export async function selectAllPaginationMEDIUM(min, max, tema) {
     return { data, error };
 }
 
+export async function selectAllPaginationMEDIUMRandom(min, max, tema) {
+    var data, error, response;
+    if (tema && tema[0] !== '1') {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'M')
+            .in('theme_fk', tema)
+            .range(min, max);
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'M')
+            .range(min, max);
+    }
+    data = response.data
+    error = response.error
+    return { data, error };
+}
+
 export async function selectAllPaginationHARD(min, max, tema) {
+    var data, error, response;
+    if (tema && tema[0] !== '1') {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'H')
+            .in('theme_fk', tema)
+            .range(min, max);
+    } else {
+        response = await supabase
+            .from('questions')
+            .select('*')
+            .eq('difficulty', 'H')
+            .range(min, max);
+    }
+    data = response.data
+    error = response.error
+    return { data, error };
+}
+
+export async function selectAllPaginationHARDRandom(min, max, tema) {
     var data, error, response;
     if (tema && tema[0] !== '1') {
         response = await supabase

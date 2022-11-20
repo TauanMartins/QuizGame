@@ -4,15 +4,19 @@ import { GlobalState } from "../DataComponents/GlobalState";
 import { Link } from "react-router-dom";
 import Score from "../Score";
 
-function Endgame({ endgame, visible }, ref) {
+function Endgame({ nothing }, ref) {
 
     const [open, setOpen] = useState(false);
+    const [questionNumberDisplay, setQuestionNumberDisplay] = useState(0);
+
     const { pontos, name } = useContext(GlobalState);
+
     function handleTooltip() {
         setOpen(!open);
     }
     ref.current = {
-        endgame: function (pontos) {
+        endgame: function (qNumberDisplay) {
+            setQuestionNumberDisplay(qNumberDisplay);
             setOpen(true)
         },
         ...{ open: open }
@@ -27,10 +31,19 @@ function Endgame({ endgame, visible }, ref) {
                                 <b>
                                     Muito bom, {`${name}`}!
                                 </b>
-                                <br />
-                                <b>
-                                    Você concluiu o jogo!
-                                </b>
+                            </h4>
+                        </Row>
+                        <Row className="d-flex justify-content-center align-items-center">
+                            <h4 >
+                                {questionNumberDisplay < 10 ?
+                                    <b>
+                                        Porém, infelizmente não temos questões suficientes para o tema escolhido.
+                                    </b>
+                                    :
+                                    <b>
+                                        Você concluiu o jogo!
+                                    </b>}
+
                             </h4>
                         </Row>
                         <Row >
@@ -78,7 +91,7 @@ function Endgame({ endgame, visible }, ref) {
                     <br />
                 </ModalBody>
             </Modal>
-        </Container>
+        </Container >
     )
 }
 
