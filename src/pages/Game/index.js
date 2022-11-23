@@ -5,7 +5,7 @@ import Question from "../../components/Question";
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import { getSong, insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 import { IoSquare, IoShieldCheckmarkOutline, IoSnow, IoVolumeHigh, IoVolumeMute } from "react-icons/io5";
 
@@ -14,7 +14,7 @@ export default function Game() {
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
         setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, overQuestions,
-        audio, playing, soundEffectW, playingSoundEffectW, soundEffectR, playingSoundEffectR, setPlaying} = useContext(GlobalState)
+        audio, playing, soundEffectW, soundEffectR, setPlaying} = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -223,6 +223,7 @@ export default function Game() {
 
     useEffect(() => {
         playing ? audio.play() : audio.pause();
+        // eslint-disable-next-line
     }, [playing])
 
     // effect que após o jogador responder uma pergunta irá ser chamado para verificar

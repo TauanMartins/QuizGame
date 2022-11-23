@@ -44,6 +44,7 @@ function GameOptions({ a }, ref) {
         setOverQuestions(false);
         setOverQuestionsGame(false);
         audio.load()
+        // eslint-disable-next-line
     }, [])
 
     // toda vez que o usuário marcar e desmarcar uma opção de tema irá passar
