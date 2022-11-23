@@ -5,14 +5,19 @@ import { shuffleArray } from "../DataComponents/RandomInt&ShuffledArray";
 
 function Question({ nothing }, ref) {
     const { questions, setQuestions, currentQuestion, setCurrentQuestion, setAnswers, setCorrectAnswer, setIMG,
-            setDistractionAnswer1, setDistractionAnswer2, setOverQuestionsGame, setOverQuestions } = useContext(GlobalState);
+        setDistractionAnswer1, setDistractionAnswer2, setOverQuestionsGame, setOverQuestions } = useContext(GlobalState);
 
     // função que baixa imagem se a questão possuir
     async function downloadImage(path) {
         try {
             getImage(path).then(response => {
-                const url = URL.createObjectURL(response.data)
-                setIMG(url)
+                console.log(response.data)
+                if (response.data === null) {
+                    return setIMG(undefined)
+                } else {
+                    const url = URL.createObjectURL(response.data)
+                    setIMG(url)
+                }
             })
         } catch (error) {
             console.log('Error downloading image: ', error)

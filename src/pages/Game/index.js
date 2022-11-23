@@ -5,15 +5,16 @@ import Question from "../../components/Question";
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import { insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { getSong, insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
-import { IoSquare, IoShieldCheckmarkOutline, IoSnow } from "react-icons/io5";
+import { IoSquare, IoShieldCheckmarkOutline, IoSnow, IoVolumeHigh, IoVolumeMute } from "react-icons/io5";
 
 export default function Game() {
     // variáveis globais que percorrem o jogo inteiro e todos seus componentes
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
-        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, overQuestions } = useContext(GlobalState)
+        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, overQuestions,
+        audio, playing, soundEffectW, playingSoundEffectW, soundEffectR, playingSoundEffectR, setPlaying} = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -105,10 +106,10 @@ export default function Game() {
 
         // sorteia poderes quando o usuário acertar o streak
         setListPowers(shuffleArray(listPowers))
-        
+
         // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
-
+            soundEffectR.play();
             // como ele acertou seta de verde
             document.getElementById(questionNumber).style.backgroundColor = '#218838';
 
@@ -136,6 +137,7 @@ export default function Game() {
 
             return nextQuestion();
         } else {
+            soundEffectW.play();
             // ao errar uma questão seta de vermelho e chama a função setPontos para chamar a check() posteriormente
             if (power === 'Imune') {
                 setPower(undefined);
@@ -182,7 +184,7 @@ export default function Game() {
         // condição visa incluir questões difíceis depois que o jogador responde as 3 questões médias
         else if (((questionNumberDisplay === 9) && (questions[questions.length - 1].difficulty === 'M')) || (questions[questions.length - 1].difficulty === 'M' && value === 'operationGame2')) {
             generateQuestion(3)
-        } 
+        }
         // se não satisfaz as primeiras condições é capaz que não existam questões que preencham a premissa 5,3,2
         // onde deve ter 5 questões fáceis, 3 médias e 2 difíceis no banco de dados. Condições abaixo visam preencher
         // o jogo com o máximo de questões que achar sobre o tema escolhido. E se não houver o jogo acaba.
@@ -218,6 +220,10 @@ export default function Game() {
         generateQuestion(1)
         // eslint-disable-next-line
     }, [])
+
+    useEffect(() => {
+        playing ? audio.play() : audio.pause();
+    }, [playing])
 
     // effect que após o jogador responder uma pergunta irá ser chamado para verificar
     // se precisa chamar questões Médias ou Difíceis ou ainda acabar o jogo.
@@ -407,8 +413,8 @@ export default function Game() {
                                                     : ''
                                                 }
                                                 {(listPowers[0] === 3 || listPowers[1] === 3) || ((listPowers[0] === 4 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 4) && answers.length <= 2)
-                                                    || (((listPowers[0] === 5 && listPowers[1] === 2)&& answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 5) && answers.length <= 2)) 
-                                                    || (((listPowers[0] === 6 && listPowers[1] === 2)&& answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 6) && answers.length <= 2))?
+                                                    || (((listPowers[0] === 5 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 5) && answers.length <= 2))
+                                                    || (((listPowers[0] === 6 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 6) && answers.length <= 2)) ?
                                                     <Col>
                                                         <Row className="d-flex justify-content-center align-items-center">
                                                             < Button outline color='info' onClick={() => { setActivate(false); setPower('Imune') }}>
@@ -429,7 +435,7 @@ export default function Game() {
                                                     </Col>
                                                     : ''}
                                                 {(listPowers[0] === 4 || listPowers[1] === 4) || (listPowers[0] === 1 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 1) ||
-                                                    (((listPowers[0] === 3 && listPowers[1] === 2)&& answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 3) && answers.length <= 2)) ?
+                                                    (((listPowers[0] === 3 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 3) && answers.length <= 2)) ?
                                                     <Col>
                                                         <Row className="d-flex justify-content-center align-items-center">
                                                             <Button outline color='danger' onClick={() => setPower('2x')}><b>2x Points</b></Button>
@@ -466,6 +472,11 @@ export default function Game() {
                                             </>
                                             : ''
                                     }
+                                </Row>
+                                <Row>
+                                    {playing?
+                                    <IoVolumeMute size={40} onClick={()=>{setPlaying(false);audio.pause()}}/>:
+                                    <IoVolumeHigh size={40} onClick={()=>{setPlaying(true);audio.play()}}/>}
                                 </Row>
                             </Col>
                         </CardBody>

@@ -21,6 +21,13 @@ export async function getImage(path) {
     return { data: data, error };
 }
 
+export async function getSong(path) {
+    const { data, error } = await supabase.storage.from('public')
+        .download(`sounds/${path}`);
+
+    return { data: data, error };
+}
+
 export async function selectMaxScore() {
     let { data: maxscore, error } = await supabase
         .from('maxscore')
