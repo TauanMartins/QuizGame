@@ -18,6 +18,10 @@
     max-height: 160px;
 }
 
+.powerIcon {
+    line-height: 10%;
+}
+
 @media (min-width:700px) {
     .AllQuestions {
         margin: auto;
