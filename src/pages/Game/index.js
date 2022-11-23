@@ -14,7 +14,7 @@ export default function Game() {
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
         setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, overQuestions,
-        audio, playing, soundEffectW, soundEffectR, setPlaying} = useContext(GlobalState)
+        audio, playing, soundEffectW, soundEffectR, setPlaying } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -475,9 +475,10 @@ export default function Game() {
                                     }
                                 </Row>
                                 <Row>
-                                    {playing?
-                                    <IoVolumeMute size={40} onClick={()=>{setPlaying(false);audio.pause()}}/>:
-                                    <IoVolumeHigh size={40} onClick={()=>{setPlaying(true);audio.play()}}/>}
+                                    {playing ?
+                                        <IoVolumeHigh size={40} onClick={() => { setPlaying(true); audio.play() }} /> :
+                                        <IoVolumeMute size={40} onClick={() => { setPlaying(false); audio.pause() }} />
+                                    }
                                 </Row>
                             </Col>
                         </CardBody>
