@@ -7,12 +7,13 @@ import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
 import { insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
+import { IoSquare, IoShieldCheckmarkOutline, IoSnow } from "react-icons/io5";
 
 export default function Game() {
     // variáveis globais que percorrem o jogo inteiro e todos seus componentes
-    const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos,
+    const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
-        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, endgameVariable } = useContext(GlobalState)
+        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, overQuestions } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -48,7 +49,7 @@ export default function Game() {
                 var intervaloMax = intervaloMin + 4;
                 selectAllPaginationEASYRandom(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
-                        return check('operationGame1')
+                        return generateQuestion(2)
                     } else {
                         return QuestionRef.current.setList(shuffleArray(response.data))
                     }
@@ -64,7 +65,7 @@ export default function Game() {
                 var intervaloMax = intervaloMin + 2;
                 selectAllPaginationMEDIUMRandom(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
-                        return check('operationGame2')
+                        return generateQuestion(3)
                     } else {
                         return QuestionRef.current.setList(shuffleArray(response.data))
                     }
@@ -104,6 +105,7 @@ export default function Game() {
 
         // sorteia poderes quando o usuário acertar o streak
         setListPowers(shuffleArray(listPowers))
+        
         // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
 
@@ -168,50 +170,24 @@ export default function Game() {
         // variável que define a questão a frente da próxima. Ex: na lista com 3 questões e estando 
         // respondendo a primeira questão, next_question terá valor de 2, pois a 2 questão é logo após a 1 
 
-        // console.log('entrou 1')
-        // console.log('dificuldade da questão é facil? ', questions[questions.length - 1].difficulty === 'E', 'qtd de questões menor que o esperado? ', questions.length < 5, 'menos questões na lista do que o numero da questão?', questionNumberDisplay > questions.length, 'ultima questão é a atual? ', questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))
-        // console.log('dificuldade da questão é media? ', questions[questions.length - 1].difficulty === 'M', 'qtd de questões menor que o esperado? ', questions.length < 3, 'menos questões na lista do que o numero da questão?', questionNumberDisplay - 4 >= questions.length, 'ultima questão é a atual? ', questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))
-        // console.log('dificuldade da questão é dificil? ', questions[questions.length - 1].difficulty === 'H', 'qtd de questões menor que o esperado? ', questions.length <= 2, 'menos questões na lista do que o numero da questão?', questionNumberDisplay - 7 >= questions.length, 'ultima questão é a atual? ', questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))
-
         // aqui checa se o usuário ativará o poder ou não.
         if (streak % 3 === 0 && streak !== 0) {
             setActivate(true)
         }
 
         // condição visa incluir questões médias depois que o jogador responde as 5 questões fáceis
-        if (((questionNumberDisplay === 6) && (questions[questions.length - 1].difficulty === 'E'))) {
-            // console.log('entrou 2')
+        if ((((questionNumberDisplay === 6) && (questions[questions.length - 1].difficulty === 'E'))) || (questions[questions.length - 1].difficulty === 'E' && value === 'operationGame2')) {
             generateQuestion(2)
         }
         // condição visa incluir questões difíceis depois que o jogador responde as 3 questões médias
-        else if (((questionNumberDisplay === 9) && (questions[questions.length - 1].difficulty === 'M'))) {
-            // console.log('entrou 3')
+        else if (((questionNumberDisplay === 9) && (questions[questions.length - 1].difficulty === 'M')) || (questions[questions.length - 1].difficulty === 'M' && value === 'operationGame2')) {
             generateQuestion(3)
-        }
+        } 
         // se não satisfaz as primeiras condições é capaz que não existam questões que preencham a premissa 5,3,2
         // onde deve ter 5 questões fáceis, 3 médias e 2 difíceis no banco de dados. Condições abaixo visam preencher
         // o jogo com o máximo de questões que achar sobre o tema escolhido. E se não houver o jogo acaba.
-        else if ((questions[questions.length - 1].difficulty === 'E' && (questions.length < 5 && questionNumberDisplay > questions.length) && questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion)) ||
-            (questions[questions.length - 1].difficulty === 'M' && (questions.length < 3 && questionNumberDisplay - 4 >= questions.length) && questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion)) ||
-            (questions[questions.length - 1].difficulty === 'H' && (questions.length < 2 && questionNumberDisplay - 7 >= questions.length) && questions.lastIndexOf(questions[questions.length - 1]) === questions.indexOf(currentQuestion))) {
-            // console.log('entrou 4')
-
-            if (currentQuestion.difficulty === 'E' && value === undefined) {
-                // console.log('if')
-                return generateQuestion(2)
-            }
-            else if (currentQuestion.difficulty === 'M' || value === 'operationGame2') {
-                //console.log('else if 1')
-                return generateQuestion(3)
-            }
-            else if (currentQuestion.difficulty === 'H' && !(value === 'operationGame4')) {
-                // console.log('else if 2')
-                return check('operationGame4')
-            }
-        }
         // condição abaixo acabará com o jogo, quando chegar 
-        if (questionNumberDisplay === 11 || value === 'operationGame2' || value === 'operationGame3' || value === 'operationGame4') {
-            // console.log('entrou 5')
+        if (questionNumberDisplay === 11 || value === 'operationGame3' || value === 'operationGame4') {
             CounterRef.current.stopTimer();
             return endgame()
         }
@@ -247,8 +223,11 @@ export default function Game() {
     // se precisa chamar questões Médias ou Difíceis ou ainda acabar o jogo.
     useEffect(() => {
         if (pontos !== 0 && questions.length > 0) {
-            if (endgameVariable) {
+            if (overQuestionsGame) {
                 return check('operationGame4')
+            } else if (overQuestions) {
+                setOverQuestions(false)
+                return check('operationGame2')
             }
             check()
         }
@@ -273,6 +252,10 @@ export default function Game() {
             setMultiplier(3);
             setActivate(false);
             setPower(undefined);
+        } else if (power === 'Freeze') {
+            CounterRef.current.freeze();
+            setActivate(false);
+            setPower(undefined);
         }
         // eslint-disable-next-line
     }, [power])
@@ -282,7 +265,6 @@ export default function Game() {
         <Fragment>
             <div className="Game">
                 <Container fluid>
-
                     <Card>
                         <CardTitle>
                             <Col>
@@ -299,7 +281,6 @@ export default function Game() {
                                     </Col>
                                     <Col >
                                         <Row className="d-flex justify-content-center align-items-center">
-
                                             <Timer timeOut={timeOut} ref={CounterRef} />
                                         </Row>
                                     </Col>
@@ -342,7 +323,41 @@ export default function Game() {
                                                 {(listPowers[0] === 1 || listPowers[1] === 1) || (listPowers[0] === 5 && listPowers[1] === 4) || (listPowers[0] === 4 && listPowers[1] === 5) ?
                                                     <Col>
                                                         <Row className="flex-end justify-content-center align-items-center">
-                                                            <Button outline color='warning' onClick={() => setPower('Hide1')}><b>Hide</b></Button>
+                                                            <Button outline color='warning' onClick={() => setPower('Hide1')}>
+                                                                <Col>
+                                                                    <Row className="d-flex justify-content-center align-items-center">
+                                                                        <b>Hide</b>
+                                                                    </Row>
+                                                                    <Row className="flex-end justify-content-center align-items-center powerIcon">
+                                                                        <Col >
+                                                                            <Row>
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        <IoSquare color="blue" />
+                                                                                    </Col>
+                                                                                </Row>
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        {''}
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Row>
+                                                                            <Row>
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        <IoSquare />
+                                                                                    </Col>
+                                                                                </Row>
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        <IoSquare color="red" />
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Row>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Col>
+                                                            </Button>
                                                         </Row>
                                                     </Col>
                                                     : ''
@@ -351,21 +366,70 @@ export default function Game() {
                                                     answers.length > 2 ?
                                                         <Col>
                                                             <Row className="d-flex justify-content-center align-items-center">
-                                                                <Button outline color='warning' onClick={() => setPower('Hide2')}><b>Hide</b></Button>
+                                                                <Button outline color='warning' onClick={() => setPower('Hide2')}>
+                                                                    <Col>
+                                                                        <Row className="d-flex justify-content-center align-items-center">
+                                                                            <b>Hide</b>
+                                                                        </Row>
+                                                                        <Row className="d-flex justify-content-center align-items-center powerIcon">
+                                                                            <Col >
+                                                                                <Row>
+                                                                                    <Row>
+                                                                                        <Col>
+                                                                                            <IoSquare color='blue' />
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                    <Row>
+                                                                                        <Col>
+                                                                                            <IoSquare color='white' />
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                </Row>
+                                                                                <Row>
+                                                                                    <Row>
+                                                                                        <Col>
+                                                                                            <IoSquare color='white' />
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                    <Row>
+                                                                                        <Col>
+                                                                                            <IoSquare color='red' />
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                </Row>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+                                                                </Button>
                                                             </Row>
                                                         </Col>
                                                         : ''
                                                     : ''
                                                 }
                                                 {(listPowers[0] === 3 || listPowers[1] === 3) || ((listPowers[0] === 4 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 4) && answers.length <= 2)
-                                                    || (listPowers[0] === 5 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 5) ?
+                                                    || (((listPowers[0] === 5 && listPowers[1] === 2)&& answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 5) && answers.length <= 2)) 
+                                                    || (((listPowers[0] === 6 && listPowers[1] === 2)&& answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 6) && answers.length <= 2))?
                                                     <Col>
                                                         <Row className="d-flex justify-content-center align-items-center">
-                                                            < Button outline color='info' onClick={() => { setActivate(false); setPower('Imune') }}><b>Imune</b></Button>
+                                                            < Button outline color='info' onClick={() => { setActivate(false); setPower('Imune') }}>
+                                                                <Col>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            <Row>
+                                                                                <b>Imune</b>
+                                                                            </Row>
+                                                                        </Col>
+                                                                        <Col>
+                                                                            <IoShieldCheckmarkOutline />
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Col>
+                                                            </Button>
                                                         </Row>
                                                     </Col>
                                                     : ''}
-                                                {(listPowers[0] === 4 || listPowers[1] === 4) || (listPowers[0] === 1 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 1) ?
+                                                {(listPowers[0] === 4 || listPowers[1] === 4) || (listPowers[0] === 1 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 1) ||
+                                                    (((listPowers[0] === 3 && listPowers[1] === 2)&& answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 3) && answers.length <= 2)) ?
                                                     <Col>
                                                         <Row className="d-flex justify-content-center align-items-center">
                                                             <Button outline color='danger' onClick={() => setPower('2x')}><b>2x Points</b></Button>
@@ -379,6 +443,26 @@ export default function Game() {
                                                         </Row>
                                                     </Col>
                                                     : ''}
+                                                {(listPowers[0] === 6 || listPowers[1] === 6) ?
+                                                    <Col>
+                                                        <Row className="d-flex justify-content-center align-items-center">
+                                                            <Button outline color='info' onClick={() => setPower('Freeze')}>
+                                                                <Col>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            <Row>
+                                                                                <b>Freeze</b>
+                                                                            </Row>
+                                                                        </Col>
+                                                                        <Col>
+                                                                            <IoSnow />
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Col>
+                                                            </Button>
+                                                        </Row>
+                                                    </Col>
+                                                    : ''}
                                             </>
                                             : ''
                                     }
@@ -386,7 +470,6 @@ export default function Game() {
                             </Col>
                         </CardBody>
                     </Card>
-
                     {
                         answers === undefined ? '' : answers.length === 0 ? '' :
                             <Container fluid>

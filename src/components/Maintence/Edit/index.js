@@ -172,7 +172,7 @@ function Edit({ Editar }, ref) {
                                 <Row>
                                     <Col style={{ textAlign: 'center' }}>
                                         <Button size="lg" color="primary" onClick={editar} >
-                                            Editar
+                                            Salvar
                                         </Button>
                                         {' '}
                                         <Button size="lg" onClick={handleTooltip} >

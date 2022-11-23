@@ -16,6 +16,9 @@ function Timer({ timeOut }, ref) {
             clearTimeout(timer);
             setCounter(seconds + ms)
         },
+        freeze: async function () {
+            clearTimeout(timer);
+        },
         ...{ counter: counter }
     }
 
