@@ -12,7 +12,7 @@ function GameOptions({ a }, ref) {
     const [invalid, setInvalid] = useState({ value: 'true', msg: '', first: true });
 
     // variáveis para definir opções do jogador
-    const { setName, setPontos, setTheme, theme, setActivate, setPower, setMultiplier, setStreak, setOverQuestions, setOverQuestionsGame } = useContext(GlobalState)
+    const { setName, setPontos, setTheme, theme, setActivate, setPower, setMultiplier, setStreak, setOverQuestions, setOverQuestionsGame, setPlaying, audio } = useContext(GlobalState)
 
     // variáveis para apresentar a lista correta ao usuário à 
     // medida que ele for marcando e desmarcando as checkboxes
@@ -28,29 +28,30 @@ function GameOptions({ a }, ref) {
     ref.current = {
         startGameOptions: function () {
             setAbrir(true);
-            setName('Unknown');
-            setTheme([]);           
-            setPontos(0);
-            setActivate(false);
-            setPower(undefined);
-            setStreak(0);
-            setMultiplier(1);
-            setOverQuestions(false);
-            setOverQuestionsGame(false);
         }
     }
 
     // ao carregar esse componente a lista com todos os temas será carregada
     useEffect(() => {
         selectAllThemes().then(response => setThemeList(response.data))
+        setName('Unknown');
+        setTheme([]);
+        setPontos(0);
+        setActivate(false);
+        setPower(undefined);
+        setStreak(0);
+        setMultiplier(1);
+        setOverQuestions(false);
+        setOverQuestionsGame(false);
+        audio.load()
     }, [])
 
     // toda vez que o usuário marcar e desmarcar uma opção de tema irá passar
     // por essa condição e verificará se o usuário deixou a lista de tema vazia,
     // mostrando uma mensagem de erro e impedindo o prosseguimento do jogo.
     useEffect(() => {
-        if (theme.length === 0 && invalid.first===false) {
-            setInvalid({ value: true, msg: 'Selecione um tema!', first: false})
+        if (theme.length === 0 && invalid.first === false) {
+            setInvalid({ value: true, msg: 'Selecione um tema!', first: false })
         }
         // eslint-disable-next-line
     }, [theme])
@@ -145,7 +146,7 @@ function GameOptions({ a }, ref) {
                                             <Label style={{ color: '#c82333' }}><b>{invalid.msg}</b></Label>
                                         </Row>
                                         <Row className="d-flex justify-content-center align-items-center">
-                                            <Button className="Button" size="lg" color="primary" onClick={()=> setInvalid({ value: true, msg: 'Selecione um tema!', first: false})} >
+                                            <Button className="Button" size="lg" color="primary" onClick={() => setInvalid({ value: true, msg: 'Selecione um tema!', first: false })} >
                                                 {'Jogar'}
                                             </Button>
                                         </Row>
@@ -153,7 +154,7 @@ function GameOptions({ a }, ref) {
                                     :
                                     < Link to="/game">
                                         <Row className="d-flex justify-content-center align-items-center">
-                                            <Button className="Button" size="lg" color="primary" >
+                                            <Button onClick={() => setPlaying(true)} className="Button" size="lg" color="primary" >
                                                 {'Jogar'}
                                             </Button>
                                         </Row>
