@@ -476,8 +476,8 @@ export default function Game() {
                                 </Row>
                                 <Row>
                                     {playing ?
-                                        <IoVolumeHigh size={40} onClick={() => { setPlaying(true); audio.play() }} /> :
-                                        <IoVolumeMute size={40} onClick={() => { setPlaying(false); audio.pause() }} />
+                                        <IoVolumeHigh size={40} onClick={() => { setPlaying(false); audio.pause() }} /> :
+                                        <IoVolumeMute size={40} onClick={() => { setPlaying(true); audio.play() }} />
                                     }
                                 </Row>
                             </Col>
