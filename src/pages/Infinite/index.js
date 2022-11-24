@@ -495,7 +495,7 @@ export default function Infinite() {
                                             : ''
                                     }
                                 </Row>
-                                <Row style={{ width: '50%', margin: 'auto' }}>
+                                <Row className="AllPowers">
                                     <Col>
                                         <Row>
                                             {playing ?
@@ -508,17 +508,17 @@ export default function Infinite() {
                                         <Row style={{ justifyContent: 'flex-end' }}>
                                             {lifes === 3 ?
                                                 <>
-                                                    <IoHeart size={50} color='red' />
-                                                    <IoHeart size={50} color='red' />
-                                                    <IoHeart size={50} color='red' />
+                                                    <IoHeart size={35} color='red' />
+                                                    <IoHeart size={35} color='red' />
+                                                    <IoHeart size={35} color='red' />
                                                 </>
                                                 : lifes === 2 ?
                                                     <>
-                                                        <IoHeart size={50} color='red' />
-                                                        <IoHeart size={50} color='red' />
+                                                        <IoHeart size={35} color='red' />
+                                                        <IoHeart size={35} color='red' />
                                                     </>
                                                     : lifes === 1 ?
-                                                        <IoHeart size={50} color='red' /> : ''
+                                                        <IoHeart size={35} color='red' /> : ''
                                             }
                                         </Row>
                                     </Col>

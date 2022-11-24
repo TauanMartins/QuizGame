@@ -36,6 +36,13 @@
     }
 }
 
+@media (min-width:700px) {
+    .AllLifes {
+        margin: auto;
+        width: 40%;
+    }
+}
+
 @media (max-width:350px) {
     .middleText{
         
