@@ -38,7 +38,8 @@ export default function Maintence() {
         if ((question === undefined ||
             difficulty === undefined ||
             answerRight === undefined ||
-            distractionAnswer1 === undefined)) {
+            distractionAnswer1 === undefined||
+            theme === undefined)) {
             return setRequired(true);
         }
         uploadImage(pathimg.name, pathimg.img).then(response => console.log(response))
@@ -98,13 +99,13 @@ export default function Maintence() {
                                         <li><b>Quantidade de questões do tema {questions === undefined || themeListInfo === undefined ? 'Geral' : themeListInfo[0] === '1' ? 'Geral' : questions[0].theme}: {questionsQTD}</b></li>
                                     </Row>
                                     <Row>
-                                        <li>Quantidade de questões fáceis: {questionsEASY}. Quantidade de páginas: {questionsEASY === undefined ? '' : questionsEASY / 5}</li>
+                                        <li>Quantidade de questões fáceis: {questionsEASY}. Quantidade de páginas: {questionsEASY === undefined ? '' : questionsEASY / 5}. Faltam {questionsEASY === undefined ? '' : Math.ceil(5-(((questionsEASY / 5)-(Math.trunc(questionsEASY / 5)))*5))  } perguntas.</li>
                                     </Row>
                                     <Row>
-                                        <li>Quantidade de questões médias: {questionsMEDIUM}. Quantidade de páginas: {questionsMEDIUM === undefined ? '' : questionsMEDIUM / 3}</li>
+                                        <li>Quantidade de questões médias: {questionsMEDIUM}. Quantidade de páginas: {questionsMEDIUM === undefined ? '' : questionsMEDIUM / 3}. Faltam {questionsMEDIUM === undefined ? '' : Math.ceil(3-(((questionsMEDIUM / 3)-(Math.trunc(questionsMEDIUM / 3)))*3))} perguntas.</li>
                                     </Row>
                                     <Row>
-                                        <li>Quantidade de questões difíceis: {questionsHARD}. Quantidade de páginas: {questionsHARD === undefined ? '' : questionsHARD / 2}</li>
+                                        <li>Quantidade de questões difíceis: {questionsHARD}. Quantidade de páginas: {questionsHARD === undefined ? '' : questionsHARD / 2}. Faltam {questionsHARD === undefined ? '' : Math.ceil(2-(((questionsHARD / 2)-(Math.trunc(questionsHARD / 2)))*2))} perguntas.</li>
                                     </Row>
                                     <Row>
                                         <li><b>Selecione para ver questões de temas específicos:</b></li>
@@ -180,11 +181,11 @@ export default function Maintence() {
                                                 <Input type='file' onChange={e => { setPathImg({ name: e.target.files[0].name, img: e.target.files[0] }) }} />
                                                 <Input type='text' placeholder="Nome da IMG" onChange={e => setPathImg({ name: e.target.value, img: e.target.value })} /></td>
                                             <td><Input invalid={required} type="select" onChange={e => setTheme(e.target.value)} >
-                                                <option >Selecione</option>
                                                 {
                                                     themeList === undefined ? '' :
                                                         themeList.map(tema => {
                                                             return (
+                                                                tema.id===1? <option disabled key={tema.id} value={tema.id}>{tema.theme}</option>:
                                                                 <option key={tema.id} value={tema.id}>{tema.theme}</option>
                                                             );
                                                         })

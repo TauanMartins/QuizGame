@@ -7,6 +7,7 @@ import GlobalStateProvider from './components/DataComponents/GlobalState';
 import Sobre from './pages/Sobre';
 import Maintence from './pages/Maintence';
 import Infinite from './pages/Infinite';
+import History from './pages/History';
 
 function RoutesApp() {
     return (
@@ -20,6 +21,7 @@ function RoutesApp() {
                         <Route path="/" element={<GlobalStateProvider><Home /></GlobalStateProvider>} />
                         <Route path="/game" element={<GlobalStateProvider><Game /></GlobalStateProvider>} />
                         <Route path="/infinite" element={<GlobalStateProvider><Infinite /></GlobalStateProvider>} />
+                        <Route path="/history" element={<GlobalStateProvider><History /></GlobalStateProvider>} />
                     </Routes>
                 </div>
             </Fragment>

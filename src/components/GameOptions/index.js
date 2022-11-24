@@ -110,7 +110,7 @@ function GameOptions({ a }, ref) {
                                                         onMouseLeave={handleTooltipHistory} size={20} />
                                                     <Popover placement="right" target={'history'} isOpen={isTooltipoOpenHistory}>
                                                         <PopoverBody>
-                                                            {'Neste modo você terá perguntas relacionadas a história de Harry Potter'}
+                                                            {'Neste modo você terá perguntas relacionadas a história de Harry Potter.'}
                                                         </PopoverBody>
                                                     </Popover>
                                                 </span>
@@ -125,7 +125,7 @@ function GameOptions({ a }, ref) {
                                                     checked={gameMode === '2' ? true : false}
                                                     value={'2'}
                                                     onChange={(e) => { setGameMode(e.target.value) }} />
-                                                <span>{' Padrão'}
+                                                <span>{' Clássico'}
                                                     <IoHelpCircleOutline cursor="pointer" id="classic" onMouseEnter={handleTooltipClassic}
                                                         onMouseLeave={handleTooltipClassic} size={20} />
                                                     <Popover placement="right" target={'classic'} isOpen={isTooltipoOpenClassic}>
@@ -150,7 +150,7 @@ function GameOptions({ a }, ref) {
                                                         onMouseLeave={handleTooltipInfinite} size={20} />
                                                     <Popover placement="right" target={'infinite'} isOpen={isTooltipoOpenInfinite}>
                                                         <PopoverBody>
-                                                            {'Neste modo você terá perguntas infinitas, sempre intercalando 5 fáceis, 3 médias e 2 difíceis. O jogo acaba quando o jogador errar 3 perguntas.'}
+                                                            {'Neste modo você terá perguntas infinitas, sempre intercalando 5 fáceis, 3 médias e 2 difíceis. O tema é de sua preferência. O jogo acaba quando você errar 3 perguntas.'}
                                                         </PopoverBody>
                                                     </Popover>
                                                 </span>
@@ -243,7 +243,15 @@ function GameOptions({ a }, ref) {
                                     gameMode === '1' && invalid.value === false ?
                                         <Row className="d-flex justify-content-center align-items-center">
                                             <Label style={{ color: '#c82333' }}><b>{'Modo história desabilitado'}</b></Label>
-                                        </Row> :
+                                        </Row> 
+                                    //     < Link to="/history">
+                                    //     <Row className="d-flex justify-content-center align-items-center">
+                                    //         <Button onClick={() => setPlaying(true)} className="Button" size="lg" color="primary" >
+                                    //             {'Jogar'}
+                                    //         </Button>
+                                    //      </Row>
+                                    //     </Link>
+                                    :
                                         gameMode === '2' && invalid.value === false ?
                                             < Link to="/game">
                                                 <Row className="d-flex justify-content-center align-items-center">
