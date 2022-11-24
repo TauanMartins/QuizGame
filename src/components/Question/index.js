@@ -11,7 +11,6 @@ function Question({ nothing }, ref) {
     async function downloadImage(path) {
         try {
             getImage(path).then(response => {
-                console.log(response.data)
                 if (response.data === null) {
                     return setIMG(undefined)
                 } else {
@@ -43,7 +42,7 @@ function Question({ nothing }, ref) {
         setList: function (allQuestions) {
             // seta a lista de questões que serão perguntadas            
             setQuestions(allQuestions)
-            console.log(allQuestions)
+            //console.log(allQuestions)
             // abaixo a primeira questão é selecionada para a dispor na tela
             let firstQuestion = allQuestions[0]
             setCurrentQuestion(firstQuestion)

@@ -1,0 +1,58 @@
+.Infinite {
+    color: #000;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.Infinite .Button {
+    text-align: center;
+    height: 90%;
+    width: 100%;
+    padding: 7%;
+    margin: 4px;
+
+}
+
+
+.img {
+    max-height: 160px;
+}
+
+.powerIcon {
+    line-height: 10%;
+}
+
+@media (min-width:700px) {
+    .AllQuestions {
+        margin: auto;
+        width: 40%;
+    }
+}
+
+@media (min-width:700px) {
+    .AllPowers {
+        margin: auto;
+        width: 40%;
+    }
+}
+
+@media (max-width:350px) {
+    .middleText{
+        
+        top: 0;
+        border-left: thin solid #012a35;
+        border-right: thin solid #012a35;
+    }
+}
+
+.qNumberF{
+    background-color: #60B4D3;
+    border: thin solid #012a35;
+    border-radius: 12px;
+}
+.qNumber {
+    background-color: lightgray;
+    border: thin solid #012a35;
+    border-radius: 12px;
+}
+
