@@ -13,6 +13,11 @@ function GlobalStateProvider({ children }) {
     const [overQuestions, setOverQuestions] = useState(false);
     const [overQuestionsGame, setOverQuestionsGame] = useState(false);
 
+    // variável que guarda qual páginas já foi utilizada
+    const [alreadyUsed, setAlreadyUsed] = useState([{easy:undefined, medium: undefined, hard: undefined}])
+    
+    // variável que compõe a vida do jogador
+    const [lifes, setLifes] = useState(3);
 
     // variáveis para compor os poderes e atributos não essenciais
     const [streak, setStreak] = useState(0);
@@ -34,6 +39,7 @@ function GlobalStateProvider({ children }) {
     const [audio, setAudio] = useState(new Audio());
     const [playing, setPlaying] = useState(false);
 
+    // variável que comporta efeitos de respostas corretas e incorretas
     const [soundEffectW, setSoundEffectW] = useState(new Audio());
     const [playingSoundEffectW, setPlayingSoundEffectW] = useState(true);
     const [soundEffectR, setSoundEffectR] = useState(new Audio());
@@ -77,7 +83,9 @@ function GlobalStateProvider({ children }) {
             soundEffectW, setSoundEffectW,
             playingSoundEffectW, setPlayingSoundEffectW,
             soundEffectR, setSoundEffectR,
-            playingSoundEffectR, setPlayingSoundEffectR
+            playingSoundEffectR, setPlayingSoundEffectR,
+            alreadyUsed, setAlreadyUsed,
+            lifes, setLifes
         }}>
             {children}
         </GlobalState.Provider>
