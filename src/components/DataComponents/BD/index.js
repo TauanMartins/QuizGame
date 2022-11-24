@@ -103,14 +103,14 @@ export async function selectAllPaginationEASYRandom(min, max, tema) {
     var data, error, response;
     if (tema && tema[0] !== '1') {
         response = await supabase
-            .from('questions')
+            .from('questions_random')
             .select('*')
             .eq('difficulty', 'E')
             .in('theme_fk', tema)
             .range(min, max);
     } else {
         response = await supabase
-            .from('questions')
+            .from('questions_random')
             .select('*')
             .eq('difficulty', 'E')
             .range(min, max);
@@ -145,14 +145,14 @@ export async function selectAllPaginationMEDIUMRandom(min, max, tema) {
     var data, error, response;
     if (tema && tema[0] !== '1') {
         response = await supabase
-            .from('questions')
+            .from('questions_random')
             .select('*')
             .eq('difficulty', 'M')
             .in('theme_fk', tema)
             .range(min, max);
     } else {
         response = await supabase
-            .from('questions')
+            .from('questions_random')
             .select('*')
             .eq('difficulty', 'M')
             .range(min, max);
@@ -187,14 +187,14 @@ export async function selectAllPaginationHARDRandom(min, max, tema) {
     var data, error, response;
     if (tema && tema[0] !== '1') {
         response = await supabase
-            .from('questions')
+            .from('questions_random')
             .select('*')
             .eq('difficulty', 'H')
             .in('theme_fk', tema)
             .range(min, max);
     } else {
         response = await supabase
-            .from('questions')
+            .from('questions_random')
             .select('*')
             .eq('difficulty', 'H')
             .range(min, max);
