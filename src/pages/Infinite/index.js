@@ -5,7 +5,7 @@ import Question from "../../components/Question";
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import { insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { insertScore, selectAllPaginationEASY, selectAllPaginationHARD, selectAllPaginationMEDIUM, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 import { IoSquare, IoShieldCheckmarkOutline, IoSnow, IoVolumeHigh, IoVolumeMute, IoHeart } from "react-icons/io5";
 
@@ -14,7 +14,7 @@ export default function Infinite() {
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
         setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, setOverQuestionsGame, overQuestions,
-        audio, playing, soundEffectW, soundEffectR, setPlaying, alreadyUsed, setAlreadyUsed, setLifes, lifes } = useContext(GlobalState)
+        audio, playing, soundEffectW, soundEffectR, setPlaying, alreadyUsedEasy, setAlreadyUsedEasy, alreadyUsedMedium, setAlreadyUsedMedium, alreadyUsedHard, setAlreadyUsedHard, setLifes, lifes } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -45,11 +45,22 @@ export default function Infinite() {
             return selectAllQtdEASY(theme).then(response => {
                 var totalRows = response.count;
                 var totalPages = Math.floor(totalRows / 5);
-                var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
-                setAlreadyUsed([{ easy: [alreadyUsed.easy, currentPage], medium: [alreadyUsed.medium], hard: [alreadyUsed.hard] }])
+                var currentPage;
+                if (alreadyUsedEasy.length === 0) {
+                    currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                } else {
+                    currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    while (alreadyUsedEasy.includes(currentPage)) {
+                        if (alreadyUsedEasy.length === totalPages) {
+                            return generateQuestion(2)
+                        }
+                        currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    }
+                }
+                setAlreadyUsedEasy([...alreadyUsedEasy, currentPage])
                 var intervaloMin = currentPage * 5;
                 var intervaloMax = intervaloMin + 4;
-                selectAllPaginationEASYRandom(intervaloMin, intervaloMax, theme).then(response => {
+                selectAllPaginationEASY(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
                         return generateQuestion(2)
                     } else {
@@ -62,10 +73,22 @@ export default function Infinite() {
             return selectAllQtdMEDIUM(theme).then(response => {
                 var totalRows = response.count;
                 var totalPages = Math.floor(totalRows / 3);
-                var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                var currentPage;
+                if (alreadyUsedMedium.length === 0) {
+                    currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                } else {
+                    currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    while (alreadyUsedMedium.includes(currentPage)) {
+                        if (alreadyUsedMedium.length === totalPages) {
+                            return generateQuestion(3)
+                        }
+                        currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    }
+                }
+                setAlreadyUsedMedium([...alreadyUsedMedium, currentPage])
                 var intervaloMin = currentPage * 3;
                 var intervaloMax = intervaloMin + 2;
-                selectAllPaginationMEDIUMRandom(intervaloMin, intervaloMax, theme).then(response => {
+                selectAllPaginationMEDIUM(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
                         return generateQuestion(3)
                     } else {
@@ -78,10 +101,22 @@ export default function Infinite() {
             return selectAllQtdHARD(theme).then(response => {
                 var totalRows = response.count;
                 var totalPages = Math.floor(totalRows / 2);
-                var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                var currentPage;
+                if (alreadyUsedHard.length === 0) {
+                    currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                } else {
+                    currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    while (alreadyUsedHard.includes(currentPage)) {
+                        if (alreadyUsedHard.length === totalPages) {
+                            return check('operationGame3')
+                        }
+                        currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
+                    }
+                }
+                setAlreadyUsedHard([...alreadyUsedHard, currentPage])
                 var intervaloMin = currentPage * 2;
                 var intervaloMax = intervaloMin + 1;
-                selectAllPaginationHARDRandom(intervaloMin, intervaloMax, theme).then(response => {
+                selectAllPaginationHARD(intervaloMin, intervaloMax, theme).then(response => {
                     if (Object.keys(response.data).length === 0) {
                         return check('operationGame3')
                     } else {
@@ -217,9 +252,9 @@ export default function Infinite() {
     }, [playing])
 
     useEffect(() => {
-        console.log(alreadyUsed)
+        console.log(alreadyUsedEasy, alreadyUsedMedium, alreadyUsedHard)
         // eslint-disable-next-line
-    }, [alreadyUsed])
+    }, [alreadyUsedEasy, alreadyUsedMedium, alreadyUsedHard])
 
     // effect que após o jogador responder uma pergunta irá ser chamado para verificar
     // se precisa chamar questões Médias ou Difíceis ou ainda acabar o jogo.
@@ -460,7 +495,7 @@ export default function Infinite() {
                                             : ''
                                     }
                                 </Row>
-                                <Row style={{width: '50%', margin: 'auto'}}>
+                                <Row style={{ width: '50%', margin: 'auto' }}>
                                     <Col>
                                         <Row>
                                             {playing ?

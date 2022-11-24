@@ -14,7 +14,9 @@ function GlobalStateProvider({ children }) {
     const [overQuestionsGame, setOverQuestionsGame] = useState(false);
 
     // variável que guarda qual páginas já foi utilizada
-    const [alreadyUsed, setAlreadyUsed] = useState([{easy:undefined, medium: undefined, hard: undefined}])
+    const [alreadyUsedEasy, setAlreadyUsedEasy] = useState([])
+    const [alreadyUsedMedium, setAlreadyUsedMedium] = useState([])
+    const [alreadyUsedHard, setAlreadyUsedHard] = useState([])
     
     // variável que compõe a vida do jogador
     const [lifes, setLifes] = useState(3);
@@ -84,7 +86,9 @@ function GlobalStateProvider({ children }) {
             playingSoundEffectW, setPlayingSoundEffectW,
             soundEffectR, setSoundEffectR,
             playingSoundEffectR, setPlayingSoundEffectR,
-            alreadyUsed, setAlreadyUsed,
+            alreadyUsedEasy, setAlreadyUsedEasy,
+            alreadyUsedMedium, setAlreadyUsedMedium,
+            alreadyUsedHard, setAlreadyUsedHard,
             lifes, setLifes
         }}>
             {children}
