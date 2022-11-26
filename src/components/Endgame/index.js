@@ -2,12 +2,15 @@ import React, { forwardRef, useContext, useState } from "react";
 import { Modal, ModalBody, Row, Col, Button, Container } from "reactstrap";
 import { GlobalState } from "../DataComponents/GlobalState";
 import { Link } from "react-router-dom";
-import Score from "../Score";
+import ScoreHistory from "../ScoreHistory";
+import ScoreClassic from "../ScoreClassic";
+import ScoreInfinite from "../ScoreInfinite";
 
 function Endgame({ nothing }, ref) {
 
     const [open, setOpen] = useState(false);
     const [questionNumberDisplay, setQuestionNumberDisplay] = useState(0);
+    const [gameMode, setGameMode] = useState(undefined);
 
     const { pontos, name } = useContext(GlobalState);
 
@@ -15,8 +18,9 @@ function Endgame({ nothing }, ref) {
         setOpen(!open);
     }
     ref.current = {
-        endgame: function (qNumberDisplay) {
+        endgame: function (qNumberDisplay, gameMode) {
             setQuestionNumberDisplay(qNumberDisplay);
+            setGameMode(gameMode)
             setOpen(true)
         },
         ...{ open: open }
@@ -73,7 +77,12 @@ function Endgame({ nothing }, ref) {
                     </Col>
                     <Col>
                         <Row className="justify-content-center">
-                            <Score />
+                            {gameMode === 1 ?
+                                <ScoreHistory /> : gameMode === 2 ?
+                                    <ScoreClassic /> : gameMode === 3 ?
+                                        <ScoreInfinite /> : ''
+                            }
+
                         </Row>
                     </Col>
                     <br />

@@ -5,7 +5,7 @@ import Question from "../../components/Question";
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import { insertScore, selectAllPaginationEASY, selectAllPaginationHARD, selectAllPaginationMEDIUM, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { insertScoreInfinite, selectAllPaginationEASY, selectAllPaginationHARD, selectAllPaginationMEDIUM, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 import { IoSquare, IoShieldCheckmarkOutline, IoSnow, IoVolumeHigh, IoVolumeMute, IoHeart } from "react-icons/io5";
 
@@ -14,7 +14,7 @@ export default function Infinite() {
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
         setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, setOverQuestionsGame, overQuestions,
-        audio, playing, soundEffectW, soundEffectR, setPlaying, alreadyUsedEasy, setAlreadyUsedEasy, alreadyUsedMedium, setAlreadyUsedMedium, alreadyUsedHard, setAlreadyUsedHard, setLifes, lifes } = useContext(GlobalState)
+        audio, playing, soundEffectW, soundEffectR, soundEffectF, setPlaying, alreadyUsedEasy, setAlreadyUsedEasy, alreadyUsedMedium, setAlreadyUsedMedium, alreadyUsedHard, setAlreadyUsedHard, setLifes, lifes } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -179,9 +179,6 @@ export default function Infinite() {
             var operationalPoints = parseFloat(`0.0${getRandomInt(0, 1000)}`);
             setPontos(scoreDisplay + operationalPoints);
 
-            // se ele tinha um streak ativo ele agora seta as questões antes amarelas(indicando streak) para verde
-            document.getElementById(questionNumber).style.backgroundColor = '#218838'
-
             // como ele errou, perde o streak
             setStreak(0)
 
@@ -236,8 +233,8 @@ export default function Infinite() {
     function endgame() {
         //console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
-        insertScore({ name: name, score: scoreDisplay })
-        setTimeout(() => EndgameRef.current.endgame(questionNumberDisplay), 500)
+        insertScoreInfinite({ name: name, score: scoreDisplay })
+        setTimeout(() => EndgameRef.current.endgame(questionNumberDisplay, 3), 500)
     }
 
     // effect que ao carregar o jogo chama as questões fáceis para compor o jogo
@@ -248,13 +245,9 @@ export default function Infinite() {
 
     useEffect(() => {
         playing ? audio.play() : audio.pause();
+        audio.loop = true;
         // eslint-disable-next-line
     }, [playing])
-
-    useEffect(() => {
-        console.log(alreadyUsedEasy, alreadyUsedMedium, alreadyUsedHard)
-        // eslint-disable-next-line
-    }, [alreadyUsedEasy, alreadyUsedMedium, alreadyUsedHard])
 
     // effect que após o jogador responder uma pergunta irá ser chamado para verificar
     // se precisa chamar questões Médias ou Difíceis ou ainda acabar o jogo.
@@ -291,6 +284,7 @@ export default function Infinite() {
             setActivate(false);
             setPower(undefined);
         } else if (power === 'Freeze') {
+            soundEffectF.play()
             CounterRef.current.freeze();
             setActivate(false);
             setPower(undefined);

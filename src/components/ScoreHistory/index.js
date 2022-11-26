@@ -1,17 +1,17 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Table } from "reactstrap";
-import { selectMaxScore } from "../DataComponents/BD";
+import { selectMaxScoreHistory } from "../DataComponents/BD";
 
-export default function Score({ s }) {
+export default function ScoreHistory({ s }) {
 
     const [score, setScore] = useState(undefined)
 
     useEffect(() => {
-        selectMaxScore().then(response => { return setScore(response.data) })
+        selectMaxScoreHistory().then(response => { return setScore(response.data) })
     }, [])
     return (
         <Fragment>
-            <Table bordered responsive striped>
+            <Table bordered responsive striped >
                 <thead>
                     <tr>
                         <th style={{ width: "3%" }}>Pos.</th>
