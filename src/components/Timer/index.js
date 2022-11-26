@@ -42,13 +42,14 @@ function Timer({ timeOut }, ref) {
         }
 
         // se restar 5 segundos o som irá tocar, e se for abaixo disso a fonte e cor mudará
-        if (Math.floor(counter) === 5) {
-            console.log('entrou')
-            soundEffectT.loop = true;
-            soundEffectT.play();
-            audio.volume = 0.1
-        }
+        
         if (Math.floor(counter) <= 5) {
+            if (Math.floor(counter) >=4.2 && Math.floor(counter) <=5.2 ) {
+                console.log('entrou')
+                soundEffectT.loop = true;
+                soundEffectT.play();
+                audio.volume = 0.1
+            }
             if (Math.floor(counter) % 2 === 0) {
                 setColorD('black')
                 setFontD('13px')
