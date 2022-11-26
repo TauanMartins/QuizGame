@@ -20,7 +20,6 @@ function Timer({ timeOut }, ref) {
         },
         restartTimer: async function () {
             soundEffectT.pause();
-            soundEffectT.currentTime = 0;
             setFontD('1rem')
             setColorD('black')
             clearTimeout(timer);
@@ -45,6 +44,7 @@ function Timer({ timeOut }, ref) {
         // se restar 5 segundos o som irá tocar, e se for abaixo disso a fonte e cor mudará
         if (Math.floor(counter) === 5) {
             console.log('entrou')
+            soundEffectT.loop = true;
             soundEffectT.play();
             audio.volume = 0.1
         }
@@ -53,7 +53,7 @@ function Timer({ timeOut }, ref) {
                 setColorD('black')
                 setFontD('13px')
             } else {
-                setFontD('17px')
+                setFontD('16px')
                 setColorD('red')
             }
         }

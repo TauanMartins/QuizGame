@@ -72,7 +72,7 @@ function GameOptions({ a }, ref) {
     // por essa condição e verificará se o usuário deixou a lista de tema vazia,
     // mostrando uma mensagem de erro e impedindo o prosseguimento do jogo.
     useEffect(() => {
-        if (theme.length === 0 && invalid.first === false) {
+        if (theme.length === 0 && invalid.first === false && gameMode!=='1') {
             setInvalid({ value: true, msg: 'Selecione um tema!', first: false })
         }
         console.log(theme)
