@@ -39,7 +39,7 @@ export default function Maintence() {
             difficulty === undefined ||
             answerRight === undefined ||
             distractionAnswer1 === undefined||
-            theme === undefined)) {
+            (theme === undefined || theme === 0))) {
             return setRequired(true);
         }
         uploadImage(pathimg.name, pathimg.img).then(response => console.log(response))
@@ -185,7 +185,7 @@ export default function Maintence() {
                                                     themeList === undefined ? '' :
                                                         themeList.map(tema => {
                                                             return (
-                                                                tema.id===1? <option disabled key={tema.id} value={tema.id}>{tema.theme}</option>:
+                                                                tema.id===1? <option key={0} value={0}>{'Selecione'}</option>:
                                                                 <option key={tema.id} value={tema.id}>{tema.theme}</option>
                                                             );
                                                         })

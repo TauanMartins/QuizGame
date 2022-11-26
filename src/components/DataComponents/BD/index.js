@@ -24,21 +24,42 @@ export async function getImage(path) {
 export async function getSong(path) {
     const { data, error } = await supabase.storage.from('public')
         .download(`sounds/${path}`);
-
     return { data: data, error };
 }
 
-export async function selectMaxScore() {
+export async function selectMaxScoreHistory() {
     let { data: maxscore, error } = await supabase
-        .from('maxscore')
+        .from('maxscorehistory')
         .select('*')
-        .limit(10);
-
     return { data: maxscore, error };
 }
-export async function insertScore(dados) {
+export async function selectMaxScoreClassic() {
+    let { data: maxscore, error } = await supabase
+        .from('maxscoreclassic')
+        .select('*')
+    return { data: maxscore, error };
+}
+export async function selectMaxScoreInfinite() {
+    let { data: maxscore, error } = await supabase
+        .from('maxscoreinfinite')
+        .select('*')
+    return { data: maxscore, error };
+}
+export async function insertScoreHistory(dados) {
     const { data, error } = await supabase
-        .from('score_users')
+        .from('score_users_history')
+        .insert(dados)
+    return { data, error };
+}
+export async function insertScoreClassic(dados) {
+    const { data, error } = await supabase
+        .from('score_users_classic')
+        .insert(dados)
+    return { data, error };
+}
+export async function insertScoreInfinite(dados) {
+    const { data, error } = await supabase
+        .from('score_users_infinite')
         .insert(dados)
     return { data, error };
 }

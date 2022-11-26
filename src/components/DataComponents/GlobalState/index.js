@@ -46,6 +46,10 @@ function GlobalStateProvider({ children }) {
     const [playingSoundEffectW, setPlayingSoundEffectW] = useState(true);
     const [soundEffectR, setSoundEffectR] = useState(new Audio());
     const [playingSoundEffectR, setPlayingSoundEffectR] = useState(true);
+    const [soundEffectF, setSoundEffectF] = useState(new Audio());
+    const [playingSoundEffectF, setPlayingSoundEffectF] = useState(true);
+    const [soundEffectT, setSoundEffectT] = useState(new Audio());
+    const [playingSoundEffectT, setPlayingSoundEffectT] = useState(true);
 
     useEffect(() => {
         getSong('Kahoot').then(response => {
@@ -59,6 +63,14 @@ function GlobalStateProvider({ children }) {
         getSong('Correct').then(response => {
             const url = URL.createObjectURL(response.data);
             setSoundEffectR(new Audio(url));
+        })
+        getSong('Freeze').then(response => {
+            const url = URL.createObjectURL(response.data);
+            setSoundEffectF(new Audio(url));
+        })
+        getSong('OveringTime').then(response => {
+            const url = URL.createObjectURL(response.data);
+            setSoundEffectT(new Audio(url));
         })
     }, [])
     return (
@@ -89,7 +101,11 @@ function GlobalStateProvider({ children }) {
             alreadyUsedEasy, setAlreadyUsedEasy,
             alreadyUsedMedium, setAlreadyUsedMedium,
             alreadyUsedHard, setAlreadyUsedHard,
-            lifes, setLifes
+            lifes, setLifes,
+            soundEffectF, setSoundEffectF,
+            playingSoundEffectF, setPlayingSoundEffectF,
+            soundEffectT, setSoundEffectT,
+            playingSoundEffectT, setPlayingSoundEffectT
         }}>
             {children}
         </GlobalState.Provider>

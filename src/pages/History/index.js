@@ -5,7 +5,7 @@ import Question from "../../components/Question";
 import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import { insertScore, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { insertScoreHistory, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
 import { IoSquare, IoShieldCheckmarkOutline, IoSnow, IoVolumeHigh, IoVolumeMute } from "react-icons/io5";
 
@@ -211,8 +211,8 @@ export default function History() {
     function endgame() {
         //console.log("endgame")
         // chama modal com score e única opção é voltando para tela principal
-        insertScore({ name: name, score: scoreDisplay })
-        setTimeout(() => EndgameRef.current.endgame(questionNumberDisplay), 500)
+        insertScoreHistory({ name: name, score: scoreDisplay })
+        setTimeout(() => EndgameRef.current.endgame(questionNumberDisplay, 1), 500)
     }
 
     // effect que ao carregar o jogo chama as questões fáceis para compor o jogo
@@ -223,6 +223,7 @@ export default function History() {
 
     useEffect(() => {
         playing ? audio.play() : audio.pause();
+        audio.loop = true;
         // eslint-disable-next-line
     }, [playing])
 

@@ -12,7 +12,7 @@ function GameOptions({ a }, ref) {
     const [invalid, setInvalid] = useState({ value: 'true', msg: '', first: true });
 
     // variáveis para definir opções do jogador
-    const { setName, setPontos, setTheme, theme, setActivate, setPower, setMultiplier, 
+    const { setName, setPontos, setTheme, theme, setActivate, setPower, setMultiplier,
         setStreak, setOverQuestions, setOverQuestionsGame, setPlaying, audio,
         setAlreadyUsedEasy, setAlreadyUsedMedium, setAlreadyUsedHard, setLifes } = useContext(GlobalState)
 
@@ -75,8 +75,10 @@ function GameOptions({ a }, ref) {
         if (theme.length === 0 && invalid.first === false) {
             setInvalid({ value: true, msg: 'Selecione um tema!', first: false })
         }
+        console.log(theme)
         // eslint-disable-next-line
     }, [theme])
+
 
     return (
         <Fragment>
@@ -106,7 +108,7 @@ function GameOptions({ a }, ref) {
                                                     type="checkbox"
                                                     checked={gameMode === '1' ? true : false}
                                                     value={'1'}
-                                                    onChange={(e) => { setGameMode(e.target.value); setInvalid({ value: false, msg: '', first: false }) }} />
+                                                    onChange={(e) => { setGameMode(e.target.value); setTheme([]); setInvalid({ value: false, msg: '', first: false }) }} />
                                                 <span>{' História'}
                                                     <IoHelpCircleOutline cursor="pointer" id="history" onMouseEnter={handleTooltipHistory}
                                                         onMouseLeave={handleTooltipHistory} size={20} />
@@ -126,7 +128,7 @@ function GameOptions({ a }, ref) {
                                                     type="checkbox"
                                                     checked={gameMode === '2' ? true : false}
                                                     value={'2'}
-                                                    onChange={(e) => { setGameMode(e.target.value) }} />
+                                                    onChange={(e) => { setGameMode(e.target.value); if(gameMode==='1')setInvalid({ value: true, msg: '', first: false }) }} />
                                                 <span>{' Clássico'}
                                                     <IoHelpCircleOutline cursor="pointer" id="classic" onMouseEnter={handleTooltipClassic}
                                                         onMouseLeave={handleTooltipClassic} size={20} />
@@ -146,7 +148,7 @@ function GameOptions({ a }, ref) {
                                                     type="checkbox"
                                                     checked={gameMode === '3' ? true : false}
                                                     value={'3'}
-                                                    onChange={(e) => { setGameMode(e.target.value) }} />
+                                                    onChange={(e) => { setGameMode(e.target.value); if(gameMode==='1')setInvalid({ value: true, msg: '', first: false }) }} />
                                                 <span>{' Infinito'}
                                                     <IoHelpCircleOutline cursor="pointer" id="infinite" onMouseEnter={handleTooltipInfinite}
                                                         onMouseLeave={handleTooltipInfinite} size={20} />
@@ -245,15 +247,15 @@ function GameOptions({ a }, ref) {
                                     gameMode === '1' && invalid.value === false ?
                                         <Row className="d-flex justify-content-center align-items-center">
                                             <Label style={{ color: '#c82333' }}><b>{'Modo história desabilitado'}</b></Label>
-                                        </Row> 
-                                    //     < Link to="/history">
-                                    //     <Row className="d-flex justify-content-center align-items-center">
-                                    //         <Button onClick={() => setPlaying(true)} className="Button" size="lg" color="primary" >
-                                    //             {'Jogar'}
-                                    //         </Button>
-                                    //      </Row>
-                                    //     </Link>
-                                    :
+                                        </Row>
+                                        //     < Link to="/history">
+                                        //     <Row className="d-flex justify-content-center align-items-center">
+                                        //         <Button onClick={() => setPlaying(true)} className="Button" size="lg" color="primary" >
+                                        //             {'Jogar'}
+                                        //         </Button>
+                                        //      </Row>
+                                        //     </Link>
+                                        :
                                         gameMode === '2' && invalid.value === false ?
                                             < Link to="/game">
                                                 <Row className="d-flex justify-content-center align-items-center">
