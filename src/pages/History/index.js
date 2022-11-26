@@ -14,7 +14,7 @@ export default function History() {
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
         setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, overQuestions,
-        audio, playing, soundEffectW, soundEffectR, setPlaying } = useContext(GlobalState)
+        audio, playing, soundEffectW, soundEffectR, setPlaying, soundEffectF } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -261,6 +261,7 @@ export default function History() {
             setActivate(false);
             setPower(undefined);
         } else if (power === 'Freeze') {
+            soundEffectF.play()
             CounterRef.current.freeze();
             setActivate(false);
             setPower(undefined);
