@@ -232,7 +232,7 @@ export default function Game() {
 
     // effect que ao carregar o jogo chama as questões fáceis para compor o jogo
     useEffect(() => {
-        if(theme.length===0||theme===undefined){
+        if (theme.length === 0 || theme === undefined) {
             window.location.replace(window.location.origin);
         }
         generateQuestion(1)
@@ -343,13 +343,12 @@ export default function Game() {
                                     {img === null || img === undefined ? '' :
                                         <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
                                 </Row>
-                                <br />
-                                <br />
-
-                                <Col className="AllPowers">
-                                    {
-                                        activate === true ?
-                                            <>
+                                {
+                                    activate === true ?
+                                        <>
+                                            <br />
+                                            <br />
+                                            <Col className="AllPowers">
                                                 <Row className="d-flex justify-content-center align-items-center">
                                                     <b>Você desbloqueou poderes! Só é possível usar nesta questão!</b>
                                                 </Row>
@@ -487,12 +486,12 @@ export default function Game() {
                                                         : ''}
                                                     {' '}
                                                 </Row>
-                                            </>
-                                            : ''
-                                    }
-                                </Col>
-                                <br />
+                                            </Col>
+                                            <br />
+                                        </> : ''
+                                }
                                 <Row className="AllComponents">
+
                                     {playing ?
                                         <IoVolumeHigh size={40} onClick={() => { setPlaying(false); audio.pause() }} /> :
                                         <IoVolumeMute size={40} onClick={() => { setPlaying(true); audio.play() }} />
@@ -540,6 +539,7 @@ export default function Game() {
                                 }
                             </Container>
                     }
+                    <br/>
                 </Container>
             </div >
             <Endgame ref={EndgameRef} />
