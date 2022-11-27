@@ -30,13 +30,15 @@ export default function Game() {
 
     // evento para caso o usuário saia da janela a música pause e pule a questão
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            evaluator('operationGame1')
-            audio.pause();
-            soundEffectT.pause()
-        } else {
-            soundEffectT.play()
-            audio.play();
+        if (window.location.pathname === '/game') {
+            if (document.hidden) {
+                evaluator('operationGame1')
+                audio.pause();
+                soundEffectT.pause()
+            } else {
+                soundEffectT.play()
+                audio.play();
+            }
         }
     });
 
