@@ -40,7 +40,7 @@ export default function Infinite() {
                 evaluator('operationGame1')
                 audio.pause();
                 soundEffectT.pause();
-                CounterRef.current.stopTimer();
+                CounterRef.current.freeze();
             } else {
                 soundEffectT.play()
                 audio.play();
