@@ -361,13 +361,14 @@ export default function Infinite() {
                                     {img === null || img === undefined ? '' :
                                         <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
                                 </Row>
-                                <br />
-                                <Col className="AllPowers">
-                                    {
-                                        activate === true ?
-                                            <>
+                                {
+                                    activate === true ?
+                                        <>
+                                            <br />
+                                            <br />
+                                            <Col className="AllPowers">
                                                 <Row className="d-flex justify-content-center align-items-center">
-                                                    <b>Você desbloqueou poderes! Use-os! Se errar uma questão já era poderes.</b>
+                                                    <b>Você desbloqueou poderes! Só é possível usar nesta questão!</b>
                                                 </Row>
                                                 <Row className="d-flex justify-content-center align-items-center">
                                                     {(listPowers[0] === 1 || listPowers[1] === 1) || (listPowers[0] === 5 && listPowers[1] === 4) || (listPowers[0] === 4 && listPowers[1] === 5) ?
@@ -503,11 +504,10 @@ export default function Infinite() {
                                                         : ''}
                                                     {' '}
                                                 </Row>
-                                            </>
-                                            : ''
-                                    }
-                                </Col>
-                                <br />
+                                            </Col>
+                                            <br />
+                                        </> : ''
+                                }
                                 <Row className="AllComponents">
                                     <Col>
                                         <Row>
@@ -578,6 +578,7 @@ export default function Infinite() {
                                 }
                             </Container>
                     }
+                    <br/>
                 </Container>
             </div >
             <Endgame ref={EndgameRef} />
