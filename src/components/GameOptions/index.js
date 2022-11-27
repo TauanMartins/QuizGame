@@ -115,7 +115,7 @@ function GameOptions({ a }, ref) {
                                                         onMouseLeave={handleTooltipHistory} size={20} />
                                                     <Popover placement="right" target={'history'} isOpen={isTooltipoOpenHistory}>
                                                         <PopoverBody>
-                                                            {'Neste modo você terá perguntas relacionadas a história de Harry Potter.'}
+                                                            {'Neste modo você terá perguntas relacionadas ao Universo Cinemátográfico da Marvel.'}
                                                         </PopoverBody>
                                                     </Popover>
                                                 </span>
@@ -166,7 +166,7 @@ function GameOptions({ a }, ref) {
                                 {gameMode !== '1' ?
                                     <>
                                         < Row >
-                                            <Label>Escolha um tema:</Label>
+                                            <Label>Escolha um ou mais temas:</Label>
                                         </Row>
                                         <Row md={2} xs={2}>
                                             {
