@@ -41,7 +41,7 @@ export default function Sobre() {
                                                 <li>O trabalho final é um jogo Quiz que possui 3 modos de jogo.</li>
                                                 <li>
                                                     No <u><b>primeiro modo de jogo History</b></u> você deve responder
-                                                    perguntas relacionadas à franquia de Harry Potter, nesse modo você além de testar seus conhecimentos sobre esse mundo se divertirá adquirindo mais conhecimento quando erra alguma pergunta.
+                                                    perguntas relacionadas ao Universo Cinemátográfico da Marvel, nesse modo você além de testar seus conhecimentos sobre esse mundo se divertirá adquirindo mais conhecimento quando erra alguma pergunta.
                                                 </li>
                                                 <li>
                                                     No <u><b>segundo modo de jogo Classic</b></u> você tem 10 perguntas (perguntas aleatórias e triviais) para responder e a cada sequência de 3 perguntas certas você ganha 2 opções de poder que ao ativar
@@ -55,7 +55,6 @@ export default function Sobre() {
                                                 <li>
                                                     Todos os 3 modos de jogo possuem: Poderes ao acertar múltiplas questões, Pontuações exclusivas para cada tipo de questão, Tempo cronometrado e Score no final do jogo compondo a colocação do jogador.
                                                     1 dos modos de jogo possui: 3 vidas que irão acabando à medida que o usuário erra questões.
-
                                                 </li>
                                             </Col>
                                         </Row>
