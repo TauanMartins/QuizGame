@@ -32,14 +32,15 @@ export default function Infinite() {
     function timeOut() {
         return evaluator('operationGame1');
     }
-
+    
     // evento para caso o usuário saia da janela a música pause e pule a questão
     document.addEventListener('visibilitychange', () => {
         if (window.location.pathname === '/infinite') {
             if (document.hidden) {
                 evaluator('operationGame1')
                 audio.pause();
-                soundEffectT.pause()
+                soundEffectT.pause();
+                CounterRef.current.stopTimer();
             } else {
                 soundEffectT.play()
                 audio.play();
@@ -258,6 +259,9 @@ export default function Infinite() {
 
     // effect que ao carregar o jogo chama as questões fáceis para compor o jogo
     useEffect(() => {
+        if(theme.length===0||theme===undefined){
+            window.location.replace(window.location.origin);
+        }
         generateQuestion(1)
         // eslint-disable-next-line
     }, [])
