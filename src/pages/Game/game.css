@@ -13,7 +13,6 @@
 
 }
 
-
 .img {
     max-height: 160px;
 }
@@ -36,23 +35,30 @@
     }
 }
 
+@media (min-width:700px) {
+    .AllComponents {
+        margin: auto;
+        width: 40%;
+    }
+}
+
 @media (max-width:350px) {
-    .middleText{
-        
+    .middleText {
+
         top: 0;
         border-left: thin solid #012a35;
         border-right: thin solid #012a35;
     }
 }
 
-.qNumberF{
+.qNumberF {
     background-color: #60B4D3;
     border: thin solid #012a35;
     border-radius: 12px;
 }
+
 .qNumber {
     background-color: lightgray;
     border: thin solid #012a35;
     border-radius: 12px;
 }
-

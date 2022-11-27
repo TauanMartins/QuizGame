@@ -14,7 +14,8 @@ export default function Infinite() {
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
         setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
         setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, setOverQuestionsGame, overQuestions,
-        audio, playing, soundEffectW, soundEffectR, soundEffectF, setPlaying, alreadyUsedEasy, setAlreadyUsedEasy, alreadyUsedMedium, setAlreadyUsedMedium, alreadyUsedHard, setAlreadyUsedHard, setLifes, lifes } = useContext(GlobalState)
+        audio, playing, soundEffectW, soundEffectR, soundEffectF, setPlaying, alreadyUsedEasy, setAlreadyUsedEasy, alreadyUsedMedium, setAlreadyUsedMedium,
+        alreadyUsedHard, setAlreadyUsedHard, setLifes, lifes, soundEffectT } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
     const CounterRef = useRef(null);
@@ -32,6 +33,17 @@ export default function Infinite() {
         return evaluator('operationGame1');
     }
 
+    // evento para caso o usuário saia da janela a música pause e pule a questão
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            evaluator('operationGame1')
+            audio.pause();
+            soundEffectT.pause()
+        } else {
+            soundEffectT.play()
+            audio.play();
+        }
+    });
     // variável que chama as questões com a quantidade e dificuldade certa, é onde possui a
     // lógica de variabilidade e sempre trará questões que satisfaçam as condições estabelecidas
     // no intervalo max e min. A lógica é a seguinte, escolhendo um tema jogos por exemplo, no início
@@ -137,11 +149,13 @@ export default function Infinite() {
 
         // ao clicar em uma alternativa ou acabando o tempo os poderes são desativados
         // e o multiplicador volta ao normal de valor 1
-        setActivate(false);
         setMultiplier(1);
 
         // sorteia poderes quando o usuário acertar o streak
-        setListPowers(shuffleArray(listPowers))
+        if (!activate) {
+            setListPowers(shuffleArray(listPowers))
+        }
+
 
         // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
@@ -173,6 +187,9 @@ export default function Infinite() {
             if (power === 'Imune') {
                 setPower(undefined);
                 return console.log('Tente novamente!')
+            }
+            if (activate) {
+                setActivate(false)
             }
             setLifes(lifes - 1)
             document.getElementById(questionNumber).style.backgroundColor = '#c82333';
@@ -285,6 +302,7 @@ export default function Infinite() {
             setPower(undefined);
         } else if (power === 'Freeze') {
             soundEffectF.play()
+            soundEffectT.pause()
             CounterRef.current.freeze();
             setActivate(false);
             setPower(undefined);
@@ -337,15 +355,18 @@ export default function Infinite() {
                                     {img === null || img === undefined ? '' :
                                         <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
                                 </Row>
-                                <Row className="AllPowers">
+                                <br />
+                                <Col className="AllPowers">
                                     {
-
                                         activate === true ?
                                             <>
-                                                {(listPowers[0] === 1 || listPowers[1] === 1) || (listPowers[0] === 5 && listPowers[1] === 4) || (listPowers[0] === 4 && listPowers[1] === 5) ?
-                                                    <Col>
-                                                        <Row className="flex-end justify-content-center align-items-center">
-                                                            <Button outline color='warning' onClick={() => setPower('Hide1')}>
+                                                <Row className="d-flex justify-content-center align-items-center">
+                                                    <b>Você desbloqueou poderes! Use-os! Se errar uma questão já era poderes.</b>
+                                                </Row>
+                                                <Row className="d-flex justify-content-center align-items-center">
+                                                    {(listPowers[0] === 1 || listPowers[1] === 1) || (listPowers[0] === 5 && listPowers[1] === 4) || (listPowers[0] === 4 && listPowers[1] === 5) ?
+                                                        <Col>
+                                                            <Button color='warning' onClick={() => setPower('Hide1')}>
                                                                 <Col>
                                                                     <Row className="d-flex justify-content-center align-items-center">
                                                                         <b>Hide</b>
@@ -367,7 +388,7 @@ export default function Infinite() {
                                                                             <Row>
                                                                                 <Row>
                                                                                     <Col>
-                                                                                        <IoSquare />
+                                                                                        <IoSquare color="green" />
                                                                                     </Col>
                                                                                 </Row>
                                                                                 <Row>
@@ -380,15 +401,13 @@ export default function Infinite() {
                                                                     </Row>
                                                                 </Col>
                                                             </Button>
-                                                        </Row>
-                                                    </Col>
-                                                    : ''
-                                                }
-                                                {((listPowers[0] === 2 || listPowers[1] === 2) && !(listPowers[0] === 1 || listPowers[1] === 1)) ?
-                                                    answers.length > 2 ?
-                                                        <Col>
-                                                            <Row className="d-flex justify-content-center align-items-center">
-                                                                <Button outline color='warning' onClick={() => setPower('Hide2')}>
+                                                        </Col>
+                                                        : ''
+                                                    }
+                                                    {((listPowers[0] === 2 || listPowers[1] === 2) && !(listPowers[0] === 1 || listPowers[1] === 1)) ?
+                                                        answers.length > 2 ?
+                                                            <Col>
+                                                                <Button color='warning' onClick={() => setPower('Hide2')}>
                                                                     <Col>
                                                                         <Row className="d-flex justify-content-center align-items-center">
                                                                             <b>Hide</b>
@@ -403,14 +422,14 @@ export default function Infinite() {
                                                                                     </Row>
                                                                                     <Row>
                                                                                         <Col>
-                                                                                            <IoSquare color='white' />
+                                                                                            <IoSquare color='#ffc107' />
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Row>
                                                                                 <Row>
                                                                                     <Row>
                                                                                         <Col>
-                                                                                            <IoSquare color='white' />
+                                                                                            <IoSquare color='#ffc107' />
                                                                                         </Col>
                                                                                     </Row>
                                                                                     <Row>
@@ -423,17 +442,15 @@ export default function Infinite() {
                                                                         </Row>
                                                                     </Col>
                                                                 </Button>
-                                                            </Row>
-                                                        </Col>
+                                                            </Col>
+                                                            : ''
                                                         : ''
-                                                    : ''
-                                                }
-                                                {(listPowers[0] === 3 || listPowers[1] === 3) || ((listPowers[0] === 4 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 4) && answers.length <= 2)
-                                                    || (((listPowers[0] === 5 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 5) && answers.length <= 2))
-                                                    || (((listPowers[0] === 6 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 6) && answers.length <= 2)) ?
-                                                    <Col>
-                                                        <Row className="d-flex justify-content-center align-items-center">
-                                                            < Button outline color='info' onClick={() => { setActivate(false); setPower('Imune') }}>
+                                                    }
+                                                    {(listPowers[0] === 3 || listPowers[1] === 3) || ((listPowers[0] === 4 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 4) && answers.length <= 2)
+                                                        || (((listPowers[0] === 5 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 5) && answers.length <= 2))
+                                                        || (((listPowers[0] === 6 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 6) && answers.length <= 2)) ?
+                                                        <Col>
+                                                            < Button color='info' onClick={() => { setActivate(false); setPower('Imune') }}>
                                                                 <Col>
                                                                     <Row>
                                                                         <Col>
@@ -447,28 +464,22 @@ export default function Infinite() {
                                                                     </Row>
                                                                 </Col>
                                                             </Button>
-                                                        </Row>
-                                                    </Col>
-                                                    : ''}
-                                                {(listPowers[0] === 4 || listPowers[1] === 4) || (listPowers[0] === 1 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 1) ||
-                                                    (((listPowers[0] === 3 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 3) && answers.length <= 2)) ?
-                                                    <Col>
-                                                        <Row className="d-flex justify-content-center align-items-center">
-                                                            <Button outline color='danger' onClick={() => setPower('2x')}><b>2x Points</b></Button>
-                                                        </Row>
-                                                    </Col>
-                                                    : ''}
-                                                {(listPowers[0] === 5 || listPowers[1] === 5) && !(listPowers[0] === 4 || listPowers[1] === 4) ?
-                                                    <Col>
-                                                        <Row className="d-flex justify-content-center align-items-center">
-                                                            <Button outline color='danger' onClick={() => setPower('3x')}><b>3x Points</b></Button>
-                                                        </Row>
-                                                    </Col>
-                                                    : ''}
-                                                {(listPowers[0] === 6 || listPowers[1] === 6) ?
-                                                    <Col>
-                                                        <Row className="d-flex justify-content-center align-items-center">
-                                                            <Button outline color='info' onClick={() => setPower('Freeze')}>
+                                                        </Col>
+                                                        : ''}
+                                                    {(listPowers[0] === 4 || listPowers[1] === 4) || (listPowers[0] === 1 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 1) ||
+                                                        (((listPowers[0] === 3 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 3) && answers.length <= 2)) ?
+                                                        <Col>
+                                                            <Button color='danger' onClick={() => setPower('2x')}><b>2x Points</b></Button>
+                                                        </Col>
+                                                        : ''}
+                                                    {(listPowers[0] === 5 || listPowers[1] === 5) && !(listPowers[0] === 4 || listPowers[1] === 4) ?
+                                                        <Col>
+                                                            <Button color='danger' onClick={() => setPower('3x')}><b>3x Points</b></Button>
+                                                        </Col>
+                                                        : ''}
+                                                    {(listPowers[0] === 6 || listPowers[1] === 6) ?
+                                                        <Col>
+                                                            <Button color='info' onClick={() => setPower('Freeze')}>
                                                                 <Col>
                                                                     <Row>
                                                                         <Col>
@@ -482,14 +493,16 @@ export default function Infinite() {
                                                                     </Row>
                                                                 </Col>
                                                             </Button>
-                                                        </Row>
-                                                    </Col>
-                                                    : ''}
+                                                        </Col>
+                                                        : ''}
+                                                    {' '}
+                                                </Row>
                                             </>
                                             : ''
                                     }
-                                </Row>
-                                <Row className="AllPowers">
+                                </Col>
+                                <br />
+                                <Row className="AllComponents">
                                     <Col>
                                         <Row>
                                             {playing ?
