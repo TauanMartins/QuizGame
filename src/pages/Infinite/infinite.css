@@ -13,7 +13,6 @@
 
 }
 
-
 .img {
     max-height: 160px;
 }
@@ -37,7 +36,7 @@
 }
 
 @media (min-width:700px) {
-    .AllLifes {
+    .AllComponents {
         margin: auto;
         width: 40%;
     }

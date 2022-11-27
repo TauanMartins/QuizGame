@@ -12,17 +12,17 @@ export default function Home() {
             <div className="Home">
                 <Container fluid>
                     <GameOptions ref={GameOptionsRef} />
-                    <AllScoreboard ref={GenericModalRef}/>
+                    <AllScoreboard ref={GenericModalRef} />
                     <Row>
                         <Col>
-                            <Button onClick={()=>  GameOptionsRef.current.startGameOptions()} className="Button" size="lg" color="primary" >
+                            <Button onClick={() => GameOptionsRef.current.startGameOptions()} className="Button" size="lg" color="primary" >
                                 {"Jogar"}
                             </Button>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Button onClick={()=>GenericModalRef.current.open()} outline size="lg" color="primary" >
+                            <Button onClick={() => GenericModalRef.current.open()} outline size="lg" color="primary" >
                                 {"ScoreBoard"}
                             </Button>
                         </Col>

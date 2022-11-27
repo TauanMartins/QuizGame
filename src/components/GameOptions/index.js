@@ -14,7 +14,7 @@ function GameOptions({ a }, ref) {
     // variáveis para definir opções do jogador
     const { setName, setPontos, setTheme, theme, setActivate, setPower, setMultiplier,
         setStreak, setOverQuestions, setOverQuestionsGame, setPlaying, audio,
-        setAlreadyUsedEasy, setAlreadyUsedMedium, setAlreadyUsedHard, setLifes } = useContext(GlobalState)
+        setAlreadyUsedEasy, setAlreadyUsedMedium, setAlreadyUsedHard, setLifes, soundEffectT } = useContext(GlobalState)
 
     // variáveis para apresentar a lista correta ao usuário à 
     // medida que ele for marcando e desmarcando as checkboxes
@@ -61,6 +61,7 @@ function GameOptions({ a }, ref) {
         setOverQuestions(false);
         setOverQuestionsGame(false);
         audio.load()
+        soundEffectT.pause()
         setAlreadyUsedEasy([])
         setAlreadyUsedMedium([])
         setAlreadyUsedHard([])
