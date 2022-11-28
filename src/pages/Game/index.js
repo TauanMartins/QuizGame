@@ -121,7 +121,7 @@ export default function Game() {
 
         // sorteia poderes quando o usuário acertar o streak
         setListPowers(shuffleArray(listPowers))
-        
+
         if (msg) {
             setMsg(false)
         }
@@ -139,7 +139,10 @@ export default function Game() {
             } else {
                 setPontos(scoreDisplay + (qHard * multiplier))
             }
-
+            if (power === 'Imune') {
+                setPower(undefined);
+                setMsg(false)
+            }
             // seta +1 p contar o streak
             setStreak(streak + 1);
 
