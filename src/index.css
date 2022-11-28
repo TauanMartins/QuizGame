@@ -23,6 +23,7 @@ body a:hover{
 }
 
 .genericModal{
+    min-height: 300px;
     color: #000000;
 }
 .table-responsive{

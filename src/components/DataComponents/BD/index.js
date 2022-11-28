@@ -120,6 +120,36 @@ export async function selectAllPaginationEASY(min, max, tema) {
     error = response.error
     return { data, error };
 }
+export async function selectAllHistoryEASY() {
+    var data, error, response;
+    response = await supabase
+        .from('history_view')
+        .select('*')
+        .eq('difficulty', 'E')
+    data = response.data
+    error = response.error
+    return { data, error };
+}
+export async function selectAllHistoryMEDIUM() {
+    var data, error, response;
+    response = await supabase
+        .from('history_view')
+        .select('*')
+        .eq('difficulty', 'M')
+    data = response.data
+    error = response.error
+    return { data, error };
+}
+export async function selectAllHistoryHARD() {
+    var data, error, response;
+    response = await supabase
+        .from('history_view')
+        .select('*')
+        .eq('difficulty', 'H')
+    data = response.data
+    error = response.error
+    return { data, error };
+}
 export async function selectAllPaginationEASYRandom(min, max, tema) {
     var data, error, response;
     if (tema && tema[0] !== '1') {

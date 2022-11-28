@@ -62,10 +62,10 @@ function Endgame({ nothing }, ref) {
                                 <Row className="d-flex justify-content-center align-items-center">
                                     <b>
                                         {
-                                            pontos >= 9 ? 'Parabéns, você sabe muito!' :
-                                                pontos >= 7 ? 'Ok, você sabe mais ou menos.' :
-                                                    pontos >= 3 ? 'Vish, por pouco você não é um burro' :
-                                                        pontos >= 0 ? 'Sinto muito!' : ''
+                                            pontos >= 13500 ? 'Parabéns, você sabe muito!' :
+                                                pontos >= 8000 ? 'Ok, você sabe mais ou menos.' :
+                                                    pontos >= 5000 ? 'Vish, por pouco você não é um burro' :
+                                                        pontos >= 3000 ? 'Sinto muito!' : ''
                                         }
                                     </b>
                                 </Row>

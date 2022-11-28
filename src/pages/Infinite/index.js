@@ -24,6 +24,7 @@ export default function Infinite() {
 
     // variável que define o número da questão
     const [questionNumber, setQuestionNumber] = useState(1);
+    const [msg, setMsg] = useState(false);
 
     // variáveis para mostrar na tela
     const questionNumberDisplay = useMemo(() => questionNumber, [questionNumber])
@@ -32,18 +33,17 @@ export default function Infinite() {
     function timeOut() {
         return evaluator('operationGame1');
     }
-    
+
     // evento para caso o usuário saia da janela a música pause e pule a questão
     document.addEventListener('visibilitychange', () => {
         if (window.location.pathname === '/infinite') {
             if (document.hidden) {
-                evaluator('operationGame1')
+                soundEffectW.play();
                 audio.pause();
                 soundEffectT.pause();
                 CounterRef.current.freeze();
             } else {
-                soundEffectT.play()
-                audio.play();
+                window.location.reload()
             }
         }
     });
@@ -158,7 +158,9 @@ export default function Infinite() {
         if (!activate) {
             setListPowers(shuffleArray(listPowers))
         }
-
+        if (msg) {
+            setMsg(false)
+        }
 
         // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
@@ -189,7 +191,7 @@ export default function Infinite() {
             // ao errar uma questão seta de vermelho e chama a função setPontos para chamar a check() posteriormente
             if (power === 'Imune') {
                 setPower(undefined);
-                return console.log('Tente novamente!')
+                return setMsg(true)
             }
             if (activate) {
                 setActivate(false)
@@ -259,7 +261,7 @@ export default function Infinite() {
 
     // effect que ao carregar o jogo chama as questões fáceis para compor o jogo
     useEffect(() => {
-        if(theme.length===0||theme===undefined){
+        if (theme.length === 0 || theme === undefined) {
             window.location.replace(window.location.origin);
         }
         generateQuestion(1)
@@ -368,7 +370,7 @@ export default function Infinite() {
                                             <br />
                                             <Col className="AllPowers">
                                                 <Row className="d-flex justify-content-center align-items-center">
-                                                    <b>Você desbloqueou poderes! Só é possível usar nesta questão!</b>
+                                                    <b>Você desbloqueou poderes! Use-os quando quiser.</b>
                                                 </Row>
                                                 <Row className="d-flex justify-content-center align-items-center">
                                                     {(listPowers[0] === 1 || listPowers[1] === 1) || (listPowers[0] === 5 && listPowers[1] === 4) || (listPowers[0] === 4 && listPowers[1] === 5) ?
@@ -508,6 +510,13 @@ export default function Infinite() {
                                             <br />
                                         </> : ''
                                 }
+                                {
+                                    msg ?
+                                        <Row className="d-flex justify-content-center align-items-center">
+                                            Errou! Por pouco hein...
+                                        </Row>
+                                        : ''
+                                }
                                 <Row className="AllComponents">
                                     <Col>
                                         <Row>
@@ -578,7 +587,7 @@ export default function Infinite() {
                                 }
                             </Container>
                     }
-                    <br/>
+                    <br />
                 </Container>
             </div >
             <Endgame ref={EndgameRef} />

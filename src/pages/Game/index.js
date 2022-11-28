@@ -23,6 +23,7 @@ export default function Game() {
 
     // variável que define o número da questão
     const [questionNumber, setQuestionNumber] = useState(1);
+    const [msg, setMsg] = useState(false);
 
     // variáveis para mostrar na tela
     const questionNumberDisplay = useMemo(() => questionNumber, [questionNumber])
@@ -32,13 +33,12 @@ export default function Game() {
     document.addEventListener('visibilitychange', () => {
         if (window.location.pathname === '/game') {
             if (document.hidden) {
-                evaluator('operationGame1')
+                soundEffectW.play();
                 audio.pause();
                 soundEffectT.pause();
                 CounterRef.current.freeze();
             } else {
-                soundEffectT.play()
-                audio.play();
+                window.location.reload()
             }
         }
     });
@@ -121,7 +121,10 @@ export default function Game() {
 
         // sorteia poderes quando o usuário acertar o streak
         setListPowers(shuffleArray(listPowers))
-
+        
+        if (msg) {
+            setMsg(false)
+        }
         // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
             soundEffectR.play();
@@ -156,7 +159,7 @@ export default function Game() {
             // ao errar uma questão seta de vermelho e chama a função setPontos para chamar a check() posteriormente
             if (power === 'Imune') {
                 setPower(undefined);
-                return console.log('Tente novamente!')
+                return setMsg(true)
             }
             document.getElementById(questionNumber).style.backgroundColor = '#c82333';
             var operationalPoints = parseFloat(`0.0${getRandomInt(0, 1000)}`);
@@ -490,6 +493,13 @@ export default function Game() {
                                             <br />
                                         </> : ''
                                 }
+                                {
+                                    msg ?
+                                        <Row className="d-flex justify-content-center align-items-center">
+                                            Errou! Por pouco hein...
+                                        </Row>
+                                        : ''
+                                }
                                 <Row className="AllComponents">
 
                                     {playing ?
@@ -539,7 +549,7 @@ export default function Game() {
                                 }
                             </Container>
                     }
-                    <br/>
+                    <br />
                 </Container>
             </div >
             <Endgame ref={EndgameRef} />

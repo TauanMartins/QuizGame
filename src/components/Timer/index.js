@@ -45,7 +45,6 @@ function Timer({ timeOut }, ref) {
         
         if (Math.floor(counter) <= 5) {
             if (Math.floor(counter) >=4.2 && Math.floor(counter) <=5.2 ) {
-                console.log('entrou')
                 soundEffectT.loop = true;
                 soundEffectT.play();
                 audio.volume = 0.1

@@ -2,36 +2,44 @@ import React, { Fragment, useEffect, useState, useRef, useMemo, useContext } fro
 import { Row, Col, Card, CardTitle, Button, Container, CardBody } from "reactstrap";
 import './history.css';
 import Question from "../../components/Question";
-import Timer from "../../components/Timer";
 import Endgame from "../../components/Endgame";
 import { GlobalState } from "../../components/DataComponents/GlobalState";
-import { insertScoreHistory, selectAllPaginationEASYRandom, selectAllPaginationHARDRandom, selectAllPaginationMEDIUMRandom, selectAllQtdEASY, selectAllQtdHARD, selectAllQtdMEDIUM } from "../../components/DataComponents/BD";
+import { insertScoreHistory, selectAllHistoryEASY, selectAllHistoryHARD, selectAllHistoryMEDIUM, } from "../../components/DataComponents/BD";
 import { getRandomInt, shuffleArray } from "../../components/DataComponents/RandomInt&ShuffledArray";
-import { IoSquare, IoShieldCheckmarkOutline, IoSnow, IoVolumeHigh, IoVolumeMute } from "react-icons/io5";
+import { IoSquare, IoShieldCheckmarkOutline, IoVolumeHigh, IoVolumeMute } from "react-icons/io5";
+import GenericModal from "../../components/GenericModal";
 
 export default function History() {
     // variáveis globais que percorrem o jogo inteiro e todos seus componentes
     const { currentQuestion, questions, answers, correctAnswer, pontos, setPontos, setOverQuestions,
-        setAnswers, name, img, theme, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
-        setPower, activate, setActivate, multiplier, setMultiplier, listPowers, setListPowers, overQuestionsGame, overQuestions,
-        audio, playing, soundEffectW, soundEffectR, setPlaying, soundEffectF } = useContext(GlobalState)
+        setAnswers, name, img, streak, setStreak, distractionAnswer1, distractionAnswer2, power,
+        setPower, activate, setActivate, multiplier, setMultiplier, listPowersHistory, setListPowersHistory, overQuestionsGame, overQuestions,
+        audio, playing, soundEffectW, soundEffectR, setPlaying } = useContext(GlobalState)
 
     // refs para chamar funções nos componentes filhos
-    const CounterRef = useRef(null);
     const QuestionRef = useRef(null);
     const EndgameRef = useRef(null);
+    const GenericModalRef = useRef(null);
 
     // variável que define o número da questão
     const [questionNumber, setQuestionNumber] = useState(1);
+    const [msg, setMsg] = useState(false);
 
     // variáveis para mostrar na tela
     const questionNumberDisplay = useMemo(() => questionNumber, [questionNumber])
     const scoreDisplay = useMemo(() => Math.floor(pontos), [pontos])
 
-    function timeOut() {
-        return evaluator('operationGame1');
-    }
 
+    // evento para caso o usuário saia da janela a música pause e pule a questão
+    document.addEventListener('visibilitychange', () => {
+        if (window.location.pathname === '/history') {
+            if (document.hidden) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+        }
+    });
     // variável que chama as questões com a quantidade e dificuldade certa, é onde possui a
     // lógica de variabilidade e sempre trará questões que satisfaçam as condições estabelecidas
     // no intervalo max e min. A lógica é a seguinte, escolhendo um tema jogos por exemplo, no início
@@ -42,51 +50,30 @@ export default function History() {
     // o intervalo mínimo é a página escolhida (0) * 5, retornando 0 e o máximo será +4, o intervalo será 0-4.
     function generateQuestion(cond) {
         if (cond === 1) {
-            return selectAllQtdEASY(theme).then(response => {
-                var totalRows = response.count;
-                var totalPages = Math.floor(totalRows / 5);
-                var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
-                var intervaloMin = currentPage * 5;
-                var intervaloMax = intervaloMin + 4;
-                selectAllPaginationEASYRandom(intervaloMin, intervaloMax, theme).then(response => {
-                    if (Object.keys(response.data).length === 0) {
-                        return generateQuestion(2)
-                    } else {
-                        return QuestionRef.current.setList(shuffleArray(response.data))
-                    }
-                })
+            return selectAllHistoryEASY().then(response => {
+                if (Object.keys(response.data).length === 0) {
+                    return generateQuestion(2)
+                } else {
+                    return QuestionRef.current.setList(shuffleArray(response.data))
+                }
             })
         }
         if (cond === 2) {
-            return selectAllQtdMEDIUM(theme).then(response => {
-                var totalRows = response.count;
-                var totalPages = Math.floor(totalRows / 3);
-                var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
-                var intervaloMin = currentPage * 3;
-                var intervaloMax = intervaloMin + 2;
-                selectAllPaginationMEDIUMRandom(intervaloMin, intervaloMax, theme).then(response => {
-                    if (Object.keys(response.data).length === 0) {
-                        return generateQuestion(3)
-                    } else {
-                        return QuestionRef.current.setList(shuffleArray(response.data))
-                    }
-                })
+            return selectAllHistoryMEDIUM().then(response => {
+                if (Object.keys(response.data).length === 0) {
+                    return generateQuestion(3)
+                } else {
+                    return QuestionRef.current.setList(shuffleArray(response.data))
+                }
             })
         }
         if (cond === 3) {
-            return selectAllQtdHARD(theme).then(response => {
-                var totalRows = response.count;
-                var totalPages = Math.floor(totalRows / 2);
-                var currentPage = getRandomInt(0, totalPages === 0 ? 0 : totalPages - 1);
-                var intervaloMin = currentPage * 2;
-                var intervaloMax = intervaloMin + 1;
-                selectAllPaginationHARDRandom(intervaloMin, intervaloMax, theme).then(response => {
-                    if (Object.keys(response.data).length === 0) {
-                        return check('operationGame3')
-                    } else {
-                        return QuestionRef.current.setList(shuffleArray(response.data))
-                    }
-                })
+            return selectAllHistoryHARD().then(response => {
+                if (Object.keys(response.data).length === 0) {
+                    return check('operationGame3')
+                } else {
+                    return QuestionRef.current.setList(shuffleArray(response.data))
+                }
             })
         }
     }
@@ -105,7 +92,12 @@ export default function History() {
         setMultiplier(1);
 
         // sorteia poderes quando o usuário acertar o streak
-        setListPowers(shuffleArray(listPowers))
+        setListPowersHistory(shuffleArray(listPowersHistory))
+        if (msg) {
+            setMsg(false)
+        }
+        // Mostra modal com contexto
+        GenericModalRef.current.open('Entendendo a história...', currentQuestion.hint, currentQuestion.hintIMG)
 
         // condição que confere se resposta está certa ou errada e faz a soma da pontuação
         if (String(value) === String(correctAnswer)) {
@@ -141,7 +133,7 @@ export default function History() {
             // ao errar uma questão seta de vermelho e chama a função setPontos para chamar a check() posteriormente
             if (power === 'Imune') {
                 setPower(undefined);
-                return console.log('Tente novamente!')
+                return setMsg(true)
             }
             document.getElementById(questionNumber).style.backgroundColor = '#c82333';
             var operationalPoints = parseFloat(`0.0${getRandomInt(0, 1000)}`);
@@ -178,19 +170,18 @@ export default function History() {
         }
 
         // condição visa incluir questões médias depois que o jogador responde as 5 questões fáceis
-        if ((((questionNumberDisplay === 6) && (questions[questions.length - 1].difficulty === 'E'))) || (questions[questions.length - 1].difficulty === 'E' && value === 'operationGame2')) {
+        if ((((questionNumberDisplay === 7) && (questions[questions.length - 1].difficulty === 'E'))) || (questions[questions.length - 1].difficulty === 'E' && value === 'operationGame2')) {
             generateQuestion(2)
         }
         // condição visa incluir questões difíceis depois que o jogador responde as 3 questões médias
-        else if (((questionNumberDisplay === 9) && (questions[questions.length - 1].difficulty === 'M')) || (questions[questions.length - 1].difficulty === 'M' && value === 'operationGame2')) {
+        else if (((questionNumberDisplay === 11) && (questions[questions.length - 1].difficulty === 'M')) || (questions[questions.length - 1].difficulty === 'M' && value === 'operationGame2')) {
             generateQuestion(3)
         }
         // se não satisfaz as primeiras condições é capaz que não existam questões que preencham a premissa 5,3,2
         // onde deve ter 5 questões fáceis, 3 médias e 2 difíceis no banco de dados. Condições abaixo visam preencher
         // o jogo com o máximo de questões que achar sobre o tema escolhido. E se não houver o jogo acaba.
         // condição abaixo acabará com o jogo, quando chegar 
-        if (questionNumberDisplay === 11 || value === 'operationGame3' || value === 'operationGame4') {
-            CounterRef.current.stopTimer();
+        if (questionNumberDisplay === 14 || value === 'operationGame3' || value === 'operationGame4') {
             return endgame()
         }
     }
@@ -201,8 +192,7 @@ export default function History() {
         //console.log("nextQuestion");
         setAnswers(['', '']) // seta lista de respostas como vazias para os botões não sumirem
         setQuestionNumber(questionNumberDisplay + 1); // seta questão +=1
-        document.getElementById(questionNumber + 1 === 11 ? 10 : questionNumber + 1).style.backgroundColor = '#60B4D3' // seta a proxima questão como atual
-        CounterRef.current.restartTimer(); // restart timer
+        document.getElementById(questionNumber + 1 === 14 ? 13 : questionNumber + 1).style.backgroundColor = '#60B4D3' // seta a proxima questão como atual
         QuestionRef.current.nextQuestion(); // diz para componente filho alterar questão
     }
 
@@ -260,11 +250,6 @@ export default function History() {
             setMultiplier(3);
             setActivate(false);
             setPower(undefined);
-        } else if (power === 'Freeze') {
-            soundEffectF.play()
-            CounterRef.current.freeze();
-            setActivate(false);
-            setPower(undefined);
         }
         // eslint-disable-next-line
     }, [power])
@@ -272,7 +257,9 @@ export default function History() {
 
     return (
         <Fragment>
+
             <div className="History">
+                <GenericModal ref={GenericModalRef} />
                 <Container fluid>
                     <Card>
                         <CardTitle>
@@ -280,17 +267,12 @@ export default function History() {
                                 <Row>
                                     <Col  >
                                         <Row className="d-flex justify-content-center align-items-center">
-                                            <b>Questão {questionNumberDisplay === 11 ? 10 : questionNumberDisplay}/10</b>
+                                            <b>Questão {questionNumberDisplay === 14 ? 13 : questionNumberDisplay}/13</b>
                                         </Row>
                                     </Col>
                                     <Col className="middleText" >
                                         <Row className="d-flex justify-content-center align-items-center">
                                             <b>Score: {scoreDisplay}</b>
-                                        </Row>
-                                    </Col>
-                                    <Col >
-                                        <Row className="d-flex justify-content-center align-items-center">
-                                            <Timer timeOut={timeOut} ref={CounterRef} />
                                         </Row>
                                     </Col>
                                 </Row>
@@ -310,6 +292,11 @@ export default function History() {
                                             <Col className="qNumber" id="9"><b>9</b></Col>
                                             <Col className="qNumber" id="10"><b>10</b></Col>
                                         </Row>
+                                        <Row >
+                                            <Col className="qNumber" id="11"><b>11</b></Col>
+                                            <Col className="qNumber" id="12"><b>12</b></Col>
+                                            <Col className="qNumber" id="13"><b>13</b></Col>
+                                        </Row>
                                     </Col>
                                 </Row>
                             </Col>
@@ -324,16 +311,17 @@ export default function History() {
                                     {img === null || img === undefined ? '' :
                                         <img className='img' id="img" alt={`${currentQuestion.img}`} src={img} />}
                                 </Row>
-                                <br />
-                                <Col className="AllPowers">
-                                    {
-                                        activate === true ?
-                                            <>
+                                {
+                                    activate === true ?
+                                        <>
+                                            <br />
+                                            <br />
+                                            <Col className="AllPowers">
                                                 <Row className="d-flex justify-content-center align-items-center">
-                                                    <b>Você desbloqueou poderes! Use-os!</b>
+                                                    <b>Você desbloqueou poderes! Só é possível usar nesta questão.</b>
                                                 </Row>
                                                 <Row className="d-flex justify-content-center align-items-center">
-                                                    {(listPowers[0] === 1 || listPowers[1] === 1) || (listPowers[0] === 5 && listPowers[1] === 4) || (listPowers[0] === 4 && listPowers[1] === 5) ?
+                                                    {(listPowersHistory[0] === 1 || listPowersHistory[1] === 1) || (listPowersHistory[0] === 5 && listPowersHistory[1] === 4) || (listPowersHistory[0] === 4 && listPowersHistory[1] === 5) ?
                                                         <Col>
                                                             <Button color='warning' onClick={() => setPower('Hide1')}>
                                                                 <Col>
@@ -373,7 +361,7 @@ export default function History() {
                                                         </Col>
                                                         : ''
                                                     }
-                                                    {((listPowers[0] === 2 || listPowers[1] === 2) && !(listPowers[0] === 1 || listPowers[1] === 1)) ?
+                                                    {((listPowersHistory[0] === 2 || listPowersHistory[1] === 2) && !(listPowersHistory[0] === 1 || listPowersHistory[1] === 1)) ?
                                                         answers.length > 2 ?
                                                             <Col>
                                                                 <Button color='warning' onClick={() => setPower('Hide2')}>
@@ -415,9 +403,9 @@ export default function History() {
                                                             : ''
                                                         : ''
                                                     }
-                                                    {(listPowers[0] === 3 || listPowers[1] === 3) || ((listPowers[0] === 4 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 4) && answers.length <= 2)
-                                                        || (((listPowers[0] === 5 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 5) && answers.length <= 2))
-                                                        || (((listPowers[0] === 6 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 6) && answers.length <= 2)) ?
+                                                    {(listPowersHistory[0] === 3 || listPowersHistory[1] === 3) || ((listPowersHistory[0] === 4 && listPowersHistory[1] === 2) && answers.length <= 2) || ((listPowersHistory[0] === 2 && listPowersHistory[1] === 4) && answers.length <= 2)
+                                                        || (((listPowersHistory[0] === 5 && listPowersHistory[1] === 2) && answers.length <= 2) || ((listPowersHistory[0] === 2 && listPowersHistory[1] === 5) && answers.length <= 2))
+                                                        || (((listPowersHistory[0] === 6 && listPowersHistory[1] === 2) && answers.length <= 2) || ((listPowersHistory[0] === 2 && listPowersHistory[1] === 6) && answers.length <= 2)) ?
                                                         <Col>
                                                             < Button color='info' onClick={() => { setActivate(false); setPower('Imune') }}>
                                                                 <Col>
@@ -435,42 +423,30 @@ export default function History() {
                                                             </Button>
                                                         </Col>
                                                         : ''}
-                                                    {(listPowers[0] === 4 || listPowers[1] === 4) || (listPowers[0] === 1 && listPowers[1] === 2) || (listPowers[0] === 2 && listPowers[1] === 1) ||
-                                                        (((listPowers[0] === 3 && listPowers[1] === 2) && answers.length <= 2) || ((listPowers[0] === 2 && listPowers[1] === 3) && answers.length <= 2)) ?
+                                                    {(listPowersHistory[0] === 4 || listPowersHistory[1] === 4) || (listPowersHistory[0] === 1 && listPowersHistory[1] === 2) || (listPowersHistory[0] === 2 && listPowersHistory[1] === 1) ||
+                                                        (((listPowersHistory[0] === 3 && listPowersHistory[1] === 2) && answers.length <= 2) || ((listPowersHistory[0] === 2 && listPowersHistory[1] === 3) && answers.length <= 2)) ?
                                                         <Col>
                                                             <Button color='danger' onClick={() => setPower('2x')}><b>2x Points</b></Button>
                                                         </Col>
                                                         : ''}
-                                                    {(listPowers[0] === 5 || listPowers[1] === 5) && !(listPowers[0] === 4 || listPowers[1] === 4) ?
+                                                    {(listPowersHistory[0] === 5 || listPowersHistory[1] === 5) && !(listPowersHistory[0] === 4 || listPowersHistory[1] === 4) ?
                                                         <Col>
                                                             <Button color='danger' onClick={() => setPower('3x')}><b>3x Points</b></Button>
                                                         </Col>
                                                         : ''}
-                                                    {(listPowers[0] === 6 || listPowers[1] === 6) ?
-                                                        <Col>
-                                                            <Button color='info' onClick={() => setPower('Freeze')}>
-                                                                <Col>
-                                                                    <Row>
-                                                                        <Col>
-                                                                            <Row>
-                                                                                <b>Freeze</b>
-                                                                            </Row>
-                                                                        </Col>
-                                                                        <Col>
-                                                                            <IoSnow />
-                                                                        </Col>
-                                                                    </Row>
-                                                                </Col>
-                                                            </Button>
-                                                        </Col>
-                                                        : ''}
                                                     {' '}
                                                 </Row>
-                                            </>
-                                            : ''
-                                    }
-                                </Col>
-                                <br />
+                                            </Col>
+                                            <br />
+                                        </> : ''
+                                }
+                                {
+                                    msg ?
+                                        <Row className="d-flex justify-content-center align-items-center">
+                                            Errou! Por pouco hein...
+                                        </Row>
+                                        : ''
+                                }
                                 <Row className="AllComponents">
                                     {playing ?
                                         <IoVolumeHigh size={40} onClick={() => { setPlaying(false); audio.pause() }} /> :
