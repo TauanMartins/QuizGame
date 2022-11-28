@@ -176,7 +176,10 @@ export default function Infinite() {
             } else {
                 setPontos(scoreDisplay + (qHard * multiplier))
             }
-
+            if (power === 'Imune') {
+                setPower(undefined);
+                setMsg(false)
+            }
             // seta +1 p contar o streak
             setStreak(streak + 1);
 
