@@ -55,7 +55,7 @@ function GenericModal({ n }, ref) {
                     <Col>
                         <Row className="justify-content-center">
                             {img === null || img === undefined ? '' :
-                                <img id="img" alt={`contexto da questão`} src={img} />}
+                                <img id="img" style={{maxWidth: '80%'}} alt={`contexto da questão`} src={img} />}
                         </Row>
                     </Col>
                     <br />
