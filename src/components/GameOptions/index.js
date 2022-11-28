@@ -73,10 +73,9 @@ function GameOptions({ a }, ref) {
     // por essa condição e verificará se o usuário deixou a lista de tema vazia,
     // mostrando uma mensagem de erro e impedindo o prosseguimento do jogo.
     useEffect(() => {
-        if (theme.length === 0 && invalid.first === false && gameMode!=='1') {
+        if (theme.length === 0 && invalid.first === false && gameMode !== '1') {
             setInvalid({ value: true, msg: 'Selecione um tema!', first: false })
         }
-        console.log(theme)
         // eslint-disable-next-line
     }, [theme])
 
@@ -129,7 +128,7 @@ function GameOptions({ a }, ref) {
                                                     type="checkbox"
                                                     checked={gameMode === '2' ? true : false}
                                                     value={'2'}
-                                                    onChange={(e) => { setGameMode(e.target.value); if(gameMode==='1')setInvalid({ value: true, msg: '', first: false }) }} />
+                                                    onChange={(e) => { setGameMode(e.target.value); if (gameMode === '1') setInvalid({ value: true, msg: '', first: false }) }} />
                                                 <span>{' Clássico'}
                                                     <IoHelpCircleOutline cursor="pointer" id="classic" onMouseEnter={handleTooltipClassic}
                                                         onMouseLeave={handleTooltipClassic} size={20} />
@@ -149,7 +148,7 @@ function GameOptions({ a }, ref) {
                                                     type="checkbox"
                                                     checked={gameMode === '3' ? true : false}
                                                     value={'3'}
-                                                    onChange={(e) => { setGameMode(e.target.value); if(gameMode==='1')setInvalid({ value: true, msg: '', first: false }) }} />
+                                                    onChange={(e) => { setGameMode(e.target.value); if (gameMode === '1') setInvalid({ value: true, msg: '', first: false }) }} />
                                                 <span>{' Infinito'}
                                                     <IoHelpCircleOutline cursor="pointer" id="infinite" onMouseEnter={handleTooltipInfinite}
                                                         onMouseLeave={handleTooltipInfinite} size={20} />
@@ -246,16 +245,13 @@ function GameOptions({ a }, ref) {
                                     </>
                                     :
                                     gameMode === '1' && invalid.value === false ?
-                                        <Row className="d-flex justify-content-center align-items-center">
-                                            <Label style={{ color: '#c82333' }}><b>{'Modo história desabilitado'}</b></Label>
-                                        </Row>
-                                        //     < Link to="/history">
-                                        //     <Row className="d-flex justify-content-center align-items-center">
-                                        //         <Button onClick={() => setPlaying(true)} className="Button" size="lg" color="primary" >
-                                        //             {'Jogar'}
-                                        //         </Button>
-                                        //      </Row>
-                                        //     </Link>
+                                        < Link to="/history">
+                                            <Row className="d-flex justify-content-center align-items-center">
+                                                <Button onClick={() => setPlaying(true)} className="Button" size="lg" color="primary" >
+                                                    {'Jogar'}
+                                                </Button>
+                                            </Row>
+                                        </Link>
                                         :
                                         gameMode === '2' && invalid.value === false ?
                                             < Link to="/game">

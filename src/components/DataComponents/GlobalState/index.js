@@ -26,6 +26,7 @@ function GlobalStateProvider({ children }) {
     const [distractionAnswer1, setDistractionAnswer1] = useState(undefined);
     const [distractionAnswer2, setDistractionAnswer2] = useState(undefined);
     const [listPowers, setListPowers] = useState([1, 2, 3, 4, 5, 6])
+    const [listPowersHistory, setListPowersHistory] = useState([1, 2, 3, 4, 5])
     const [power, setPower] = useState(undefined)
     const [activate, setActivate] = useState(false)
     const [multiplier, setMultiplier] = useState(1);
@@ -90,6 +91,7 @@ function GlobalStateProvider({ children }) {
             activate, setActivate,
             multiplier, setMultiplier,
             listPowers, setListPowers,
+            listPowersHistory, setListPowersHistory,
             overQuestions, setOverQuestions,
             overQuestionsGame, setOverQuestionsGame,
             audio, setAudio,
